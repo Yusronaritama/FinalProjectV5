@@ -1,0 +1,26 @@
+<ion-content [fullscreen]="true">
+  <div class="login-container">
+    <img src="assets/icon/Icon.png" alt="GoRentall Logo" class="logo" />
+    <div class="form-box login-box">
+      <h2>Login</h2>
+
+      <ion-item>
+        <ion-icon name="mail-outline" slot="start"></ion-icon>
+        <ion-input type="email" placeholder="Email" [(ngModel)]="email"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+        <ion-input type="password" placeholder="Password" [(ngModel)]="password"></ion-input>
+        <ion-note slot="end" class="forgot-password-link">
+          <ion-router-link routerLink="/forgot-password">Forgot password?</ion-router-link>
+        </ion-note>
+      </ion-item>
+
+      <ion-button expand="block" color="success" (click)="doLogin()">Login</ion-button>
+      <p class="toggle-link">
+        <ion-button expand="block" color="success" (click)="goToRegister()">Registration</ion-button>
+      </p>
+    </div>
+  </div>
+</ion-content>

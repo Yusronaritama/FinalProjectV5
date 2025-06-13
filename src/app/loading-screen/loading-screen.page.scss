@@ -1,0 +1,57 @@
+ion-content {
+  // Menggunakan variabel CSS kustom Ionic untuk background
+  --background: #27ae60; // Warna hijau branding GoRent All
+
+  .splash-container {
+    display: flex;
+    flex-direction: column; // Mengatur item dalam kolom
+    justify-content: center; // Menengahkan secara vertikal
+    align-items: center;    // Menengahkan secara horizontal
+    height: 100%;           // Memastikan container mengambil tinggi penuh ion-content
+    width: 100%;
+  }
+
+  .app-logo-text {
+    font-size: 3.5em;       // Sesuaikan ukuran teks logo
+    color: white;           // Warna teks putih
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    // Animasi bounce-in opsional
+    animation: bounceIn 0.8s ease-out forwards;
+  }
+
+  .all-circle {
+    border: 3px solid white; // Lingkaran putih di sekitar "all"
+    border-radius: 50%;     // Membuat bentuk lingkaran
+    padding: 0.1em 0.3em;   // Padding di dalam lingkaran
+    margin-left: 0.1em;     // Sedikit jarak dari "GoRent"
+    display: inline-flex;   // Memastikan konten di tengah lingkaran
+    justify-content: center;
+    align-items: center;
+    line-height: 1;         // Membantu perataan vertikal teks di dalam lingkaran
+  }
+
+  // Styling opsional untuk spinner Ionic
+  .loading-spinner {
+    margin-top: 30px; // Jarak dari logo
+    color: white;     // Warna spinner putih
+    width: 40px;      // Ukuran spinner
+    height: 40px;
+  }
+
+  /* Keyframe Animations (sama seperti sebelumnya, atau bisa disesuaikan) */
+  @keyframes bounceIn {
+    0% {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+    60% {
+      transform: scale(1.1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+}

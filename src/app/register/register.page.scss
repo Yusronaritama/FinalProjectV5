@@ -1,0 +1,114 @@
+// Warna-warna yang diadaptasi dari gambar dan preferensi Anda
+// Variabel warna telah diganti dengan nilai hex manual
+// $gradient-start-color: #064420;
+// $gradient-end-color: #B8ECBC;
+// $card-bg-color: #c3f4c3;
+// $text-dark-green: #064420;
+// $input-text-color: #2eaa63;
+// $icon-color: #0FAA50;
+// $link-color: #064420;
+// $button-shadow-color: rgba(#064420, 0.3);
+
+ion-content {
+  // Linear gradient sesuai gambar, dari hijau gelap ke hijau terang
+  // Hapus !important jika background sudah tidak bugging (hanya untuk debugging)
+  --background: linear-gradient(135deg, #064420 0%, #B8ECBC 100%) !important;
+  display: flex;
+  justify-content: center; // Menengahkan secara horizontal
+  align-items: center;    // Menengahkan secara vertikal
+  height: 100%;
+  width: 100%; // Pastikan mengambil lebar penuh
+  // Menghapus padding-top/bottom di sini, biarkan align-items: center yang bekerja
+  // Jika kartu terlalu ke atas, bisa tambahkan margin-top pada .register-container
+}
+
+.register-container {
+  background: #c3f4c3; // Background kartu
+  margin: auto; // Ini akan menengahkan secara horizontal dan vertikal bersama align-items: center
+  padding: 25px 20px; // Padding di dalam kartu
+  border-radius: 12px; // Sudut membulat
+  width: 90%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); // Shadow kartu
+  overflow-y: auto; // Memungkinkan scroll jika konten terlalu panjang
+  max-height: 90vh; // Batasi tinggi container agar tidak keluar layar, memungkinkan centering
+}
+
+.logo {
+  width: 140px; // Ukuran logo
+  margin-bottom: 20px; // Jarak bawah logo dari judul
+  // Menambahkan box-shadow untuk efek visual pada logo jika diinginkan (opsional)
+  // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 50%; // Jika logo berbentuk lingkaran
+}
+
+h2 {
+  color: #064420; // Warna judul "Registration"
+  font-size: 2em; // Ukuran font judul
+  margin-top: 0;
+  margin-bottom: 25px; // Jarak bawah judul dari input pertama
+  font-weight: bold;
+}
+
+ion-item {
+  --background: #ffffff; // Background input item
+  border-radius: 8px; // Sudut membulat input item
+  margin-bottom: 15px; // Jarak antar input item
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); // Shadow ringan pada input
+  --inner-padding-end: 0; // Hilangkan padding default di akhir item
+  --padding-start: 10px; // Padding kiri untuk ikon
+
+  ion-icon {
+    color: #0FAA50; // Warna ikon
+    font-size: 1.4em; // Ukuran ikon
+    margin-right: 8px; // Jarak antara ikon dan input
+  }
+
+  ion-input {
+    --color: #2eaa63; // Warna teks input
+    font-size: 1em;
+    --padding-start: 5px; // Padding antara ikon dan teks input
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+  }
+}
+
+ion-datetime-button {
+  --border-radius: 8px;
+  --background: #ffffff;
+  --color: #2eaa63;
+  // Menyesuaikan margin atau lebar jika layoutnya terdistorsi
+  width: 100%; // Agar tombol mengambil lebar penuh item
+  margin-right: 0;
+  // Menambahkan padding internal agar teks "DD/MM/YYYY" terlihat jelas
+  --padding-start: 10px;
+  --padding-end: 10px;
+}
+
+
+ion-button {
+  margin-top: 8px;
+  height: 50px; // Tinggi tombol
+  font-size: 1.1em;
+  text-transform: uppercase; // Teks kapital
+
+  &.register-button {
+    margin-top: 8px;
+  }
+
+  &.cancel-button {
+    margin-top: 8px;
+  }
+}
+
+.toggle-link {
+  margin-top: 15px; // Jarak atas dari tombol cancel
+  font-size: 0.9em;
+  color: #666; // Warna teks default
+  ion-router-link {
+    color: #064420; // Warna link "Daftar di sini"
+    font-weight: bold;
+    text-decoration: none; // Hapus underline default
+  }
+}
