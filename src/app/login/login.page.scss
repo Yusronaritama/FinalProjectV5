@@ -53,3 +53,23 @@ ion-button {
   font-size: 14px;
   color: #444;
 }
+
+/* Styling untuk Notifikasi Login Gagal */
+.login-error-message {
+  background-color: #fcebeb; // Background merah muda
+  color: #cc0000; // Teks merah gelap
+  border: 1px solid #cc0000; // Border merah
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px; // Jarak di bawah pesan error
+  font-size: 0.9em;
+  text-align: center;
+  opacity: 0; // Mulai dengan tersembunyi
+  animation: fadeIn 0.3s forwards; // Animasi fade in
+}
+
+/* Keyframe for fade-in animation (for error message) */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

@@ -1,20 +1,150 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+<ion-header>
+  <ion-toolbar class="custom-toolbar">
+    <div class="logo-header">
+        <img src="assets/icon/Icon.png" alt="Logo" class="logo-header" />
+      </div>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- Top Banner Section -->
+  <div class="top-banner-card">
+    <img src="assets/image/tank.jpeg" onerror="this.src='https://placehold.co/600x400/E0E0E0/white?text=Image+Not+Found';" alt="Honda BR-V" class="banner-image">
+  </div>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <!-- Location Section -->
+  <div class="location-section">
+    <!-- Menambahkan event click pada location-box -->
+    <div class="location-box" (click)="requestLocationPermission()">
+      <ion-icon name="location-outline"></ion-icon>
+      <span>Aktifkan locationmu</span>
+    </div>
+  </div>
+
+  <!-- Car Type Section -->
+  <div class="car-type-section">
+    <h3>Car Type</h3>
+    <div class="car-type-grid">
+      <div class="car-type-item">
+        <!-- Replace with actual Tesla logo if available, or SVG -->
+        <img src="https://placehold.co/80x80/E0E0E0/white?text=TESLA" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=TESLA';" alt="Tesla Logo">
+        <span>TESLA</span>
+      </div>
+      <div class="car-type-item">
+        <!-- Replace with actual Nissan logo -->
+        <img src="https://placehold.co/80x80/E0E0E0/white?text=NISSAN" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=NISSAN';" alt="Nissan Logo">
+        <span>NISSAN</span>
+      </div>
+      <div class="car-type-item active">
+        <!-- Replace with actual Toyota logo -->
+        <img src="assets/logomobil/toyota.jpg" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=TOYOTA';" alt="Toyota Logo">
+        <span>TOYOTA</span>
+      </div>
+      <div class="car-type-item">
+        <!-- Replace with actual BMW logo -->
+        <img src="https://placehold.co/80x80/E0E0E0/white?text=BMW" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
+        <span>BMW</span>
+      </div>
+      <div class="car-type-item">
+        <!-- Replace with actual Honda logo -->
+        <img src="https://placehold.co/80x80/E0E0E0/white?text=HONDA" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=HONDA';" alt="Honda Logo">
+        <span>HONDA</span>
+      </div>
+      <div class="car-type-item">
+        <!-- Replace with actual Suzuki logo -->
+        <img src="https://placehold.co/80x80/E0E0E0/white?text=SUZUKI" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=SUZUKI';" alt="Suzuki Logo">
+        <span>SUZUKI</span>
+      </div>
+      <div class="car-type-item">
+        <!-- Replace with actual BMW logo -->
+        <img src="assets/logomobil/isuzu.png" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
+        <span>BMW</span>
+      </div>
+      <div class="car-type-item">
+        <!-- Replace with actual BMW logo -->
+        <img src="https://placehold.co/80x80/E0E0E0/white?text=BMW" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
+        <span>BMW</span>
+      </div>
+      <div class="car-type-item">
+        <!-- Replace with actual BMW logo -->
+        <img src="https://placehold.co/80x80/E0E0E0/white?text=BMW" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
+        <span>BMW</span>
+      </div>
+      <div class="car-type-item">
+        <!-- Replace with actual BMW logo -->
+        <img src="https://placehold.co/80x80/E0E0E0/white?text=BMW" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
+        <span>BMW</span>
+      </div>
+      <div class="car-type-item">
+        <!-- Replace with actual BMW logo -->
+        <img src="https://placehold.co/80x80/E0E0E0/white?text=BMW" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
+        <span>BMW</span>
+      </div>
+      <div class="car-type-item">
+        <!-- Replace with actual BMW logo -->
+        <img src="https://placehold.co/80x80/E0E0E0/white?text=BMW" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
+        <span>BMW</span>
+      </div>
+      <div class="car-type-item">
+        <!-- Replace with actual BMW logo -->
+        <img src="https://placehold.co/80x80/E0E0E0/white?text=BMW" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
+        <span>BMW</span>
+      </div>
+      <div class="car-type-item">
+        <!-- Replace with actual BMW logo -->
+        <img src="https://placehold.co/80x80/E0E0E0/white?text=BMW" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
+        <span>BMW</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popular Car Section -->
+  <div class="popular-car-section">
+    <h3>Populer Car</h3>
+    <div class="car-card">
+      <div class="unavailable-tag">
+        <ion-icon name="star"></ion-icon> TIDAK TERSEDIA
+      </div>
+      <img src="https://placehold.co/300x200/FFB380/white?text=Avanza" onerror="this.src='https://placehold.co/300x200/FFB380/white?text=Avanza';" alt="Avanza" class="car-image">
+      <div class="car-details">
+        <h4>Avanza</h4>
+        <p>Rp 275.000/24 Jam</p>
+        <ion-button expand="block" class="view-detail-button">View Detail</ion-button>
+      </div>
+    </div>
+    <!-- You can duplicate the .car-card div for more cars -->
   </div>
 </ion-content>
+
+<!-- Bottom Tab Bar -->
+<ion-footer>
+  <ion-toolbar class="bottom-tab-bar">
+    <ion-tabs>
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button tab="home" routerLink="/home" routerDirection="root">
+          <ion-icon name="home-outline"></ion-icon>
+          <ion-label>Beranda</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="activity" routerLink="/activity">
+          <ion-icon name="time-outline"></ion-icon>
+          <ion-label>Aktivitas</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="qna" routerLink="/qna">
+          <ion-icon name="help-circle-outline"></ion-icon>
+          <ion-label>Q&A</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-toolbar>
+</ion-footer>

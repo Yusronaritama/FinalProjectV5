@@ -1,6 +1,6 @@
 ion-content {
   // Menggunakan variabel CSS kustom Ionic untuk background
-  --background: #27ae60; // Warna hijau branding GoRent All
+  --background: linear-gradient(135deg, #B8ECBC 0%, #014001 100%);
 
   .splash-container {
     display: flex;
@@ -9,38 +9,64 @@ ion-content {
     align-items: center;    // Menengahkan secara horizontal
     height: 100%;           // Memastikan container mengambil tinggi penuh ion-content
     width: 100%;
+    // Properti animation sudah dipindahkan ke global di .app-logo-image atau dihilangkan
+    // animation: fadeOut 0.5s ease-out forwards;
+    // animation-delay: 2.5s;
   }
 
-  .app-logo-text {
-    font-size: 3.5em;       // Sesuaikan ukuran teks logo
-    color: white;           // Warna teks putih
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    // Animasi bounce-in opsional
-    animation: bounceIn 0.8s ease-out forwards;
-  }
-
-  .all-circle {
-    border: 3px solid white; // Lingkaran putih di sekitar "all"
-    border-radius: 50%;     // Membuat bentuk lingkaran
-    padding: 0.1em 0.3em;   // Padding di dalam lingkaran
-    margin-left: 0.1em;     // Sedikit jarak dari "GoRent"
-    display: inline-flex;   // Memastikan konten di tengah lingkaran
+  // Gaya untuk kotak logo (lebih besar dari kartu login)
+  .splash-logo-box {
+    background: #c3f4c3; // Background putih untuk kotak
+    border-radius: 20px; // Sudut membulat yang lebih besar dari kartu login
+    padding: 40px;       // Padding di dalam kotak, sesuaikan untuk ruang di sekitar logo
+    width: 90%;          // Mengambil 90% lebar layar
+    max-width: 550px;    // Maksimum lebar (lebih besar dari 420px kartu login)
+    text-align: center;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2); // Shadow yang lebih besar
+    display: flex;         // Menggunakan flexbox untuk menengahkan logo di dalamnya
     justify-content: center;
     align-items: center;
-    line-height: 1;         // Membantu perataan vertikal teks di dalam lingkaran
+    flex-direction: column; // Agar logo bisa diatur margin vertikalnya jika perlu
+    animation: bounceIn 0.8s ease-out forwards; // Animasi kotak muncul
+  }
+
+  // Gaya untuk logo gambar di dalam kotak
+  .app-logo-image {
+    max-width: 80%; // Sesuaikan ukuran logo agar pas di dalam kotak
+    height: auto;   // Pertahankan rasio aspek
+    margin-bottom: 30px; /* Jarak antara logo dan loading bar */
+    // Animasi bounceIn dipindahkan ke .splash-logo-box
+  }
+
+  /* Gaya untuk Loading Bar */
+  .loading-bar-container {
+    width: 80%; /* Lebar container loading bar */
+    height: 10px; /* Tinggi loading bar */
+    background-color: #e0e0e0; /* Warna background loading bar (bagian kosong) */
+    border-radius: 5px; /* Sudut membulat loading bar */
+    overflow: hidden; /* Pastikan progress bar tidak keluar dari container */
+    animation: fadeIn 0.5s ease-in forwards; /* Animasi fade in */
+    animation-delay: 1.0s; /* Muncul setelah logo */
+  }
+
+  .loading-bar-progress {
+    height: 100%;
+    width: 0%; /* Mulai dari 0% */
+    background-color: #27ae60; /* Warna progress bar (hijau GoRent All) */
+    border-radius: 5px; /* Sudut membulat */
+    animation: fillProgress 2s ease-out forwards; /* Animasi pengisian progres */
+    animation-delay: 1.2s; /* Mulai mengisi setelah sedikit delay */
   }
 
   // Styling opsional untuk spinner Ionic
   .loading-spinner {
-    margin-top: 30px; // Jarak dari logo
+    margin-top: 30px; // Jarak dari kotak logo
     color: white;     // Warna spinner putih
     width: 40px;      // Ukuran spinner
     height: 40px;
   }
 
-  /* Keyframe Animations (sama seperti sebelumnya, atau bisa disesuaikan) */
+  /* Keyframe Animations */
   @keyframes bounceIn {
     0% {
       transform: scale(0.5);
@@ -53,5 +79,26 @@ ion-content {
     100% {
       transform: scale(1);
     }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fadeOut {
+    from { opacity: 1; visibility: visible; }
+    to { opacity: 0; visibility: hidden; }
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Keyframe baru untuk pengisian progres loading bar */
+  @keyframes fillProgress {
+    from { width: 0%; }
+    to { width: 100%; }
   }
 }

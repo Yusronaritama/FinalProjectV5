@@ -1,9 +1,18 @@
 <ion-content [fullscreen]="true" class="ion-text-center splash-screen-page">
   <!-- Konten ini akan berada di tengah layar secara vertikal dan horizontal -->
   <div class="splash-container">
-    <div class="app-logo-text">
-      GoRent <span class="all-circle">all</span>
+    <!-- Kotak logo yang lebih besar -->
+    <div class="splash-logo-box">
+      <!-- Tempatkan tag <img> untuk logo Anda di sini -->
+      <!-- GANTI 'assets/icon/Icon.png' DENGAN PATH KE FILE LOGO ANDA -->
+      <img src="assets/icon/Icon.png" alt="Your App Logo" class="app-logo-image">
+
+      <!-- Loading Bar akan ditambahkan di sini -->
+      <div class="loading-bar-container">
+        <div class="loading-bar-progress"></div>
+      </div>
     </div>
+
     <!-- Anda bisa menambahkan spinner Ionic di sini jika diinginkan -->
     <!-- <ion-spinner name="circles" class="loading-spinner"></ion-spinner> -->
   </div>

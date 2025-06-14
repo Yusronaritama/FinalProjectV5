@@ -1,34 +1,23 @@
 // Warna-warna yang diadaptasi dari gambar dan preferensi Anda
 // Variabel warna telah diganti dengan nilai hex manual
-// $gradient-start-color: #064420;
-// $gradient-end-color: #B8ECBC;
-// $card-bg-color: #c3f4c3;
-// $text-dark-green: #064420;
-// $input-text-color: #2eaa63;
-// $icon-color: #0FAA50;
-// $link-color: #064420;
-// $button-shadow-color: rgba(#064420, 0.3);
 
 ion-content {
   // Linear gradient sesuai gambar, dari hijau gelap ke hijau terang
-  // Hapus !important jika background sudah tidak bugging (hanya untuk debugging)
   --background: linear-gradient(135deg, #064420 0%, #B8ECBC 100%) !important;
   display: flex;
   justify-content: center; // Menengahkan secara horizontal
-  align-items: center;    // Menengahkan secara vertikal
+  align-items: center;    // Menengahkan secara vertikal (seperti login)
   height: 100%;
   width: 100%; // Pastikan mengambil lebar penuh
-  // Menghapus padding-top/bottom di sini, biarkan align-items: center yang bekerja
-  // Jika kartu terlalu ke atas, bisa tambahkan margin-top pada .register-container
 }
 
 .register-container {
-  background: #c3f4c3; // Background kartu
-  margin: auto; // Ini akan menengahkan secara horizontal dan vertikal bersama align-items: center
-  padding: 25px 20px; // Padding di dalam kartu
+  background: #c3f4c3; // Background kartu register
+  margin: 200px auto; // Menengahkan horizontal dan vertikal
+  padding: 20px; // Padding di dalam kartu
   border-radius: 12px; // Sudut membulat
-  width: 90%;
-  max-width: 420px;
+  width: 90%; // Lebar
+  max-width: 420px; // Lebar maksimum
   text-align: center;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); // Shadow kartu
   overflow-y: auto; // Memungkinkan scroll jika konten terlalu panjang
@@ -38,9 +27,6 @@ ion-content {
 .logo {
   width: 140px; // Ukuran logo
   margin-bottom: 20px; // Jarak bawah logo dari judul
-  // Menambahkan box-shadow untuk efek visual pada logo jika diinginkan (opsional)
-  // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 50%; // Jika logo berbentuk lingkaran
 }
 
 h2 {
@@ -72,34 +58,17 @@ ion-item {
     --padding-top: 12px;
     --padding-bottom: 12px;
   }
-}
 
-ion-datetime-button {
-  --border-radius: 8px;
-  --background: #ffffff;
-  --color: #2eaa63;
-  // Menyesuaikan margin atau lebar jika layoutnya terdistorsi
-  width: 100%; // Agar tombol mengambil lebar penuh item
-  margin-right: 0;
-  // Menambahkan padding internal agar teks "DD/MM/YYYY" terlihat jelas
-  --padding-start: 10px;
-  --padding-end: 10px;
+  ion-label {
+  color: #2eaa63; // Warna abu-abu gelap agar terlihat jelas
+  font-size: 0.9em; // Ukuran font label
+  font-weight: 500; // Ketebalan font
+  margin-bottom: 5px; // Jarak antara label dan input
 }
-
+}
 
 ion-button {
   margin-top: 8px;
-  height: 50px; // Tinggi tombol
-  font-size: 1.1em;
-  text-transform: uppercase; // Teks kapital
-
-  &.register-button {
-    margin-top: 8px;
-  }
-
-  &.cancel-button {
-    margin-top: 8px;
-  }
 }
 
 .toggle-link {

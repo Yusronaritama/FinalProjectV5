@@ -1,27 +1,346 @@
-#container {
-  text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+.logo-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+}
+.logo-header img {
+  height: 200px; /* Sesuaikan ukuran logo */
+  width: auto;
+}
+.custom-toolbar {
+  --background: #B8ECBC;
+  width: 100%;
+  height: 90px;
+  display: flex;
+  justify-content: center; /* Menjaga elemen di tengah secara horizontal */
+  align-items: center; /* Menjaga elemen di tengah secara vertikal */
+  position: relative; 
+}
+.image-container img {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 20px;
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+/* Main Content Area */
+ion-content {
+  --background: #f4f4f4; /* Light background for the content area */
+  
+  .top-banner-card {
+    background: white;
+    border-radius: 12px;
+    margin: 15px; /* Margin around the card */
+    overflow: hidden; /* Ensures image corners are rounded */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+
+    .banner-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 12px; /* Apply border-radius to the image itself for consistency */
+    }
+  }
+
+  .location-section {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    color: #666666; /* Lighter text */
+    font-size: 0.9em;
+    margin-top: 10px;
+
+    ion-icon {
+      margin-right: 8px;
+      font-size: 1.2em;
+      color: #064420; /* Green color for location icon */
+    }
+  }
+  .custom-location-alert {
+    /* Memberi background putih dan sudut membulat pada alert itu sendiri */
+    .alert-wrapper {
+      background: #ffffff;
+      border-radius: 20px; /* Sudut membulat yang lebih besar */
+      padding-top: 0; /* Menghilangkan padding atas bawaan agar ikon bisa naik */
+      padding-bottom: 0; /* Menghilangkan padding bawah bawaan */
+      box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.25); /* Shadow yang lebih jelas */
+      position: relative; /* Untuk positioning absolute elemen anak */
+      overflow: hidden; /* Menyembunyikan bagian ikon yang keluar dari wrapper jika ada */
+      width: 280px; /* Mengatur lebar alert agar mirip gambar */
+      max-width: 90%; /* Batas lebar maksimum */
+    }
+
+    /* Menyembunyikan header bawaan Ionic yang kosong */
+    .alert-head {
+      display: none;
+    }
+
+    /* Kontainer custom yang berisi ikon, judul, dan pesan */
+    .alert-message {
+      padding: 0; /* Menghilangkan padding bawaan */
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      // Padding dan margin internal untuk konten kustom
+      padding-top: 20px; /* Memberi ruang untuk ikon yang ditarik ke atas */
+    }
+
+    /* Kontainer utama untuk mengatur padding di dalam alert-message */
+    .alert-custom-content {
+      padding: 0 20px; /* Padding horizontal untuk seluruh konten alert */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    /* Styling untuk container lingkaran ikon lokasi */
+    .alert-location-icon-container {
+      background: #e6ffe6; /* Light green background untuk lingkaran */
+      border-radius: 50%; /* Membuat bentuk lingkaran */
+      width: 80px; /* Ukuran lingkaran */
+      height: 80px; /* Ukuran lingkaran */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: -60px; /* PENTING: Menarik container ikon ke atas dari alert-wrapper */
+      margin-bottom: 20px; /* Jarak antara ikon dan judul kustom */
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Shadow untuk lingkaran ikon */
+      z-index: 1; /* Pastikan di atas konten alert lainnya */
+    }
+
+    /* Styling untuk ikon lokasi di dalam lingkaran */
+    .alert-location-icon {
+      font-size: 3em; /* Ukuran ikon lokasi */
+      color: #27ae60; /* Warna hijau GoRent All */
+    }
+
+    /* Styling untuk judul kustom ("Izinkan Akses Lokasi") */
+    .alert-title-custom {
+      font-size: 1.3em; /* Ukuran font judul */
+      font-weight: bold;
+      color: #064420; /* Warna hijau gelap */
+      text-align: center;
+      margin-top: 0; /* Menghilangkan margin atas default */
+      margin-bottom: 10px; /* Jarak antara judul dan pesan */
+    }
+
+    /* Styling untuk pesan kustom ("Aktifkan GPS...") */
+    .alert-message-custom {
+      font-size: 0.85em;
+      color: #666666;
+      text-align: center;
+      padding: 0 5px; /* Sesuaikan padding horizontal untuk teks pesan */
+      margin-bottom: 25px; /* Jarak antara pesan dan tombol */
+    }
+
+    /* Styling untuk container tombol */
+    .alert-button-group {
+      flex-direction: column; /* Tombol tampil vertikal */
+      padding: 0 20px 20px; /* Padding di sekitar tombol */
+      gap: 10px; /* Jarak antar tombol */
+      width: 100%; /* Pastikan grup tombol mengambil lebar penuh */
+    }
+
+    /* Styling untuk tombol utama (Izinkan) */
+    .alert-button-primary {
+      --background: #27ae60; /* Warna hijau GoRent All */
+      --background-activated: #229954; /* Warna hijau sedikit lebih gelap saat diaktifkan */
+      --color: #ffffff; /* Warna teks putih */
+      --border-radius: 8px;
+      height: 48px; /* Tinggi tombol */
+      font-size: 1.05em;
+      font-weight: bold;
+      text-transform: none; /* Jangan uppercase */
+      box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); /* Shadow untuk tombol */
+      width: 100%; /* Pastikan tombol mengambil lebar penuh */
+    }
+
+    /* Styling untuk tombol sekunder (Lain Kali) */
+    .alert-button-secondary {
+      --background: transparent; /* Background transparan */
+      --background-activated: rgba(39, 174, 96, 0.1); /* Efek saat diaktifkan */
+      --color: #27ae60; /* Warna teks hijau */
+      --border-color: #27ae60; /* Warna border hijau */
+      --border-width: 2px;
+      --border-style: solid;
+      --border-radius: 8px;
+      height: 48px;
+      font-size: 1.05em;
+      font-weight: bold;
+      text-transform: none; /* Jangan uppercase */
+      box-shadow: none; /* Tidak ada shadow */
+      width: 100%; /* Pastikan tombol mengambil lebar penuh */
+    }
+  }
+
+
+
+  .car-type-section {
+    padding: 20px;
+    h3 {
+      color: #333333; /* General dark text */
+      margin-bottom: 15px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    .car-type-grid {
+      display: flex;
+      /* Menghilangkan justify-content: space-around; karena bisa mengganggu scrolling */
+      /* justify-content: space-around; */
+      gap: 10px; /* Space between items */
+      flex-wrap: nowrap; /* PENTING: Mencegah item melipat ke baris berikutnya */
+      overflow-x: auto; /* PENTING: Mengaktifkan scrolling horizontal */
+      padding-bottom: 10px; /* Tambahkan padding agar scrollbar tidak menutupi item */
+      
+      /* Opsional: Sembunyikan scrollbar untuk tampilan yang lebih bersih */
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+
+      .car-type-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border-radius: 12px;
+        padding: 10px;
+        flex: 0 0 auto; /* PENTING: Mencegah item menyusut agar bisa discroll */
+        min-width: 80px; /* Pastikan ada lebar minimum untuk setiap item */
+        max-width: 80px; /* Konsisten dengan lebar maksimum sebelumnya */
+        height: 80px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        cursor: pointer;
+
+        &:active {
+          transform: translateY(2px);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        &.active {
+          border: 2px solid #064420; /* Green border for active item */
+          box-shadow: 0 4px 8px rgba(39, 174, 96, 0.2); /* Adjusted shadow color */
+        }
+
+        img {
+          width: 40px; /* Size of brand logos */
+          height: 40px;
+          margin-bottom: 5px;
+          object-fit: contain; /* Ensure logo scales properly */
+        }
+        span {
+          font-size: 0.8em;
+          color: #333333; /* General dark text */
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  .popular-car-section {
+    padding: 20px;
+    padding-top: 0; /* Remove top padding if needed */
+    h3 {
+      color: #333333; /* General dark text */
+      margin-bottom: 15px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .car-card {
+      background: white;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      position: relative; /* For unavailable tag positioning */
+
+      .unavailable-tag {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: rgba(255, 0, 0, 0.7); /* Red transparent background */
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 0.8em;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        ion-icon {
+          font-size: 1em;
+        }
+      }
+
+      .car-image {
+        width: 100%;
+        height: 200px; /* Fixed height for consistency */
+        object-fit: cover; /* Cover the area */
+        display: block;
+      }
+
+      .car-details {
+        padding: 15px;
+        h4 {
+          font-size: 1.1em;
+          color: #333333; /* General dark text */
+          margin-top: 0;
+          margin-bottom: 5px;
+        }
+        p {
+          font-size: 0.9em;
+          color: #666666; /* Lighter text */
+          margin-bottom: 15px;
+        }
+        .view-detail-button {
+          --background: #064420; /* Dark green for buttons */
+          --background-activated: #05371c; /* Darker green on active (darken(#064420, 10%)) */
+          --border-radius: 8px;
+          height: 45px;
+          font-size: 1em;
+          font-weight: bold;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
+/* Bottom Tab Bar Styling */
+ion-footer {
+  ion-toolbar {
+    --background: white; /* Background putih untuk tab bar */
+    padding-top: 5px; /* Sedikit padding atas */
+    padding-bottom: 5px; /* Sedikit padding bawah */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); /* Shadow di atas tab bar */
+  }
 
-  color: #8c8c8c;
+  ion-tab-bar {
+    --background: transparent; /* Pastikan tab bar transparent agar toolbar background terlihat */
+    --border: none; /* Hilangkan border default */
+    
+    ion-tab-button {
+      --color: #666666; /* Warna ikon/label tidak aktif */
+      --color-selected: #064420; /* Warna ikon/label aktif */
+      font-size: 0.7em; /* Ukuran font label */
+      text-transform: capitalize; /* Teks tidak kapital */
+      font-weight: 500;
 
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
+      ion-icon {
+        font-size: 1.6em; /* Ukuran ikon tab */
+        margin-bottom: 3px;
+      }
+      ion-label {
+        margin-top: 0;
+      }
+    }
+  }
 }

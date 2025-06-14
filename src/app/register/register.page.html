@@ -1,6 +1,6 @@
 <ion-content [fullscreen]="true">
   <div class="register-container">
-        <img src="assets/icon/Icon.png" alt="GoRentall Logo" class="logo" />
+    <img src="assets/icon/Icon.png" alt="GoRentall Logo" class="logo" />
     <div class="form-box register-box">
       <h2>Registration</h2>
 
@@ -28,18 +28,11 @@
         <ion-input type="text" placeholder="Current Location" [(ngModel)]="currentLocation"></ion-input>
       </ion-item>
 
-      <!-- Input Date (DD/MM/YYYY) -->
-      <ion-item>
+      <!-- Input Date (Manual Input) -->
+      <ion-item class="date-manual-input-item">
+        <ion-label position="stacked">Date of Birth</ion-label> <!-- Label "Date of Birth" ditambahkan di sini -->
         <ion-icon name="calendar-outline" slot="start"></ion-icon>
-        <!-- ion-datetime-button untuk memicu modal date picker -->
-        <ion-datetime-button datetime="birthdate"></ion-datetime-button>
-        <ion-modal [keepContentsMounted]="true">
-          <ng-template>
-            <ion-datetime id="birthdate" presentation="date" displayFormat="DD/MM/YYYY" [(ngModel)]="birthDate" (ionChange)="onDateChange($event)"></ion-datetime>
-          </ng-template>
-        </ion-modal>
-        <!-- Input readonly untuk menampilkan tanggal yang diformat -->
-        <ion-input placeholder="DD/MM/YYYY" readonly [(ngModel)]="formattedBirthDate"></ion-input>
+        <ion-input type="text" placeholder="DD/MM/YYYY" [(ngModel)]="formattedBirthDate" (ionChange)="onManualDateChange()"></ion-input>
       </ion-item>
 
       <!-- Input Password -->
@@ -55,10 +48,10 @@
       </ion-item>
 
       <!-- Tombol Register -->
-      <ion-button expand="block" color="success" class="register-button" (click)="doRegister()">Registration</ion-button>
+      <ion-button expand="block" color="success" (click)="doRegister()">Registration</ion-button>
       
       <!-- Tombol Cancel -->
-      <ion-button expand="block" color="success" class="cancel-button" (click)="goToLogin()">Cancel</ion-button>
+      <ion-button expand="block" color="success" (click)="goToLogin()">Cancel</ion-button>
     </div>
   </div>
 </ion-content>

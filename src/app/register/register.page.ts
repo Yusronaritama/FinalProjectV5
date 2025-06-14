@@ -6,69 +6,99 @@ import { Router } from '@angular/router';
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
   standalone: false
-  // Ini adalah komponen non-standalone, jadi tidak ada 'standalone: true' di sini
 })
 export class RegisterPage implements OnInit {
 
-  // Properti untuk two-way data binding ([(ngModel)])
+  // Properties for two-way data binding ([(ngModel)])
   fullName: string = '';
   phoneNumber: string = '';
   email: string = '';
   currentLocation: string = '';
-  birthDate: string = ''; // Akan menyimpan tanggal dalam format ISO 8601 (misal: "2023-10-26T00:00:00")
-  formattedBirthDate: string = ''; // Untuk menampilkan tanggal dalam format DD/MM/YYYY
+  formattedBirthDate: string = ''; // Used for manual date input
   password: string = '';
   confirmPassword: string = '';
 
   constructor(private router: Router) { }
 
   ngOnInit() {
-    // Optional: Logika inisialisasi
+    // Optional: Initialization logic
   }
 
-  // Method untuk handle event perubahan tanggal dari ion-datetime
-  onDateChange(event: CustomEvent) {
-    if (event.detail.value) {
-      const date = new Date(event.detail.value);
-      this.formattedBirthDate = this.formatDate(date);
+  // New method to handle changes in the manual date input
+  onManualDateChange() {
+    let value = this.formattedBirthDate;
+    value = value.replace(/[^0-9/]/g, '');
+
+    if (value.length === 2 && value.indexOf('/') === -1) {
+      value += '/';
+    } else if (value.length === 5 && value.lastIndexOf('/') === 2) {
+      value += '/';
+    }
+
+    if (value.length > 10) {
+      value = value.substring(0, 10);
+    }
+    this.formattedBirthDate = value;
+
+    console.log('Manual Date Input (formatted):', this.formattedBirthDate);
+    const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+    if (dateRegex.test(this.formattedBirthDate)) {
+      console.log('Date format is valid.');
     } else {
-      this.formattedBirthDate = '';
+      console.log('Date format is invalid. Please use DD/MM/YYYY.');
     }
   }
 
-  // Helper function untuk format tanggal menjadi DD/MM/YYYY
-  formatDate(date: Date): string {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  }
-
   doRegister() {
-    // Logika registrasi Anda di sini
     console.log('Full Name:', this.fullName);
     console.log('Phone Number:', this.phoneNumber);
     console.log('Email:', this.email);
     console.log('Current Location:', this.currentLocation);
-    console.log('Birth Date:', this.birthDate); // Format ISO
-    console.log('Formatted Birth Date:', this.formattedBirthDate); // Format tampilan
+    console.log('Birth Date (Manual Input):', this.formattedBirthDate);
     console.log('Password:', this.password);
     console.log('Confirm Password:', this.confirmPassword);
 
-    // Contoh validasi sederhana
     if (this.password !== this.confirmPassword) {
       alert('Passwords do not match!'); // Ganti dengan Toast/Modal Ionic
       return;
     }
 
-    // Lanjutkan dengan pengiriman data ke server atau logika lainnya
-    alert('Registration successful! (Not really, just a demo)'); // Ganti dengan Toast/Modal Ionic
-    // Setelah register, bisa diarahkan ke halaman login atau home
-    // this.router.navigateByUrl('/login', { replaceUrl: true });
+    // --- Logika untuk menyimpan pengguna untuk tujuan demo ---
+    const newUser = {
+      email: this.email,
+      password: this.password
+    };
+
+    let registeredUsersString = localStorage.getItem('registeredUsers');
+    let registeredUsers: { email: string, password: string }[] = [];
+    if (registeredUsersString) {
+      try {
+        registeredUsers = JSON.parse(registeredUsersString);
+      } catch (e) {
+        console.error('Error parsing existing users from localStorage', e);
+        // Hapus data yang korup jika terjadi error parsing
+        localStorage.removeItem('registeredUsers');
+      }
+    }
+
+    // Memeriksa apakah pengguna sudah terdaftar
+    if (registeredUsers.some(user => user.email === newUser.email)) {
+      alert('Email already registered. Please login or use a different email.'); // Ganti dengan Toast/Modal
+      return;
+    }
+
+    registeredUsers.push(newUser);
+    localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+    console.log('New user registered and saved:', newUser);
+
+    alert('Registration successful! You can now log in.'); // Ganti dengan Toast/Modal Ionic
+    // --- Akhir Logika untuk menyimpan pengguna untuk tujuan demo ---
+
+    // Mengarahkan ke halaman login setelah registrasi berhasil
+    this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 
   goToLogin() {
-    // Logika untuk kembali ke halaman login
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 }
