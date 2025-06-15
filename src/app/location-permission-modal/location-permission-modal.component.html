@@ -1,0 +1,21 @@
+<ion-content class="ion-padding">
+  <!-- Gambar latar belakang yang sudah di-blur -->
+  <img *ngIf="blurredBackgroundImage" [src]="blurredBackgroundImage" class="modal-blurred-bg" alt="Blurred Background">
+
+  <div class="modal-content-wrapper">
+    <!-- Icon lokasi -->
+    <div class="modal-location-icon-container">
+      <ion-icon name="location" class="modal-location-icon"></ion-icon>
+    </div>
+
+    <!-- Judul dan Pesan -->
+    <h2 class="modal-title">Izinkan Akses Lokasi</h2>
+    <p class="modal-message">Aktifkan GPS pada perangkat Anda untuk menikmati fitur lengkap dan keamanan selama pemesanan.</p>
+
+    <!-- Tombol-tombol -->
+    <div class="modal-buttons">
+      <ion-button expand="block" class="modal-button-primary" (click)="confirm()">Izinkan</ion-button>
+      <ion-button expand="block" fill="outline" class="modal-button-secondary" (click)="cancel()">Lain Kali</ion-button>
+    </div>
+  </div>
+</ion-content>

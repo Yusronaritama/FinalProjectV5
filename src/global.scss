@@ -35,3 +35,34 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+
+/* --- Styling Global untuk Modal Kustom --- */
+.location-permission-modal {
+  /* Pastikan elemen ion-modal itu sendiri mengambil seluruh layar */
+  --width: 100vw;
+  --height: 100vh;
+  --max-width: 100vw;
+  --max-height: 100vh;
+
+  /* Mengatur opasitas backdrop modal (bukan blur dari CSS) */
+  --backdrop-opacity: 0.4; 
+
+  /* Pastikan elemen ion-modal itu sendiri transparan */
+  &.ion-modal {
+    --background: transparent !important;
+  }
+
+  /* Mengatur latar belakang gelap transparan untuk ion-backdrop */
+  ion-backdrop {
+    background: rgba(0, 0, 0, 0.4) !important; 
+    /* backdrop-filter dihapus dari sini karena sekarang ditangani oleh gambar */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Jika modal-wrapper juga membutuhkan styling tambahan global */
+  .modal-wrapper {
+    background: transparent !important; 
+  }
+}
