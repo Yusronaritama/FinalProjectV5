@@ -1,0 +1,72 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Rental Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="profile-header-background">
+    <!-- Optional: Add a background pattern or color here -->
+  </div>
+
+  <div class="profile-container">
+    <div class="location-display">
+      <ion-icon name="location-outline"></ion-icon>
+      <span>{{ currentLocation || 'Loading Location...' }}</span>
+    </div>
+
+    <div class="avatar-section">
+      <div class="avatar-circle">
+        <ion-icon name="happy-outline" class="avatar-icon"></ion-icon>
+      </div>
+      <ion-button expand="block" class="change-avatar-button">Change Avatar</ion-button>
+    </div>
+
+    <ion-card class="personal-info-card">
+      <ion-card-header>
+        <ion-card-title>Personal Information</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="none">
+          <ion-label position="stacked">Full Name</ion-label>
+          <ion-input [value]="fullName" readonly></ion-input>
+        </ion-item>
+
+        <ion-item lines="none">
+          <ion-label position="stacked">Phone Number</ion-label>
+          <ion-input [value]="phoneNumber" readonly></ion-input>
+        </ion-item>
+
+        <ion-item lines="none">
+          <ion-label position="stacked">Email Address</ion-label>
+          <ion-input [value]="email" readonly></ion-input>
+        </ion-item>
+
+        <ion-item lines="none" class="address-item">
+          <ion-label position="stacked">Address</ion-label>
+          <ion-textarea [value]="address" readonly auto-grow="true"></ion-textarea>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="account-settings-card">
+      <ion-card-header>
+        <ion-card-title>Account Settings</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <!-- Mengubah ini dari pemanggilan modal menjadi navigasi routerLink -->
+        <ion-item button detail="true" lines="full" routerLink="/change-password">
+          <ion-label>Change Password</ion-label>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-button expand="block" color="danger" class="logout-button" (click)="logout()">
+      <ion-icon name="log-out-outline" slot="start"></ion-icon>
+      Logout
+    </ion-button>
+  </div>
+</ion-content>

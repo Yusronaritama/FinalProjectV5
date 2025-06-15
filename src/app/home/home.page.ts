@@ -2,9 +2,8 @@ import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/co
 import { Router } from '@angular/router';
 import { ToastController, ModalController } from '@ionic/angular'; 
 import { LocationPermissionModalComponent } from '../location-permission-modal/location-permission-modal.component'; 
-import html2canvas from 'html2canvas'; // Import html2canvas library
+import html2canvas from 'html2canvas';
 
-// Interface for CarType model
 interface CarType {
   id: string;
   name: string;
@@ -15,162 +14,154 @@ interface CarType {
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
-  standalone: false // Assuming it's a non-standalone component for typical Ionic project setup
+  standalone: false 
 })
 export class HomePage implements OnInit, OnDestroy {
 
   userId: string | null = null;
   
-  // Static array for car types (placeholder data)
   carTypes: CarType[] = [
     { id: 'tesla', name: 'TESLA', imageUrl: 'https://placehold.co/80x80/E0E0E0/white?text=TESLA' },
     { id: 'nissan', name: 'NISSAN', imageUrl: 'https://placehold.co/80x80/E0E0E0/white?text=NISSAN' },
     { id: 'toyota', name: 'TOYOTA', imageUrl: 'https://placehold.co/80x80/E0E0E0/white?text=TOYOTA' },
     { id: 'bmw', name: 'BMW', imageUrl: 'https://placehold.co/80x80/E0E0E0/white?text=BMW' },
-    // Add more static car types here if desired
   ];
-  selectedCarType: string | null = null; // To manage the active filter for car types
+  selectedCarType: string | null = null;
 
-  // Get a reference to the ion-app element for screenshot capture
-  // This assumes your ion-app tag in app.component.html has id="appRoot"
+  // Properti baru untuk menampilkan lokasi di UI
+  displayedLocation: string = 'Aktifkan locationmu'; 
+
   @ViewChild('appRoot', { static: true }) appRoot!: ElementRef;
 
   constructor(
     private router: Router,
     private toastController: ToastController, 
     private modalController: ModalController,
-    private elementRef: ElementRef // Inject ElementRef to potentially access native DOM elements
+    private elementRef: ElementRef
   ) { }
 
-  ngOnInit() {
-    // Initial logic for home page component
-  }
+  ngOnInit() { }
 
   /**
-   * Captures a screenshot of the application's current view,
-   * applies a blur effect, and returns it as a data URL.
-   * This is used as a fallback for `backdrop-filter` in environments
-   * where it's not well-supported.
-   * @returns Promise<string | null> A data URL of the blurred image or null if failed.
+   * Mengambil screenshot dari tampilan aplikasi saat ini,
+   * menerapkan efek blur, dan mengembalikannya sebagai data URL.
+   * Ini digunakan sebagai fallback untuk `backdrop-filter` di lingkungan
+   * di mana itu tidak didukung dengan baik.
+   * @returns Promise<string | null> Data URL dari gambar yang diblur atau null jika gagal.
    */
   async captureAndBlurBackground(): Promise<string | null> {
-    // Target the entire Ionic application element
-    const appElement = document.querySelector('ion-app'); 
+    const appElement = document.querySelector('ion-app');
 
     if (!appElement) {
-      console.error('ion-app element not found. Make sure it has id="appRoot" in app.component.html');
+      console.error('Elemen ion-app tidak ditemukan.');
       return null;
     }
 
     try {
-      // Add a small delay to ensure DOM is stable before capturing (e.g., after transitions)
       await new Promise(resolve => setTimeout(resolve, 100)); 
       
-      // Capture the screenshot using html2canvas
       const canvas = await html2canvas(appElement as HTMLElement, {
-        allowTaint: true, // Allow cross-origin images to "taint" the canvas (may not be needed if images are local/CORS-enabled)
-        useCORS: true,    // Attempt to load cross-origin images using CORS (important for external images)
+        allowTaint: true,
+        useCORS: true,   
         ignoreElements: (element) => {
-          // Ignore the modal element itself if it somehow gets rendered before screenshot
-          // This prevents the modal from blurring itself.
           return element.classList.contains('location-permission-modal');
         }
       });
 
-      // Create an offscreen canvas to apply the blur effect
       const offscreenCanvas = document.createElement('canvas');
       offscreenCanvas.width = canvas.width;
       offscreenCanvas.height = canvas.height;
       const ctx = offscreenCanvas.getContext('2d');
-
       if (ctx) {
-        ctx.filter = 'blur(10px)'; // Apply a CSS blur filter to the drawing context
-        ctx.drawImage(canvas, 0, 0); // Draw the captured screenshot onto the offscreen canvas with blur
-        return offscreenCanvas.toDataURL('image/png'); // Get the data URL of the blurred image
+        ctx.filter = 'blur(10px)'; 
+        ctx.drawImage(canvas, 0, 0); 
+        return offscreenCanvas.toDataURL('image/png'); 
       }
-      return null; // Return null if canvas context is not available
+      return null;
 
     } catch (error) {
-      console.error('Failed to capture or blur screenshot:', error);
-      this.presentToast('Failed to load background. Please try again.', 'danger');
-      return null; // Return null on error
+      console.error('Gagal mengambil atau mengaburkan screenshot:', error);
+      this.presentToast('Gagal memuat latar belakang.', 'danger');
+      return null;
     }
   }
 
   /**
-   * Displays the custom location permission modal.
-   * It first captures a blurred screenshot of the background and passes it to the modal.
+   * Menampilkan modal izin lokasi kustom.
+   * Ini pertama-tama mengambil screenshot latar belakang yang diblur dan meneruskannya ke modal.
    */
   async requestLocationPermission() {
-    // Check if Geolocation API is supported by the browser/device
     if (!navigator.geolocation) {
-      this.presentToast('Geolocation is not supported by this browser/device.', 'danger');
+      this.presentToast('Geolocation tidak didukung oleh browser ini.', 'danger');
       return;
     }
 
-    // Capture the blurred background image
     const blurredBgImage = await this.captureAndBlurBackground();
 
-    // Create the modal instance
     const modal = await this.modalController.create({
-      component: LocationPermissionModalComponent, // Use the custom modal component
-      cssClass: 'location-permission-modal', // Custom CSS class for the modal wrapper
-      // Remove initialBreakpoint and breakpoints to disable swipe-to-close behavior
-      // initialBreakpoint: 0.5, 
-      // breakpoints: [0, 0.5, 0.8, 1], 
-      backdropDismiss: false, // Prevent modal from dismissing when clicking outside
+      component: LocationPermissionModalComponent, 
+      cssClass: 'location-permission-modal', 
+      backdropDismiss: false,
       componentProps: {
-        blurredBackgroundImage: blurredBgImage // Pass the blurred image data URL to the modal
+        blurredBackgroundImage: blurredBgImage
       }
     });
 
-    // Present the modal
     await modal.present();
 
-    // Listen for modal dismissal and get returned data/role
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
-      console.log('User confirmed location permission from modal.');
-      this.getCurrentLocation(); // Proceed to get the location
+      console.log('Pengguna mengkonfirmasi izin lokasi dari modal.');
+      this.getCurrentLocation();
     } else if (role === 'cancel') {
-      console.log('User denied location permission from modal.');
-      this.presentToast('Location permission denied.', 'warning');
+      console.log('Pengguna menolak izin lokasi dari modal.');
+      this.presentToast('Izin lokasi ditolak.', 'warning');
+      this.displayedLocation = 'Izin lokasi ditolak'; // Perbarui teks saat penolakan
     }
   }
 
   /**
-   * Attempts to get the current geolocation of the device.
+   * Mencoba mendapatkan geolokasi perangkat saat ini.
    */
   getCurrentLocation() {
-    this.presentToast('Attempting to get your location...', 'primary');
+    this.displayedLocation = 'Mencari lokasi akurat...'; // Perbarui teks saat mencari
+    this.presentToast('Mencoba mendapatkan lokasi Anda...', 'primary');
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
-        console.log(`Location obtained: Latitude ${latitude}, Longitude ${longitude}`);
-        this.presentToast(`Location obtained: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`, 'success');
-        // Here you can store the location or process it further
-        // Example: this.currentLocation = `Lat: ${latitude}, Lon: ${longitude}`;
+        const locationString = `Lat: ${latitude.toFixed(4)}, Lon: ${longitude.toFixed(4)}`;
+        console.log(`Lokasi didapatkan: ${locationString}`);
+        
+        // Simulasikan atau panggil reverse geocoding API di sini
+        // Misalnya, jika Anda memiliki API untuk mendapatkan nama kota/provinsi
+        // Untuk tujuan demo, kita akan menggunakan string placeholder yang lebih deskriptif
+        this.displayedLocation = 'Karawang, Jawa Barat'; // Contoh: nama kota dan provinsi
+        this.presentToast(`Lokasi didapatkan: Karawang, Jawa Barat`, 'success');
+
+        // Opsional: Jika Anda ingin menyimpan lokasi lengkap ke localStorage (misalnya untuk halaman profil)
+        // localStorage.setItem('currentDetailedLocation', 'Karawang, Jawa Barat');
       },
       (error) => {
-        console.error('Error getting location:', error);
-        let errorMessage = 'Failed to get location.';
+        console.error('Error mendapatkan lokasi:', error);
+        let errorMessage = 'Gagal mendapatkan lokasi.';
         switch (error.code) {
           case error.PERMISSION_DENIED:
-            errorMessage = 'Location permission denied by the user.';
+            errorMessage = 'Izin lokasi ditolak oleh pengguna.';
             break;
           case error.POSITION_UNAVAILABLE:
-            errorMessage = 'Location information is unavailable.';
+            errorMessage = 'Informasi lokasi tidak tersedia.';
             break;
           case error.TIMEOUT:
-            errorMessage = 'Location request timed out.';
+            errorMessage = 'Waktu permintaan lokasi habis.';
             break;
           default:
-            errorMessage = 'An unknown error occurred while getting location.';
+            errorMessage = 'Terjadi kesalahan tidak dikenal saat mendapatkan lokasi.';
             break;
         }
         this.presentToast(errorMessage, 'danger');
+        this.displayedLocation = 'Gagal mendapatkan lokasi'; // Perbarui teks saat error
       },
       {
         enableHighAccuracy: true,
@@ -181,9 +172,9 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   /**
-   * Helper method to present a Toast message.
-   * @param message The message to display in the toast.
-   * @param color The color of the toast (e.g., 'dark', 'primary', 'success', 'danger').
+   * Metode pembantu untuk menampilkan pesan Toast.
+   * @param message Pesan yang akan ditampilkan di toast.
+   * @param color Warna toast (misalnya, 'dark', 'primary', 'success', 'danger').
    */
   async presentToast(message: string, color: string = 'dark') {
     const toast = await this.toastController.create({
@@ -196,21 +187,20 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   /**
-   * Handles the selection of a car type for filtering purposes.
-   * @param carTypeName The name of the selected car type.
+   * Menangani pemilihan jenis mobil untuk tujuan pemfilteran.
+   * @param carTypeName Nama jenis mobil yang dipilih.
    */
   selectCarType(carTypeName: string) {
     this.selectedCarType = carTypeName;
     console.log('Selected car type:', this.selectedCarType);
-    // Logic to filter popular cars would depend on local data or another data source here.
   }
 
   ngOnDestroy() {
-    // Cleanup if any subscriptions or listeners exist (currently none from Firestore)
+    // Cleanup jika ada langganan atau listener (saat ini tidak ada dari Firestore)
   }
 
   /**
-   * Navigates to the user profile page.
+   * Navigasi ke halaman profil pengguna.
    */
   goToProfile() {
     this.router.navigateByUrl('/profile');

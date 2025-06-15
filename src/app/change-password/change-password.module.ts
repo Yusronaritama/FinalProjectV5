@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { BerandaPageRoutingModule } from './beranda-routing.module';
+import { ChangePasswordPageRoutingModule } from './change-password-routing.module';
 
-import { BerandaPage } from './beranda.page';
+import { ChangePasswordPage } from './change-password.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    BerandaPageRoutingModule
+    ChangePasswordPageRoutingModule
   ],
-  declarations: [BerandaPage]
+  declarations: [ChangePasswordPage]
 })
-export class BerandaPageModule {}
+export class ChangePasswordPageModule {}

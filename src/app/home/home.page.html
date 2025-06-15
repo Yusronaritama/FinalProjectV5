@@ -26,7 +26,8 @@
     <!-- Menambahkan event click pada location-box untuk membuka modal -->
     <div class="location-box" (click)="requestLocationPermission()">
       <ion-icon name="location-outline"></ion-icon>
-      <span>Aktifkan locationmu</span>
+      <!-- Menggunakan properti displayedLocation untuk menampilkan teks -->
+      <span>{{ displayedLocation }}</span> 
     </div>
   </div>
 

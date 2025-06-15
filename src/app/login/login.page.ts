@@ -26,11 +26,6 @@ export class LoginPage implements OnInit {
 
     this.showLoginError = false; // Pastikan error disembunyikan sebelum mencoba login
 
-    // --- Logika Login Sebenarnya (Ganti dengan panggilan API Anda) ---
-    // Di sini Anda akan memiliki validasi email/password yang sebenarnya
-    // dan panggilan ke service autentikasi Anda (misalnya this.authService.login(this.email, this.password)).
-
-    // Mengambil data pengguna yang terdaftar dari localStorage
     const storedUsersString = localStorage.getItem('registeredUsers');
     let registeredUsers: { email: string, password: string }[] = [];
     if (storedUsersString) {
@@ -38,47 +33,44 @@ export class LoginPage implements OnInit {
         registeredUsers = JSON.parse(storedUsersString);
       } catch (e) {
         console.error('Error parsing stored users from localStorage', e);
-        // Hapus data yang korup jika terjadi error parsing
         localStorage.removeItem('registeredUsers');
       }
     }
 
     let isLoginSuccessful = false;
-    // Memeriksa apakah kredensial yang dimasukkan cocok dengan pengguna yang terdaftar
-    if (this.email && this.password) { // Memastikan bidang tidak kosong
-      isLoginSuccessful = registeredUsers.some(user => 
+    let loggedInUserEmail: string | null = null; // Tambahkan variabel ini
+
+    if (this.email && this.password) {
+      const foundUser = registeredUsers.find(user => 
         user.email === this.email && user.password === this.password
       );
+      if (foundUser) {
+        isLoginSuccessful = true;
+        loggedInUserEmail = foundUser.email; // Simpan email pengguna yang berhasil login
+      }
     }
     
-    // Mensimulasikan penundaan jaringan untuk percobaan login
     setTimeout(() => {
       if (isLoginSuccessful) {
         console.log('Login successful! Redirecting to home page.');
-        // Navigasi ke halaman '/home' setelah login berhasil
-        // 'replaceUrl: true' akan mengganti URL saat ini di riwayat browser
-        // sehingga pengguna tidak bisa kembali ke halaman login dengan tombol back
+        // PENTING: Simpan email pengguna yang login ke localStorage
+        if (loggedInUserEmail) {
+          localStorage.setItem('loggedInUserEmail', loggedInUserEmail);
+          console.log('Logged-in user email saved:', loggedInUserEmail);
+        }
         this.router.navigateByUrl('/home', { replaceUrl: true });
       } else {
-        // Logika untuk login gagal
-        this.showLoginError = true; // Tampilkan pesan error
+        this.showLoginError = true;
         console.log('Login failed: Invalid credentials or user not found.');
-
-        // Opsional: Sembunyikan pesan error setelah beberapa detik
         setTimeout(() => {
           this.showLoginError = false;
-        }, 5000); // Pesan akan hilang setelah 5 detik
+        }, 5000);
       }
       
-    }, 1000); // Simulasikan proses login selama 1 detik
+    }, 1000);
   }
 
   goToRegister() {
     this.router.navigateByUrl('/register', { replaceUrl: true });
   }
-
-  // Jika Anda memiliki goToForgotPassword, tambahkan juga di sini
-  // goToForgotPassword() {
-  //   this.router.navigateByUrl('/forgot-password');
-  // }
 }

@@ -9,22 +9,18 @@ import { Router } from '@angular/router';
 })
 export class RegisterPage implements OnInit {
 
-  // Properties for two-way data binding ([(ngModel)])
   fullName: string = '';
   phoneNumber: string = '';
   email: string = '';
   currentLocation: string = '';
-  formattedBirthDate: string = ''; // Used for manual date input
+  formattedBirthDate: string = '';
   password: string = '';
   confirmPassword: string = '';
 
   constructor(private router: Router) { }
 
-  ngOnInit() {
-    // Optional: Initialization logic
-  }
+  ngOnInit() { }
 
-  // New method to handle changes in the manual date input
   onManualDateChange() {
     let value = this.formattedBirthDate;
     value = value.replace(/[^0-9/]/g, '');
@@ -50,51 +46,50 @@ export class RegisterPage implements OnInit {
   }
 
   doRegister() {
-    console.log('Full Name:', this.fullName);
-    console.log('Phone Number:', this.phoneNumber);
-    console.log('Email:', this.email);
-    console.log('Current Location:', this.currentLocation);
-    console.log('Birth Date (Manual Input):', this.formattedBirthDate);
-    console.log('Password:', this.password);
-    console.log('Confirm Password:', this.confirmPassword);
-
+    console.log('Attempting Registration...');
+    
     if (this.password !== this.confirmPassword) {
-      alert('Passwords do not match!'); // Ganti dengan Toast/Modal Ionic
+      alert('Passwords do not match!'); 
       return;
     }
 
-    // --- Logika untuk menyimpan pengguna untuk tujuan demo ---
+    // Objek newUser ini akan dikonversi ke string JSON. Pastikan semua field ada dan benar.
     const newUser = {
+      fullName: this.fullName,
+      phoneNumber: this.phoneNumber, 
       email: this.email,
-      password: this.password
+      currentLocation: this.currentLocation,
+      formattedBirthDate: this.formattedBirthDate,
+      password: this.password 
     };
 
-    let registeredUsersString = localStorage.getItem('registeredUsers');
-    let registeredUsers: { email: string, password: string }[] = [];
-    if (registeredUsersString) {
+    let registeredUsers: any[] = [];
+    const storedUsersString = localStorage.getItem('registeredUsers');
+
+    if (storedUsersString) {
       try {
-        registeredUsers = JSON.parse(registeredUsersString);
+        registeredUsers = JSON.parse(storedUsersString);
       } catch (e) {
-        console.error('Error parsing existing users from localStorage', e);
-        // Hapus data yang korup jika terjadi error parsing
-        localStorage.removeItem('registeredUsers');
+        // Jika ada error parsing, hapus data lama yang rusak dan mulai dengan array kosong
+        console.error('Error parsing existing users from localStorage. Clearing corrupted data.', e);
+        localStorage.removeItem('registeredUsers'); 
+        registeredUsers = []; 
       }
     }
 
-    // Memeriksa apakah pengguna sudah terdaftar
     if (registeredUsers.some(user => user.email === newUser.email)) {
-      alert('Email already registered. Please login or use a different email.'); // Ganti dengan Toast/Modal
+      alert('Email already registered. Please login or use a different email.'); 
       return;
     }
 
     registeredUsers.push(newUser);
-    localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
-    console.log('New user registered and saved:', newUser);
+    // KONFIRMASI: Pastikan JSON.stringify(registeredUsers) menghasilkan string yang valid di konsol
+    const finalUsersString = JSON.stringify(registeredUsers);
+    localStorage.setItem('registeredUsers', finalUsersString);
+    console.log('New user registered. Final string saved to localStorage:', finalUsersString); 
+    console.log('Object saved:', newUser); // Konfirmasi objek yang disimpan
 
-    alert('Registration successful! You can now log in.'); // Ganti dengan Toast/Modal Ionic
-    // --- Akhir Logika untuk menyimpan pengguna untuk tujuan demo ---
-
-    // Mengarahkan ke halaman login setelah registrasi berhasil
+    alert('Registration successful! You can now log in.'); 
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 

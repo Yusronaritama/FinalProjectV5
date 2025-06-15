@@ -28,16 +28,20 @@ const routes: Routes = [
     loadChildren: () => import('./forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
   },
   {
-    path: 'beranda',
-    loadChildren: () => import('./beranda/beranda.module').then( m => m.BerandaPageModule)
-  },
-  {
     path: 'activity',
     loadChildren: () => import('./activity/activity.module').then( m => m.ActivityPageModule)
   },
   {
     path: 'qna',
     loadChildren: () => import('./qna/qna.module').then( m => m.QnaPageModule)
+  },
+  {
+    path: 'profile',
+    loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule)
+  },
+  {
+    path: 'change-password',
+    loadChildren: () => import('./change-password/change-password.module').then( m => m.ChangePasswordPageModule)
   },
   
 ];
