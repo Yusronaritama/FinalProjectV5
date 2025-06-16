@@ -1,15 +1,21 @@
 <ion-header>
   <ion-toolbar class="custom-toolbar">
     <div class="logo-header">
-        <img src="assets/icon/Icon.png" alt="Logo" class="logo-header" />
-      </div>
+      <!-- PENTING: PASTIKAN class pada <img> adalah "logo-img" -->
+      <img src="assets/icon/Icon.png" alt="GoRentall Logo" class="logo-img" />
+    </div>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     
     <ion-buttons slot="end">
-      <ion-button>
-        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
+      <!-- Kondisional: Tampilkan ikon profil jika sudah login, atau ikon 'sign in' jika belum -->
+      <ion-button *ngIf="isLoggedIn" routerLink="/profile">
+        <ion-icon [name]="profileAvatarIcon" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="!isLoggedIn" (click)="goToLogin()" class="sign-in-button">
+        <ion-icon name="log-in-outline" slot="start"></ion-icon> <!-- Mengubah slot menjadi "start" untuk ikon -->
+        <ion-label>Sign In</ion-label> <!-- Mengaktifkan teks "Sign In" -->
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -37,77 +43,51 @@
     <div class="car-type-grid">
       <div class="car-type-item">
         <!-- Replace with actual Tesla logo if available, or SVG -->
-        <img src="https://placehold.co/80x80/E0E0E0/white?text=TESLA" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=TESLA';" alt="Tesla Logo">
-        <span>TESLA</span>
+        <img src="assets/logomobil/wuling.jpg" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=TESLA';" alt="Tesla Logo">
+        <span>WULING</span>
       </div>
       <div class="car-type-item">
         <!-- Replace with actual Nissan logo -->
-        <img src="https://placehold.co/80x80/E0E0E0/white?text=NISSAN" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=NISSAN';" alt="Nissan Logo">
-        <span>NISSAN</span>
+        <img src="assets/logomobil/bmw.jpg" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=NISSAN';" alt="Nissan Logo">
+        <span>BWM</span>
       </div>
       <div class="car-type-item active">
         <!-- Replace with actual Toyota logo -->
-        <img src="assets/logomobil/toyota.jpg" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=TOYOTA';" alt="Toyota Logo">
-        <span>TOYOTA</span>
+        <img src="assets/logomobil/hino.jpg" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=TOYOTA';" alt="Toyota Logo">
+        <span>HINO</span>
       </div>
       <div class="car-type-item">
         <!-- Replace with actual BMW logo -->
-        <img src="https://placehold.co/80x80/E0E0E0/white?text=BMW" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
-        <span>BMW</span>
-      </div>
-      <div class="car-type-item">
-        <!-- Replace with actual Honda logo -->
-        <img src="https://placehold.co/80x80/E0E0E0/white?text=HONDA" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=HONDA';" alt="Honda Logo">
+        <img src="assets/logomobil/honda.jpg" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
         <span>HONDA</span>
       </div>
       <div class="car-type-item">
+        <!-- Replace with actual Honda logo -->
+        <img src="assets/logomobil/hyundai.jpg" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=HONDA';" alt="Honda Logo">
+        <span>HYUNDAI</span>
+      </div>
+      <div class="car-type-item">
         <!-- Replace with actual Suzuki logo -->
-        <img src="https://placehold.co/80x80/E0E0E0/white?text=SUZUKI" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=SUZUKI';" alt="Suzuki Logo">
+        <img src="assets/logomobil/isuzu.png" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=SUZUKI';" alt="Suzuki Logo">
+        <span>ISUZU</span>
+      </div>
+      <div class="car-type-item">
+        <!-- Replace with actual BMW logo -->
+        <img src="assets/logomobil/Mitsubishi_.png" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
+        <span>MITSUBISHI</span>
+      </div>
+      <div class="car-type-item">
+        <!-- Replace with actual BMW logo -->
+        <img src="assets/logomobil/suzuki.jpg" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
         <span>SUZUKI</span>
       </div>
       <div class="car-type-item">
         <!-- Replace with actual BMW logo -->
-        <img src="assets/logomobil/isuzu.png" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
-        <span>BMW</span>
-      </div>
-      <div class="car-type-item">
-        <!-- Replace with actual BMW logo -->
-        <img src="https://placehold.co/80x80/E0E0E0/white?text=BMW" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
-        <span>BMW</span>
-      </div>
-      <div class="car-type-item">
-        <!-- Replace with actual BMW logo -->
-        <img src="https://placehold.co/80x80/E0E0E0/white?text=BMW" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
-        <span>BMW</span>
-      </div>
-      <div class="car-type-item">
-        <!-- Replace with actual BMW logo -->
-        <img src="https://placehold.co/80x80/E0E0E0/white?text=BMW" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
-        <span>BMW</span>
-      </div>
-      <div class="car-type-item">
-        <!-- Replace with actual BMW logo -->
-        <img src="https://placehold.co/80x80/E0E0E0/white?text=BMW" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
-        <span>BMW</span>
-      </div>
-      <div class="car-type-item">
-        <!-- Replace with actual BMW logo -->
-        <img src="https://placehold.co/80x80/E0E0E0/white?text=BMW" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
-        <span>BMW</span>
-      </div>
-      <div class="car-type-item">
-        <!-- Replace with actual BMW logo -->
-        <img src="https://placehold.co/80x80/E0E0E0/white?text=BMW" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
-        <span>BMW</span>
-      </div>
-      <div class="car-type-item">
-        <!-- Replace with actual BMW logo -->
-        <img src="https://placehold.co/80x80/E0E0E0/white?text=BMW" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
-        <span>BMW</span>
+        <img src="assets/logomobil/toyota.jpg" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
+        <span>TOYOTA</span>
       </div>
     </div>
   </div>
-
   <!-- Popular Car Section -->
   <div class="popular-car-section">
     <h3>Populer Car</h3>
@@ -125,7 +105,6 @@
     <!-- You can duplicate the .car-card div for more cars -->
   </div>
 </ion-content>
-
 <!-- Bottom Tab Bar -->
 <ion-footer>
   <ion-toolbar class="bottom-tab-bar">

@@ -20,9 +20,11 @@
 
     <div class="avatar-section">
       <div class="avatar-circle">
-        <ion-icon name="happy-outline" class="avatar-icon"></ion-icon>
+        <!-- Menggunakan property binding [name] untuk menampilkan avatar dinamis -->
+        <ion-icon [name]="currentAvatarIcon" class="avatar-icon"></ion-icon>
       </div>
-      <ion-button expand="block" class="change-avatar-button">Change Avatar</ion-button>
+      <!-- Menambahkan event (click) yang memanggil fungsi changeAvatar() di TypeScript -->
+      <ion-button expand="block" (click)="changeAvatar()" class="change-avatar-button">Change Avatar</ion-button>
     </div>
 
     <ion-card class="personal-info-card">

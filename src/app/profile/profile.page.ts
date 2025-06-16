@@ -1,8 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-// ModalController dan ChangePasswordPage tidak lagi diperlukan di sini
-// import { ModalController } from '@ionic/angular'; 
-// import { ChangePasswordPage } from '../change-password/change-password.page'; 
 
 @Component({
   selector: 'app-profile',
@@ -18,12 +15,22 @@ export class ProfilePage implements OnInit {
   address: string = ''; 
   currentLocation: string = ''; 
 
+  // Avatar properties
+  avatarOptions: string[] = [ // List of avatar icon names
+    'happy-outline',    // Default / general avatar
+    'person-outline',   // Person avatar
+    'body-outline',     // Body avatar
+    'game-controller-outline', // Gamer avatar
+    'bug-outline',      // Bug avatar (unique example)
+    'paw-outline'       // Paw print avatar
+  ];
+  currentAvatarIcon: string = this.avatarOptions[0]; // Currently displayed avatar icon (defaults to the first one)
+  private currentAvatarIndex: number = 0; // Index to track the active avatar
+
   constructor(
     private router: Router, 
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone,
-    // ModalController tidak lagi diperlukan di sini
-    // private modalController: ModalController 
   ) { }
 
   ngOnInit() {
@@ -33,7 +40,7 @@ export class ProfilePage implements OnInit {
   loadUserProfile() {
     console.log('--- Attempting to load user profile from localStorage ---');
     const storedUsersString = localStorage.getItem('registeredUsers');
-    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail'); // Dapatkan email pengguna yang login
+    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail'); // Get the logged-in user's email
     
     console.log('Raw string from localStorage for "registeredUsers":', storedUsersString);
     console.log('Logged-in user email:', loggedInUserEmail);
@@ -56,7 +63,8 @@ export class ProfilePage implements OnInit {
         console.log('Result of JSON.parse():', registeredUsers);
 
         if (Array.isArray(registeredUsers) && registeredUsers.length > 0) {
-          const user = registeredUsers.find(u => u.email === loggedInUserEmail);
+          // FIX: Explicitly type 'u' as 'any' to resolve TS7006 error
+          const user = registeredUsers.find((u: any) => u.email === loggedInUserEmail);
           console.log('Result of find() operation for logged-in user:', user);
 
           if (user) {
@@ -68,12 +76,22 @@ export class ProfilePage implements OnInit {
             this.address = user.currentLocation || 'N/A (address/currentLocation missing or invalid)'; 
             this.currentLocation = user.currentLocation || 'N/A (currentLocation for display missing or invalid)'; 
             
+            // Set avatar icon if saved in user data, otherwise use default
+            if (user.avatarIcon && this.avatarOptions.includes(user.avatarIcon)) {
+              this.currentAvatarIcon = user.avatarIcon;
+              this.currentAvatarIndex = this.avatarOptions.indexOf(user.avatarIcon);
+            } else {
+              this.currentAvatarIcon = this.avatarOptions[0];
+              this.currentAvatarIndex = 0;
+            }
+
             console.log('Profile data assigned to component properties:');
             console.log('  fullName (assigned):', this.fullName);
             console.log('  phoneNumber (assigned):', this.phoneNumber);
             console.log('  email (assigned):', this.email);
             console.log('  address (assigned):', this.address);
             console.log('  currentLocation (assigned):', this.currentLocation);
+            console.log('  currentAvatarIcon (assigned):', this.currentAvatarIcon);
             
             this.cdr.detectChanges(); 
             console.log('Change detection triggered.');
@@ -102,7 +120,39 @@ export class ProfilePage implements OnInit {
     this.email = 'johndoe@example.com (Default)';
     this.address = 'Jl. Raya Serpong No. 123 (Default)';
     this.currentLocation = 'Telukjambe Timur, Karawang (Default)';
+    this.currentAvatarIcon = this.avatarOptions[0]; // Reset to default avatar
+    this.currentAvatarIndex = 0;
     console.log('Default profile data set and displayed.');
+  }
+
+  /**
+   * Cycles through the available avatar options and updates the displayed avatar.
+   * Also updates the user data in localStorage.
+   */
+  changeAvatar() {
+    this.currentAvatarIndex = (this.currentAvatarIndex + 1) % this.avatarOptions.length;
+    this.currentAvatarIcon = this.avatarOptions[this.currentAvatarIndex];
+    console.log('Changing avatar to:', this.currentAvatarIcon);
+
+    // Optional: Update the user's avatar preference in localStorage
+    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
+    if (loggedInUserEmail) {
+      const storedUsersString = localStorage.getItem('registeredUsers');
+      if (storedUsersString) {
+        try {
+          let registeredUsers = JSON.parse(storedUsersString);
+          // FIX: Explicitly type 'u' as 'any' to resolve TS7006 error
+          const userIndex = registeredUsers.findIndex((u: any) => u.email === loggedInUserEmail);
+          if (userIndex !== -1) {
+            registeredUsers[userIndex].avatarIcon = this.currentAvatarIcon; // Save avatar choice
+            localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+            console.log('Avatar updated in localStorage for user:', loggedInUserEmail);
+          }
+        } catch (e) {
+          console.error('Error updating avatar in localStorage:', e);
+        }
+      }
+    }
   }
 
   /**
@@ -114,6 +164,4 @@ export class ProfilePage implements OnInit {
     localStorage.removeItem('loggedInUserEmail'); 
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }
-
-  
 }

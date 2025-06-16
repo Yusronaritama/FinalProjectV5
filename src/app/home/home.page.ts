@@ -21,15 +21,21 @@ export class HomePage implements OnInit, OnDestroy {
   userId: string | null = null;
   
   carTypes: CarType[] = [
-    { id: 'tesla', name: 'TESLA', imageUrl: 'https://placehold.co/80x80/E0E0E0/white?text=TESLA' },
-    { id: 'nissan', name: 'NISSAN', imageUrl: 'https://placehold.co/80x80/E0E0E0/white?text=NISSAN' },
-    { id: 'toyota', name: 'TOYOTA', imageUrl: 'https://placehold.co/80x80/E0E0E0/white?text=TOYOTA' },
-    { id: 'bmw', name: 'BMW', imageUrl: 'https://placehold.co/80x80/E0E0E0/white?text=BMW' },
+    { id: 'wuling', name: 'WULING', imageUrl: 'assets/logomobil/wuling.jpg' },
+    { id: 'bmw', name: 'BWM', imageUrl: 'assets/logomobil/bmw.jpg' },
+    { id: 'hino', name: 'HINO', imageUrl: 'assets/logomobil/hino.jpg' },
+    { id: 'honda', name: 'HONDA', imageUrl: 'assets/logomobil/honda.jpg' },
+    { id: 'hyundai', name: 'HYUNDAI', imageUrl: 'assets/logomobil/hyundai.jpg' },
+    { id: 'isuzu', name: 'ISUZU', imageUrl: 'assets/logomobil/isuzu.png' },
+    { id: 'mitsubishi', name: 'MITSUBISHI', imageUrl: 'assets/logomobil/Mitsubishi_.png' },
+    { id: 'suzuki', name: 'SUZUKI', imageUrl: 'assets/logomobil/suzuki.jpg' },
+    { id: 'toyota', name: 'TOYOTA', imageUrl: 'assets/logomobil/toyota.jpg' },
   ];
-  selectedCarType: string | null = null;
+  selectedCarType: string | null = 'HINO'; // Default active car type as per your HTML
 
-  // Properti baru untuk menampilkan lokasi di UI
   displayedLocation: string = 'Aktifkan locationmu'; 
+  profileAvatarIcon: string = 'person-circle-outline'; // Ikon default untuk profil di header home
+  isLoggedIn: boolean = false; // NEW: Properti untuk melacak status login
 
   @ViewChild('appRoot', { static: true }) appRoot!: ElementRef;
 
@@ -40,14 +46,49 @@ export class HomePage implements OnInit, OnDestroy {
     private elementRef: ElementRef
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    // ngOnInit hanya dipanggil sekali saat komponen dibuat.
+    // Untuk update setiap kali halaman diakses, gunakan ionViewWillEnter.
+  }
+
+  // Ionic Lifecycle Hook: Dipanggil setiap kali view akan masuk ke tampilan
+  ionViewWillEnter() {
+    this.checkLoginStatusAndLoadAvatar(); // NEW: Panggil metode baru ini
+  }
+
+  /**
+   * Memeriksa status login dan memuat ikon avatar profil dari localStorage.
+   */
+  checkLoginStatusAndLoadAvatar() {
+    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
+    this.isLoggedIn = !!loggedInUserEmail; // Set isLoggedIn berdasarkan keberadaan email
+
+    if (this.isLoggedIn) {
+      const storedUsersString = localStorage.getItem('registeredUsers');
+      if (storedUsersString) {
+        try {
+          const registeredUsers = JSON.parse(storedUsersString);
+          const user = registeredUsers.find((u: any) => u.email === loggedInUserEmail);
+          if (user && user.avatarIcon) {
+            this.profileAvatarIcon = user.avatarIcon;
+            console.log('Home Page Profile Avatar loaded:', this.profileAvatarIcon);
+          } else {
+            this.profileAvatarIcon = 'person-circle-outline'; // Fallback jika avatarIcon tidak ada
+          }
+        } catch (e) {
+          console.error('Error loading profile avatar from localStorage:', e);
+          this.profileAvatarIcon = 'person-circle-outline'; // Fallback saat terjadi error
+        }
+      }
+    } else {
+      this.profileAvatarIcon = 'person-circle-outline'; // Jika tidak login, tampilkan ikon default
+      console.log('User is not logged in. Showing default profile icon.');
+    }
+  }
 
   /**
    * Mengambil screenshot dari tampilan aplikasi saat ini,
    * menerapkan efek blur, dan mengembalikannya sebagai data URL.
-   * Ini digunakan sebagai fallback untuk `backdrop-filter` di lingkungan
-   * di mana itu tidak didukung dengan baik.
-   * @returns Promise<string | null> Data URL dari gambar yang diblur atau null jika gagal.
    */
   async captureAndBlurBackground(): Promise<string | null> {
     const appElement = document.querySelector('ion-app');
@@ -88,7 +129,6 @@ export class HomePage implements OnInit, OnDestroy {
 
   /**
    * Menampilkan modal izin lokasi kustom.
-   * Ini pertama-tama mengambil screenshot latar belakang yang diblur dan meneruskannya ke modal.
    */
   async requestLocationPermission() {
     if (!navigator.geolocation) {
@@ -135,8 +175,6 @@ export class HomePage implements OnInit, OnDestroy {
         console.log(`Lokasi didapatkan: ${locationString}`);
         
         // Simulasikan atau panggil reverse geocoding API di sini
-        // Misalnya, jika Anda memiliki API untuk mendapatkan nama kota/provinsi
-        // Untuk tujuan demo, kita akan menggunakan string placeholder yang lebih deskriptif
         this.displayedLocation = 'Karawang, Jawa Barat'; // Contoh: nama kota dan provinsi
         this.presentToast(`Lokasi didapatkan: Karawang, Jawa Barat`, 'success');
 
@@ -173,8 +211,6 @@ export class HomePage implements OnInit, OnDestroy {
 
   /**
    * Metode pembantu untuk menampilkan pesan Toast.
-   * @param message Pesan yang akan ditampilkan di toast.
-   * @param color Warna toast (misalnya, 'dark', 'primary', 'success', 'danger').
    */
   async presentToast(message: string, color: string = 'dark') {
     const toast = await this.toastController.create({
@@ -188,22 +224,26 @@ export class HomePage implements OnInit, OnDestroy {
 
   /**
    * Menangani pemilihan jenis mobil untuk tujuan pemfilteran.
-   * @param carTypeName Nama jenis mobil yang dipilih.
    */
   selectCarType(carTypeName: string) {
     this.selectedCarType = carTypeName;
     console.log('Selected car type:', this.selectedCarType);
   }
 
-  ngOnDestroy() {
-    // Cleanup jika ada langganan atau listener (saat ini tidak ada dari Firestore)
-  }
+  ngOnDestroy() { }
 
   /**
    * Navigasi ke halaman profil pengguna.
    */
   goToProfile() {
     this.router.navigateByUrl('/profile');
+  }
+
+  /**
+   * Navigasi ke halaman login.
+   */
+  goToLogin() {
+    this.router.navigateByUrl('/login');
   }
 
 }
