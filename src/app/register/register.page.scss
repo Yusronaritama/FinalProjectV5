@@ -1,6 +1,3 @@
-// Warna-warna yang diadaptasi dari gambar dan preferensi Anda
-// Variabel warna telah diganti dengan nilai hex manual
-
 ion-content {
   // Linear gradient sesuai gambar, dari hijau gelap ke hijau terang
   --background: linear-gradient(135deg, #064420 0%, #B8ECBC 100%) !important;
@@ -9,19 +6,25 @@ ion-content {
   align-items: center;    // Menengahkan secara vertikal (seperti login)
   height: 100%;
   width: 100%; // Pastikan mengambil lebar penuh
+  // MENGUBAH: Izinkan scrolling vertikal pada seluruh ion-content, tetapi sembunyikan horizontal
+  overflow-y: auto;
+  overflow-x: hidden; 
 }
 
 .register-container {
   background: #c3f4c3; // Background kartu register
-  margin: 200px auto; // Menengahkan horizontal dan vertikal
-  padding: 20px; // Padding di dalam kartu
+  margin: auto; // Menengahkan horizontal dan vertikal
+  padding: 15px; // Mengurangi padding untuk memberi lebih banyak ruang internal
   border-radius: 12px; // Sudut membulat
   width: 90%; // Lebar
   max-width: 420px; // Lebar maksimum
   text-align: center;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); // Shadow kartu
-  overflow-y: auto; // Memungkinkan scroll jika konten terlalu panjang
-  max-height: 90vh; // Batasi tinggi container agar tidak keluar layar, memungkinkan centering
+  // MENGHAPUS: overflow-y: auto; - Scroll akan ditangani oleh ion-content
+  max-height: unset; // MENGUBAH: Biarkan tinggi container fleksibel
+  display: flex; // Menggunakan flexbox untuk mengatur item di dalamnya
+  flex-direction: column; // Item dalam kolom
+  align-items: center; // Menengahkan item secara horizontal
 }
 
 .logo {
@@ -44,6 +47,15 @@ ion-item {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); // Shadow ringan pada input
   --inner-padding-end: 0; // Hilangkan padding default di akhir item
   --padding-start: 10px; // Padding kiri untuk ikon
+  width: 100%; // PENTING: Pastikan ion-item mengambil lebar penuh .register-container
+
+  // PENTING: Menambahkan styling eksplisit untuk ion-label
+  ion-label {
+    color: #555555; // Warna abu-abu gelap agar terlihat jelas
+    font-size: 0.9em; // Ukuran font label
+    font-weight: 500; // Ketebalan font
+    margin-bottom: 5px; // Jarak antara label dan input
+  }
 
   ion-icon {
     color: #0FAA50; // Warna ikon
@@ -58,17 +70,57 @@ ion-item {
     --padding-top: 12px;
     --padding-bottom: 12px;
   }
-
-  ion-label {
-  color: #2eaa63; // Warna abu-abu gelap agar terlihat jelas
-  font-size: 0.9em; // Ukuran font label
-  font-weight: 500; // Ketebalan font
-  margin-bottom: 5px; // Jarak antara label dan input
 }
+
+// Styling BARU untuk Input Foto KTP
+.ktp-photo-input-item {
+  display: flex;
+  flex-direction: column; // Mengatur item di dalamnya dalam kolom
+  align-items: flex-start; // Label dan ikon di kiri atas
+  padding-bottom: 15px; // Padding bawah untuk memisahkan dari tombol
+  
+  ion-label {
+    // Label sudah diatur di ion-item global
+  }
+
+  ion-icon {
+    // Icon sudah diatur di ion-item global
+  }
+
+  ion-button {
+    margin-top: 8px;
+  }
+
+  .ktp-preview-container {
+    width: 100%;
+    position: relative; // Untuk posisi tombol remove
+    margin-top: 15px; // Jarak dari tombol upload
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden; // Pastikan gambar mengikuti border-radius
+  }
+
+  .ktp-preview-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    max-height: 150px; // Batasi tinggi pratinjau agar tidak terlalu besar
+  }
+
+  .remove-ktp-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    --color: #eb445a; // Merah untuk tombol hapus
+    font-size: 1.5em;
+  }
 }
 
 ion-button {
   margin-top: 8px;
+
+  
 }
 
 .toggle-link {
