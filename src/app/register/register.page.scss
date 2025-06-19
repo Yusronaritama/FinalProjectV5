@@ -11,6 +11,40 @@ ion-content {
   overflow-x: hidden; 
 }
 
+// ... (CSS Anda yang sudah ada dari file asli) ...
+
+// GAYA BARU UNTUK KONTENER TOMBOL TANGGAL
+.date-button-container {
+  padding: 8px 16px; // Sesuaikan dengan padding ion-item
+  
+  ion-label {
+    font-size: 0.8em;
+    color: var(--ion-color-medium-shade);
+    margin-bottom: 4px;
+    display: block; // Agar label berada di atas tombol
+  }
+  
+  ion-button {
+    margin: 0; // Hapus margin default pada tombol
+    --border-radius: 4px; // Samakan dengan input field
+    text-transform: none; // Agar teks tidak kapital semua
+
+    ion-label {
+      font-weight: normal; // Buat teks tidak tebal
+      font-size: 1em;
+      color: var(--ion-color-tertiary-contrast);
+    }
+  }
+}
+
+// Menghilangkan garis bawah pada ion-item sebelumnya
+ion-item:has(+ .date-button-container) {
+  --inner-border-width: 0;
+}
+
+
+
+
 .register-container {
   background: #c3f4c3; // Background kartu register
   margin: auto; // Menengahkan horizontal dan vertikal
@@ -79,12 +113,7 @@ ion-item {
   align-items: flex-start; // Label dan ikon di kiri atas
   padding-bottom: 15px; // Padding bawah untuk memisahkan dari tombol
   
-  ion-label {
-    // Label sudah diatur di ion-item global
-  }
-
-  ion-icon {
-    // Icon sudah diatur di ion-item global
+ 
   }
 
   ion-button {
@@ -115,7 +144,6 @@ ion-item {
     --color: #eb445a; // Merah untuk tombol hapus
     font-size: 1.5em;
   }
-}
 
 ion-button {
   margin-top: 8px;
@@ -132,4 +160,12 @@ ion-button {
     font-weight: bold;
     text-decoration: none; // Hapus underline default
   }
+
+// ... (CSS Anda yang sudah ada) ...
+
+// CSS untuk menampilkan tanggal yang dipilih
+.date-display {
+  padding: 8px 16px 0 16px; // Beri sedikit jarak
+  font-size: 0.9em;
+}  
 }

@@ -1,0 +1,85 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Rental Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="car">
+    <ion-item lines="none" class="car-info-header">
+      <ion-thumbnail slot="start">
+        <img [src]="car.imageUrl">
+      </ion-thumbnail>
+      <ion-label>
+        <h2>{{ car.name }}</h2>
+        <div class="package-chip">24 Hours Package</div>
+        <p class="price">{{ car.price | currency:'Rp ':'symbol':'1.0-0' }}</p>
+      </ion-label>
+    </ion-item>
+
+    <div class="ion-padding">
+      <h3 class="section-title">Select Rental Period</h3>
+      <ion-list>
+        <ion-item>
+          <ion-label>Pickup Date & Time</ion-label>
+          <ion-datetime-button datetime="pickupDatetime"></ion-datetime-button>
+        </ion-item>
+        <ion-item>
+          <ion-label>Return Date & Time</ion-label>
+          <ion-datetime-button datetime="returnDatetime"></ion-datetime-button>
+        </ion-item>
+      </ion-list>
+
+      <h3 class="section-title">Driver Options</h3>
+      <ion-radio-group value="with-driver">
+        <ion-item>
+          <ion-label>Self-Drive</ion-label>
+          <ion-radio slot="end" value="self-drive"></ion-radio>
+        </ion-item>
+        <ion-item class="item-selected">
+          <ion-label>
+            With Driver
+            <p>Additional Rp 150.000/day</p>
+          </ion-label>
+          <ion-radio slot="end" value="with-driver"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+
+      <h3 class="section-title">Payment Summary</h3>
+      <div class="payment-summary">
+        <div class="summary-item">
+          <span>3 Days Rental</span>
+          <span>Rp 350.000</span>
+        </div>
+        <div class="summary-item">
+          <span>Driver</span>
+          <span>Rp 150.000</span>
+        </div>
+        <div class="summary-item">
+          <span>Security Deposit (Refundable)</span>
+          <span>Rp 500.000</span>
+        </div>
+        <ion-item-divider></ion-item-divider>
+        <div class="summary-item total">
+          <span>Total</span>
+          <span>Rp 1.650.000</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="pickupDatetime"></ion-datetime>
+    </ng-template>
+  </ion-modal>
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="returnDatetime"></ion-datetime>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>
