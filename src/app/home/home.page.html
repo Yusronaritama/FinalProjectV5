@@ -1,117 +1,71 @@
 <ion-header>
   <ion-toolbar class="custom-toolbar">
     <div class="logo-header">
-      <!-- PENTING: PASTIKAN class pada <img> adalah "logo-img" -->
       <img src="assets/icon/Icon.png" alt="GoRentall Logo" class="logo-img" />
     </div>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    
+
     <ion-buttons slot="end">
-      <!-- Kondisional: Tampilkan ikon profil jika sudah login, atau ikon 'sign in' jika belum -->
       <ion-button *ngIf="isLoggedIn" routerLink="/profile">
         <ion-icon [name]="profileAvatarIcon" slot="icon-only"></ion-icon>
       </ion-button>
-      <ion-button *ngIf="!isLoggedIn" (click)="goToLogin()" class="sign-in-button">
-        <ion-icon name="log-in-outline" slot="start"></ion-icon> <!-- Mengubah slot menjadi "start" untuk ikon -->
-        <ion-label>Sign In</ion-label> <!-- Mengaktifkan teks "Sign In" -->
+      <ion-button *ngIf="!isLoggedIn" (click)="goToLogin()">
+        <ion-icon name="log-in-outline" slot="start"></ion-icon>
+        <ion-label>Sign In</ion-label>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- Top Banner Section -->
   <div class="top-banner-card">
-    <img src="assets/image/tank.jpeg" onerror="this.src='https://placehold.co/600x400/E0E0E0/white?text=Image+Not+Found';" alt="Honda BR-V" class="banner-image">
+    <img src="assets/image/tank.jpeg" onerror="this.src='https://placehold.co/600x400/E0E0E0/white?text=Image+Not+Found';" alt="Promo Banner" class="banner-image">
   </div>
 
-  <!-- Location Section -->
   <div class="location-section">
-    <!-- Menambahkan event click pada location-box untuk membuka modal -->
     <div class="location-box" (click)="requestLocationPermission()">
       <ion-icon name="location-outline"></ion-icon>
-      <!-- Menggunakan properti displayedLocation untuk menampilkan teks -->
-      <span>{{ displayedLocation }}</span> 
+      <span>{{ displayedLocation }}</span>
     </div>
   </div>
 
-  <!-- Car Type Section -->
   <div class="car-type-section">
     <h3>Car Type</h3>
     <div class="car-type-grid">
-      <div class="car-type-item">
-        <!-- Replace with actual Tesla logo if available, or SVG -->
-        <img src="assets/logomobil/wuling.jpg" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=TESLA';" alt="Tesla Logo">
-        <span>WULING</span>
-      </div>
-      <div class="car-type-item">
-        <!-- Replace with actual Nissan logo -->
-        <img src="assets/logomobil/bmw.jpg" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=NISSAN';" alt="Nissan Logo">
-        <span>BWM</span>
-      </div>
-      <div class="car-type-item active">
-        <!-- Replace with actual Toyota logo -->
-        <img src="assets/logomobil/hino.jpg" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=TOYOTA';" alt="Toyota Logo">
-        <span>HINO</span>
-      </div>
-      <div class="car-type-item">
-        <!-- Replace with actual BMW logo -->
-        <img src="assets/logomobil/honda.jpg" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
-        <span>HONDA</span>
-      </div>
-      <div class="car-type-item">
-        <!-- Replace with actual Honda logo -->
-        <img src="assets/logomobil/hyundai.jpg" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=HONDA';" alt="Honda Logo">
-        <span>HYUNDAI</span>
-      </div>
-      <div class="car-type-item">
-        <!-- Replace with actual Suzuki logo -->
-        <img src="assets/logomobil/isuzu.png" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=SUZUKI';" alt="Suzuki Logo">
-        <span>ISUZU</span>
-      </div>
-      <div class="car-type-item">
-        <!-- Replace with actual BMW logo -->
-        <img src="assets/logomobil/Mitsubishi_.png" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
-        <span>MITSUBISHI</span>
-      </div>
-      <div class="car-type-item">
-        <!-- Replace with actual BMW logo -->
-        <img src="assets/logomobil/suzuki.jpg" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
-        <span>SUZUKI</span>
-      </div>
-      <div class="car-type-item">
-        <!-- Replace with actual BMW logo -->
-        <img src="assets/logomobil/toyota.jpg" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=BMW';" alt="BMW Logo">
-        <span>TOYOTA</span>
+      <div
+        class="car-type-item"
+        *ngFor="let car of carTypes"
+        (click)="navigateToCarList(car.id)">
+        <img [src]="car.imageUrl" [alt]="car.name + ' Logo'" onerror="this.src='https://placehold.co/80x80/E0E0E0/white?text=LOGO';">
+        <span>{{ car.name }}</span>
       </div>
     </div>
   </div>
-  <!-- Popular Car Section -->
+
   <div class="popular-car-section">
     <h3>Populer Car</h3>
     <div class="car-card">
       <div class="unavailable-tag">
         <ion-icon name="star"></ion-icon> TIDAK TERSEDIA
       </div>
-      <img src="https://placehold.co/300x200/FFB380/white?text=Avanza" onerror="this.src='https://placehold.co/300x200/FFB380/white?text=Avanza';" alt="Avanza" class="car-image">
+      <img src="https://placehold.co/300x200/FFB380/white?text=Avanza" alt="Avanza" class="car-image">
       <div class="car-details">
         <h4>Avanza</h4>
         <p>Rp 275.000/24 Jam</p>
         <ion-button expand="block" class="view-detail-button">View Detail</ion-button>
       </div>
     </div>
-    <!-- You can duplicate the .car-card div for more cars -->
   </div>
 </ion-content>
-<!-- Bottom Tab Bar -->
+
 <ion-footer>
   <ion-toolbar class="bottom-tab-bar">
     <ion-tabs>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="home" routerLink="/home" routerDirection="root">
-          <ion-icon name="home-outline"></ion-icon>
+          <ion-icon name="home"></ion-icon>
           <ion-label>Beranda</ion-label>
         </ion-tab-button>
 

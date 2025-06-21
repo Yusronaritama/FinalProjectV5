@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular'; 
 import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
-import { LocationPermissionModalComponent } from '../location-permission-modal/location-permission-modal.component'; 
+
 
 @NgModule({
   imports: [
@@ -16,7 +16,7 @@ import { LocationPermissionModalComponent } from '../location-permission-modal/l
   declarations: [
     HomePage,
     // Declare the custom modal component so it can be used in this module
-    LocationPermissionModalComponent 
+    
   ]
 })
 export class HomePageModule {}

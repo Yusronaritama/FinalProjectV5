@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './guards/auth.guard'; // PENTING: Import AuthGuard Anda
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -9,41 +9,56 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'loading-screen',
-    loadChildren: () => import('./loading-screen/loading-screen.module').then(m => m.LoadingScreenPageModule)
+    path: 'home',
+    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
   },
   {
     path: 'login',
-    loadChildren: () => import('./login/login.module').then(m => m.LoginPageModule)
+    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
   },
   {
     path: 'register',
-    loadChildren: () => import('./register/register.module').then(m => m.RegisterPageModule)
-  },
-  {
-    path: 'home',
-    // Halaman home tidak dilindungi karena Anda ingin ini menjadi halaman utama yang bisa dilihat tanpa login
-    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
+    loadChildren: () => import('./register/register.module').then( m => m.RegisterPageModule)
   },
   {
     path: 'profile',
-    // TERAPKAN AuthGuard di sini
-    loadChildren: () => import('./profile/profile.module').then(m => m.ProfilePageModule),
-    canActivate: [AuthGuard] // Gunakan AuthGuard untuk melindungi rute ini
+    loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'forgot-password',
+    loadChildren: () => import('./forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
+  },
+  {
+    path: 'loading-screen',
+    loadChildren: () => import('./loading-screen/loading-screen.module').then( m => m.LoadingScreenPageModule)
   },
   {
     path: 'change-password',
-    // Halaman ganti password juga perlu dilindungi
-    loadChildren: () => import('./change-password/change-password.module').then(m => m.ChangePasswordPageModule),
-    canActivate: [AuthGuard] // Gunakan AuthGuard untuk melindungi rute ini
-  }
-  // Tambahkan rute lain yang memerlukan login di sini dengan canActivate: [AuthGuard]
-  // Contoh:
-  // {
-  //   path: 'pemesanan',
-  //   loadChildren: () => import('./pemesanan/pemesanan.module').then(m => m.PemesananPageModule),
-  //   canActivate: [AuthGuard]
-  // }
+    loadChildren: () => import('./change-password/change-password.module').then( m => m.ChangePasswordPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'qna',
+    loadChildren: () => import('./qna/qna.module').then( m => m.QnaPageModule)
+  },
+  {
+    path: 'activity',
+    loadChildren: () => import('./activity/activity.module').then( m => m.ActivityPageModule)
+  },
+  // --- TAMBAHKAN RUTE BARU DI SINI ---
+  {
+    path: 'car-list/:brand', // Rute dinamis dengan parameter :brand
+    loadChildren: () => import('./car-list/car-list.module').then( m => m.CarListPageModule)
+  },
+  {
+    path: 'car-detail/:brand/:carId', // Rute dengan 2 parameter
+    loadChildren: () => import('./car-detail/car-detail.module').then( m => m.CarDetailPageModule)
+  },
+  {
+    path: 'rental-detail/:brand/:carId', // <-- TAMBAHKAN RUTE INI
+    loadChildren: () => import('./rental-detail/rental-detail.module').then( m => m.RentalDetailPageModule)
+  },
 ];
 
 @NgModule({

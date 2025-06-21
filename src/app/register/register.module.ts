@@ -1,17 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // PENTING: Pastikan ini diimpor!
-import { IonicModule } from '@ionic/angular'; // PENTING: Pastikan ini diimpor!
+import { FormsModule } from '@angular/forms'; // <-- 1. IMPORT INI
+
+import { IonicModule } from '@ionic/angular';
+
 import { RegisterPageRoutingModule } from './register-routing.module';
-import { RegisterPage } from './register.page'; // PENTING: Pastikan ini mengimpor RegisterPage
+
+import { RegisterPage } from './register.page';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule, // Harus ada di sini untuk [(ngModel)]
-    IonicModule, // Harus ada di sini untuk komponen Ionic
+    FormsModule, // <-- 2. TAMBAHKAN INI
+    IonicModule,
     RegisterPageRoutingModule
   ],
-  declarations: [RegisterPage] // PENTING: Deklarasikan RegisterPage
+  declarations: [RegisterPage]
 })
 export class RegisterPageModule {}

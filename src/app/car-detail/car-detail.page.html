@@ -1,0 +1,88 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Car Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="car; else notFound">
+
+    <div class="scroll-snap-container" *ngIf="car.images && car.images.length > 0">
+      <div class="scroll-snap-slide" *ngFor="let image of car.images">
+        <img [src]="image" class="slide-image"/>
+      </div>
+    </div>
+    <div class="pager-indicator">
+      <span *ngFor="let image of car.images" class="dot"></span>
+    </div>
+
+    <div class="ion-padding">
+      <h1 class="car-title">{{ car.name }} {{ car.year }}</h1>
+      <p class="car-price">{{ car.price | currency:'Rp ':'symbol':'1.0-0' }}<span class="per-day">/24 Jam</span></p>
+
+      <ion-grid class="specs-grid" *ngIf="car.specs">
+        <ion-row>
+          <ion-col class="ion-text-center">
+            <ion-icon name="people-outline"></ion-icon>
+            <p>{{ car.specs.seats }} Seats</p>
+          </ion-col>
+          <ion-col class="ion-text-center">
+            <ion-icon name="color-fill-outline"></ion-icon>
+            <p>{{ car.specs.fuel }}</p>
+          </ion-col>
+          <ion-col class="ion-text-center">
+            <ion-icon name="hardware-chip-outline"></ion-icon>
+            <p>{{ car.specs.transmission }}</p>
+          </ion-col>
+          <ion-col class="ion-text-center">
+            <ion-icon name="snow-outline"></ion-icon>
+            <p>AC</p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <h2 class="section-title">Rental Options</h2>
+      <ion-list lines="none" *ngIf="car.rentalOptions">
+        <ion-item *ngFor="let option of car.rentalOptions">
+          <ion-label>
+            <h3>{{ option.duration }}</h3>
+            <p>{{ option.desc }}</p>
+          </ion-label>
+          <div slot="end" class="option-price">
+            <p>{{ option.price | currency:'Rp ':'symbol':'1.0-0' }}</p>
+            <ion-button 
+                size="small" 
+                fill="solid" 
+                color="primary" 
+                class="select-button"
+                [routerLink]="['/rental-detail', brand, car.id]">
+              Select
+            </ion-button>
+          </div>
+        </ion-item>
+        <ion-item button detail="true">
+          <ion-label><h3>Custom Days</h3></ion-label>
+        </ion-item>
+      </ion-list>
+      
+      <h2 class="section-title">Description</h2>
+      <p class="description-text">{{ car.description }}</p>
+
+      <h2 class="section-title">Security Deposit</h2>
+      <p class="description-text">
+        Kami memberlakukan security deposit sebesar {{ car.securityDeposit | currency:'Rp ':'symbol':'1.0-0' }} sebagai jaminan selama masa sewa. Deposit akan dikembalikan penuh setelah kendaraan dikembalikan.
+      </p>
+    </div>
+
+  </div>
+
+  <ng-template #notFound>
+    <div class="ion-padding ion-text-center">
+      <h2>Mobil Tidak Ditemukan</h2>
+      <p>Detail untuk mobil ini tidak tersedia.</p>
+    </div>
+  </ng-template>
+</ion-content>

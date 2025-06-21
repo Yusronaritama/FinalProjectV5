@@ -27,6 +27,7 @@
         <ion-icon name="location-outline" slot="start"></ion-icon>
         <ion-input type="text" placeholder="Current Location" [(ngModel)]="alamat"></ion-input>
       </ion-item>
+<<<<<<< HEAD
       
       <ion-item>
         <ion-label position="stacked">Date of Birth</ion-label>
@@ -34,16 +35,38 @@
         <ion-input type="date" [(ngModel)]="tanggal_lahir"></ion-input>
       </ion-item>
       
+=======
+
+      <div class="date-button-container">
+        <ion-label>Date of Birth</ion-label>
+        <ion-button expand="block" color="tertiary" (click)="openCalendar()">
+          <ion-icon name="calendar-outline" slot="start"></ion-icon>
+          <ion-label>{{ birthDate ? (birthDate | date:'d MMMM yyyy') : 'Pilih Tanggal Lahir' }}</ion-label>
+        </ion-button>
+      </div>
+
+
+>>>>>>> ac753e8de985b86de47c21802e49f6ea95a94089
       <ion-item class="ktp-photo-input-item">
         <ion-label position="stacked">SIM Photo</ion-label>
         <ion-icon name="camera-outline" slot="start"></ion-icon>
+<<<<<<< HEAD
         <input type="file" #fileInput id="fileInput" style="display: none;" accept="image/*" (change)="onFileSelected($event)">
+=======
+        <input type="file" #fileInput style="display: none;" accept="image/*" (change)="onKtpFileSelected($event)">
+>>>>>>> ac753e8de985b86de47c21802e49f6ea95a94089
         <ion-button fill="outline" expand="block" (click)="fileInput.click()">
           {{ simFilePreview ? 'Ganti Foto SIM' : 'Unggah Foto SIM' }}
         </ion-button>
+<<<<<<< HEAD
         <div *ngIf="simFilePreview" class="ktp-preview-container">
           <img [src]="simFilePreview" alt="SIM Preview" class="ktp-preview-image">
           <ion-button fill="clear" color="danger" size="small" (click)="removeSimPhoto()" class="remove-ktp-button">
+=======
+        <div *ngIf="ktpPhotoBase64" class="ktp-preview-container">
+          <img [src]="ktpPhotoBase64" alt="KTP Preview" class="ktp-preview-image">
+          <ion-button fill="clear" color="danger" size="small" (click)="removeKtpPhoto()" class="remove-ktp-button">
+>>>>>>> ac753e8de985b86de47c21802e49f6ea95a94089
             <ion-icon name="close-circle"></ion-icon>
           </ion-button>
         </div>
@@ -62,7 +85,25 @@
       </ion-item>
 
       <ion-button expand="block" color="success" class="register-button" (click)="doRegister()">Registration</ion-button>
+<<<<<<< HEAD
       <ion-button expand="block" color="medium" class="cancel-button" (click)="goToLogin()">Cancel</ion-button>
     </div>
   </div>
+=======
+      
+      <ion-button expand="block" color="success" class="cancel-button" (click)="goToLogin()">Cancel</ion-button>
+    </div>
+  </div>
+
+  <ion-modal [keepContentsMounted]="true" #dateModal>
+    <ng-template>
+      <ion-datetime
+        presentation="date"
+        [(ngModel)]="birthDate"
+        (ionChange)="onDateSelect()">
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+
+>>>>>>> ac753e8de985b86de47c21802e49f6ea95a94089
 </ion-content>

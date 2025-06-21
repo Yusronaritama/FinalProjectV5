@@ -1,10 +1,5 @@
-import { Component } from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
-import { LoadingController, AlertController } from '@ionic/angular';
-
-import { AuthService } from '../services/auth.service'; // Impor AuthService
 
 @Component({
   selector: 'app-register',
@@ -12,172 +7,162 @@ import { AuthService } from '../services/auth.service'; // Impor AuthService
   templateUrl: './register.page.html',
 
   styleUrls: ['./register.page.scss'],
-
-  standalone: false,
+  standalone: false 
 })
-export class RegisterPage {
-  // Sesuaikan nama properti agar cocok dengan key API di Laravel
+export class RegisterPage implements OnInit { 
 
-  name: string = '';
-
-  nomor_telepon: string = '';
-
+  fullName: string = '';
+  phoneNumber: string = '';
   email: string = '';
-
-  alamat: string = '';
-
-  tanggal_lahir: string = ''; // Format YYYY-MM-DD
-
+  currentLocation: string = '';
+  birthDate: string = ''; // Properti untuk menyimpan tanggal ISO (akan diisi dari input manual)
+  formattedBirthDate: string = ''; // Properti untuk menampilkan tanggal dalam format DD/MM/YYYY
+  ktpPhotoBase64: string | null = null; 
   password: string = '';
+  confirmPassword: string = '';
 
-  confirmPassword: string = ''; // Simpan file asli, bukan base64
+  constructor(private router: Router) { }
 
-  simFile: File | null = null;
+  ngOnInit() { }
 
-  simFilePreview: string | null = null;
+  /**
+   * Menangani perubahan tanggal dari input teks manual.
+   * Memvalidasi dan memformat tanggal yang dimasukkan ke format DD/MM/YYYY.
+   * Mengisi properti birthDate (ISO) berdasarkan input manual.
+   */
+  onManualDateChange() { // METODE DIPERBARUI untuk input manual
+    const dateInput = this.formattedBirthDate;
+    // Regex sederhana untuk format DD/MM/YYYY
+    const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/; 
 
-  constructor(
-    private authService: AuthService, // Suntikkan AuthService
+    if (dateRegex.test(dateInput)) {
+      const parts = dateInput.split('/');
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10);
+      const year = parseInt(parts[2], 10);
 
-    private router: Router,
+      // Membuat objek Date (bulan dimulai dari 0)
+      const dateObj = new Date(year, month - 1, day);
 
-    private loadingController: LoadingController,
+      // Periksa apakah tanggal yang dimasukkan valid (misalnya, 31/02/2023 akan menjadi 02/03/2023 tanpa validasi ini)
+      if (dateObj.getFullYear() === year && (dateObj.getMonth() + 1) === month && dateObj.getDate() === day) {
+        this.birthDate = dateObj.toISOString(); // Simpan dalam format ISO 8601
+        console.log('Valid Date (formatted):', this.formattedBirthDate);
+        console.log('Valid Date (ISO):', this.birthDate);
+      } else {
+        // Tanggal tidak valid (misalnya 31 Februari)
+        console.warn('Invalid date entered:', dateInput);
+        this.birthDate = ''; // Kosongkan jika tidak valid
+      }
+    } else {
+      console.warn('Date format is incorrect. Please use DD/MM/YYYY.');
+      this.birthDate = ''; // Kosongkan jika format salah
+    }
+  }
 
-    private alertController: AlertController
-  ) {} /**
-
-   * Menangani pemilihan file SIM dan membuat preview.
-
-   */
-
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-
+  /**
+   * Menangani pemilihan file KTP.
+   * Mengkonversi file yang dipilih menjadi string Base64 untuk pratinjau dan penyimpanan.
+   * @param event Event dari input file (change event).
+   */
+  onKtpFileSelected(event: any) { 
+    const file: File = event.target.files[0];
     if (file) {
       this.simFile = file; // Buat preview untuk ditampilkan di UI
 
       const reader = new FileReader();
-
       reader.onload = () => {
-        this.simFilePreview = reader.result as string;
+        this.ktpPhotoBase64 = reader.result as string;
+        console.log('KTP Photo selected (Base64):', this.ktpPhotoBase64.substring(0, 50) + '...'); 
       };
-
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file); 
+    } else {
+      this.ktpPhotoBase64 = null;
     }
-  } /**
+  }
 
-   * Menghapus file SIM yang sudah dipilih.
-
-   */
-
-  removeSimPhoto() {
-    this.simFile = null;
-
-    this.simFilePreview = null; // Reset input file agar bisa memilih file yang sama lagi
-
+  /**
+   * Menghapus foto KTP yang sudah dipilih.
+   */
+  removeKtpPhoto() { 
+    this.ktpPhotoBase64 = null;
     const fileInput = document.querySelector('#fileInput') as HTMLInputElement;
-
     if (fileInput) {
       fileInput.value = '';
     }
-  } /**
+    console.log('KTP Photo removed.');
+  }
 
-   * Logika utama untuk registrasi ke backend Laravel
-
-   */
-
-  async doRegister() {
-    // Validasi sederhana di frontend
-
+  doRegister() {
+    console.log('Attempting Registration...');
+    
     if (this.password !== this.confirmPassword) {
-      this.showAlert('Error', 'Password dan konfirmasi password tidak cocok.');
-
+      alert('Passwords do not match!'); 
       return;
-    } // Tampilkan loading spinner
+    }
 
-    const loading = await this.loadingController.create({
-      message: 'Mendaftarkan...',
-    });
+    // Validasi semua field yang dibutuhkan, termasuk ktpPhotoBase64 dan formattedBirthDate
+    if (!this.fullName || !this.phoneNumber || !this.email || !this.currentLocation || !this.formattedBirthDate || !this.ktpPhotoBase64 || !this.password) {
+      alert('Please fill in all required fields and upload KTP photo.'); 
+      return;
+    }
 
-    await loading.present(); // Buat objek FormData untuk mengirim file dan data teks bersamaan
+    // Pastikan tanggal lahir yang dimasukkan valid sebelum mendaftar
+    const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+    if (!dateRegex.test(this.formattedBirthDate)) {
+        alert('Please enter a valid date of birth in DD/MM/YYYY format.');
+        return;
+    }
 
-    const formData = new FormData();
+    const newUser = {
+      fullName: this.fullName,
+      phoneNumber: this.phoneNumber, 
+      email: this.email,
+      currentLocation: this.currentLocation,
+      formattedBirthDate: this.formattedBirthDate, 
+      birthDateISO: this.birthDate, // Ini akan berisi ISO string jika valid
+      ktpPhoto: this.ktpPhotoBase64, 
+      password: this.password 
+    };
 
-    formData.append('name', this.name);
+    let registeredUsers: any[] = [];
+    const storedUsersString = localStorage.getItem('registeredUsers');
 
-    formData.append('email', this.email);
+    if (storedUsersString) {
+      try {
+        registeredUsers = JSON.parse(storedUsersString);
+      } catch (e) {
+        console.error('Error parsing existing users from localStorage. Clearing corrupted data.', e);
+        localStorage.removeItem('registeredUsers'); 
+        registeredUsers = []; 
+      }
+    }
 
-    formData.append('password', this.password);
+    if (registeredUsers.some(user => user.email === newUser.email)) {
+      alert('Email already registered. Please login or use a different email.'); 
+      return;
+    }
 
-    formData.append('password_confirmation', this.confirmPassword);
+    registeredUsers.push(newUser);
+    const finalUsersString = JSON.stringify(registeredUsers);
+    localStorage.setItem('registeredUsers', finalUsersString);
+    console.log('New user registered. Final string saved to localStorage:', finalUsersString); 
+    console.log('Object saved:', newUser); 
 
-    formData.append('nomor_telepon', this.nomor_telepon);
+    alert('Registration successful! You can now log in.'); 
+    this.router.navigateByUrl('/login', { replaceUrl: true });
+  }
 
-    formData.append('alamat', this.alamat);
-
-    formData.append('tanggal_lahir', this.tanggal_lahir);
-
-    if (this.simFile) {
-      formData.append('path_sim', this.simFile);
-    } // Panggil service untuk mengirim data ke API
-
-    this.authService.register(formData).subscribe({
-      next: async (response) => {
-        await loading.dismiss();
-
-        console.log('Registrasi sukses:', response); // Simpan token dan data user
-
-        localStorage.setItem('auth_token', response.data.access_token);
-
-        localStorage.setItem('user_data', JSON.stringify(response.data.user));
-
-        await this.showAlert(
-          'Sukses',
-          'Registrasi berhasil! Anda akan diarahkan ke halaman utama.'
-        );
-
-        this.router.navigateByUrl('/home', { replaceUrl: true });
-      },
-
-      error: async (error) => {
-        await loading.dismiss();
-
-        console.error('Registrasi gagal:', error); // Menampilkan pesan error yang lebih spesifik dari backend
-
-        let errorMessage = 'Terjadi kesalahan. Periksa kembali data Anda.';
-
-        if (error.status === 422 && error.error.errors) {
-          // Ambil pesan error pertama dari list error validasi
-
-          const firstErrorKey = Object.keys(error.error.errors)[0];
-
-          errorMessage = error.error.errors[firstErrorKey][0];
-        } else if (error.error.message) {
-          errorMessage = error.error.message;
-        }
-
-        this.showAlert('Registrasi Gagal', errorMessage);
-      },
-    });
-  } /**
-
-   * Fungsi bantuan untuk menampilkan alert
-
-   */
-
-  async showAlert(header: string, message: string) {
+  async presentAlert(header: string, message: string) {
     const alert = await this.alertController.create({
       header,
-
       message,
-
-      buttons: ['OK'],
+      buttons: ['OK']
     });
-
     await alert.present();
   }
 
   goToLogin() {
-    this.router.navigateByUrl('/login', { replaceUrl: true });
+    this.router.navigateByUrl('/login');
   }
 }
