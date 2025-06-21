@@ -45,28 +45,25 @@
       </ion-grid>
 
       <h2 class="section-title">Rental Options</h2>
-      <ion-list lines="none" *ngIf="car.rentalOptions">
-        <ion-item *ngFor="let option of car.rentalOptions">
-          <ion-label>
-            <h3>{{ option.duration }}</h3>
-            <p>{{ option.desc }}</p>
-          </ion-label>
-          <div slot="end" class="option-price">
-            <p>{{ option.price | currency:'Rp ':'symbol':'1.0-0' }}</p>
-            <ion-button 
-                size="small" 
-                fill="solid" 
-                color="primary" 
-                class="select-button"
-                [routerLink]="['/rental-detail', brand, car.id]">
-              Select
-            </ion-button>
-          </div>
-        </ion-item>
-        <ion-item button detail="true">
-          <ion-label><h3>Custom Days</h3></ion-label>
-        </ion-item>
-      </ion-list>
+<ion-list lines="none" *ngIf="car.rentalOptions">
+  <ion-item *ngFor="let option of car.rentalOptions">
+    <ion-label>
+      <h3>{{ option.duration }}</h3>
+      <p>{{ option.desc }}</p>
+    </ion-label>
+    <div slot="end" class="option-price">
+      <p>{{ option.price | currency:'Rp ':'symbol':'1.0-0' }}</p>
+      <ion-button size="small" fill="solid" color="primary" class="select-button"
+                  [routerLink]="['/rental-detail', brand, car.id]">
+        Select
+      </ion-button>
+    </div>
+  </ion-item>
+
+  <ion-item button detail="true" [routerLink]="['/rental-custom', brand, car.id]">
+    <ion-label><h3>Custom Days</h3></ion-label>
+  </ion-item>
+</ion-list>
       
       <h2 class="section-title">Description</h2>
       <p class="description-text">{{ car.description }}</p>

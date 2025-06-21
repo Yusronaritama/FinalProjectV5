@@ -1,30 +1,40 @@
-import { NgModule } from '@angular/core';
+// --- TAMBAHKAN IMPORT INI ---
+import { LOCALE_ID, NgModule } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import localeId from '@angular/common/locales/id';
+// -----------------------------
+
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
-
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { LocationPermissionModalComponent } from './location-permission-modal/location-permission-modal.component';
 
-// 1. Impor HttpClientModule, ini adalah alat untuk memanggil API
-import { HttpClientModule } from '@angular/common/http';
+// --- TAMBAHKAN FUNGSI INI UNTUK MEREGISTRASIKAN LOCALE INDONESIA ---
+registerLocaleData(localeId, 'id');
+// --------------------------------------------------------------------
 
 @NgModule({
   declarations: [
     AppComponent,
-    LocationPermissionModalComponent, // Diambil dari versi rekan Anda
+    LocationPermissionModalComponent,
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    HttpClientModule, // Diambil dari versi Anda
-    FormsModule,      // Diambil dari versi rekan Anda
+    HttpClientModule,
+    FormsModule,
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    // --- TAMBAHKAN PROVIDER INI UNTUK MENGATUR LOCALE DEFAULT APLIKASI ---
+    { provide: LOCALE_ID, useValue: 'id' }
+    // -------------------------------------------------------------------
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

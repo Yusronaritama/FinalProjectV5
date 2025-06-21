@@ -51,8 +51,8 @@ export class CarDataService {
         id: 'bmw-x5-2024',
         name: 'BMW X5',
         year: 2024, type: 'SUV', price: 1200000, isAvailable: true,
-        imageUrl: 'assets/cars/bmw_x5.jpg',
-        images: ['assets/cars/bmw_x5.jpg'],
+        imageUrl: 'assets/image/tank.jpeg',
+        images: ['assets/image/tank.jpeg'],
         specs: { seats: 5, fuel: 'Diesel', transmission: 'Automatic', ac: true },
         rentalOptions: [
           { duration: '24 Hours', desc: 'Full day rental', price: 1200000 },

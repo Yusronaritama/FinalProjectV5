@@ -48,16 +48,28 @@ const routes: Routes = [
   },
   // --- TAMBAHKAN RUTE BARU DI SINI ---
   {
-    path: 'car-list/:brand', // Rute dinamis dengan parameter :brand
+    path: 'car-list/:brand', // 
     loadChildren: () => import('./car-list/car-list.module').then( m => m.CarListPageModule)
   },
   {
-    path: 'car-detail/:brand/:carId', // Rute dengan 2 parameter
+    path: 'car-detail/:brand/:carId', // 
     loadChildren: () => import('./car-detail/car-detail.module').then( m => m.CarDetailPageModule)
   },
   {
-    path: 'rental-detail/:brand/:carId', // <-- TAMBAHKAN RUTE INI
+    path: 'rental-detail/:brand/:carId', // 
     loadChildren: () => import('./rental-detail/rental-detail.module').then( m => m.RentalDetailPageModule)
+  },
+  {
+    path: 'rental-custom/:brand/:carId', // 
+    loadChildren: () => import('./rental-custom/rental-custom.module').then( m => m.RentalCustomPageModule)
+  },
+  {
+     path: 'payment-method/:brand/:carId', // <-- UBAH PATH
+    loadChildren: () => import('./payment-method/payment-method.module').then( m => m.PaymentMethodPageModule)
+  },
+  {
+    path: 'payment-instruction',
+    loadChildren: () => import('./payment-instruction/payment-instruction.module').then( m => m.PaymentInstructionPageModule)
   },
 ];
 

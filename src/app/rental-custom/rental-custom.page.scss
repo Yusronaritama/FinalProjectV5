@@ -1,3 +1,4 @@
+// Menggunakan gaya yang sama persis dengan rental-detail
 ion-toolbar {
     --background: #27ae60;
     --color: #ffffff;
@@ -28,18 +29,7 @@ ion-content {
         margin-bottom: 4px;
     }
 
-    .package-chip {
-        font-size: 0.7rem;
-        font-weight: 500;
-        background: #e9f7ef;
-        color: #27ae60;
-        padding: 2px 8px;
-        border-radius: 20px;
-        display: inline-block;
-        margin-bottom: 4px;
-    }
-
-    .price {
+    p.price {
         font-size: 1rem;
         font-weight: bold;
         color: #333;
@@ -53,6 +43,45 @@ ion-content {
     margin-top: 24px;
     margin-bottom: 12px;
 }
+
+// Gaya untuk tombol +/-
+.duration-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 16px 0;
+  padding: 8px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #eee;
+
+  .stepper-btn {
+    --padding-start: 0;
+    --padding-end: 0;
+    ion-icon {
+      font-size: 32px;
+      color: var(--ion-color-primary);
+    }
+  }
+
+  .day-count {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    min-width: 120px;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+
+    .day-text {
+      font-size: 0.8rem;
+      font-weight: normal;
+      color: #888;
+    }
+  }
+}
+
 
 ion-list {
     background: transparent;
@@ -91,6 +120,7 @@ ion-item {
   color: #8a6d3b;
 }
 
+// --- PERBAIKAN WARNA PADA PAYMENT SUMMARY ---
 .payment-summary {
     background: #ffffff;
     padding: 16px;
@@ -108,7 +138,7 @@ ion-item {
 
         span:last-child {
             font-weight: 500;
-            color: #333; // <-- WARNA ANGKA DIUBAH MENJADI HITAM/GELAP
+            color: #333; // <-- Warna angka diubah menjadi hitam/gelap
         }
 
         &.total {
@@ -120,9 +150,9 @@ ion-item {
                 color: #333;
             }
             
-            // Memastikan warna total juga hitam/gelap
+            // Warna total dibuat hijau agar menonjol
             span:last-child {
-                color: #27ae60; // Warna total dibuat hijau agar menonjol
+                color: #27ae60; 
             }
         }
     }
