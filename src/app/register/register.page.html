@@ -4,83 +4,65 @@
     <div class="form-box register-box">
       <h2>Registration</h2>
 
-      <!-- Input Full Name -->
       <ion-item>
         <ion-label position="stacked">Full Name</ion-label>
         <ion-icon name="person-outline" slot="start"></ion-icon>
-        <ion-input type="text" placeholder="Full Name" [(ngModel)]="fullName"></ion-input>
+        <ion-input type="text" placeholder="Full Name" [(ngModel)]="name"></ion-input>
       </ion-item>
 
-      <!-- Input Phone Number -->
       <ion-item>
         <ion-label position="stacked">Phone Number</ion-label>
         <ion-icon name="call-outline" slot="start"></ion-icon>
-        <ion-input type="tel" placeholder="Phone Number" [(ngModel)]="phoneNumber"></ion-input>
+        <ion-input type="tel" placeholder="Phone Number" [(ngModel)]="nomor_telepon"></ion-input>
       </ion-item>
 
-      <!-- Input Email Address -->
       <ion-item>
         <ion-label position="stacked">Email Address</ion-label>
         <ion-icon name="mail-outline" slot="start"></ion-icon>
         <ion-input type="email" placeholder="Email Address" [(ngModel)]="email"></ion-input>
       </ion-item>
 
-      <!-- Input Current Location -->
       <ion-item>
         <ion-label position="stacked">Current Location</ion-label>
         <ion-icon name="location-outline" slot="start"></ion-icon>
-        <ion-input type="text" placeholder="Current Location" [(ngModel)]="currentLocation"></ion-input>
+        <ion-input type="text" placeholder="Current Location" [(ngModel)]="alamat"></ion-input>
       </ion-item>
-
-      <!-- Input Date of Birth (INPUT MANUAL) -->
-      <ion-item class="date-input-item">
+      
+      <ion-item>
         <ion-label position="stacked">Date of Birth</ion-label>
         <ion-icon name="calendar-outline" slot="start"></ion-icon>
-        <!-- Mengganti dengan input teks manual -->
-        <ion-input type="text" placeholder="DD/MM/YYYY" 
-                   [(ngModel)]="formattedBirthDate" 
-                   (ionChange)="onManualDateChange()">
-        </ion-input>
+        <ion-input type="date" [(ngModel)]="tanggal_lahir"></ion-input>
       </ion-item>
-
-      <!-- Input Foto KTP BARU -->
+      
       <ion-item class="ktp-photo-input-item">
-        <ion-label position="stacked">KTP Photo</ion-label>
+        <ion-label position="stacked">SIM Photo</ion-label>
         <ion-icon name="camera-outline" slot="start"></ion-icon>
-        <!-- Input file tersembunyi -->
-        <input type="file" #fileInput style="display: none;" accept="image/*" (change)="onKtpFileSelected($event)">
-        <!-- Tombol untuk memicu input file -->
+        <input type="file" #fileInput id="fileInput" style="display: none;" accept="image/*" (change)="onFileSelected($event)">
         <ion-button fill="outline" expand="block" (click)="fileInput.click()">
-          {{ ktpPhotoBase64 ? 'Change Photo' : 'Upload KTP Photo' }}
+          {{ simFilePreview ? 'Ganti Foto SIM' : 'Unggah Foto SIM' }}
         </ion-button>
-        <!-- Pratinjau Gambar KTP -->
-        <div *ngIf="ktpPhotoBase64" class="ktp-preview-container">
-          <img [src]="ktpPhotoBase64" alt="KTP Preview" class="ktp-preview-image">
-          <ion-button fill="clear" color="danger" size="small" (click)="removeKtpPhoto()" class="remove-ktp-button">
+        <div *ngIf="simFilePreview" class="ktp-preview-container">
+          <img [src]="simFilePreview" alt="SIM Preview" class="ktp-preview-image">
+          <ion-button fill="clear" color="danger" size="small" (click)="removeSimPhoto()" class="remove-ktp-button">
             <ion-icon name="close-circle"></ion-icon>
           </ion-button>
         </div>
       </ion-item>
 
-      <!-- Input Password -->
       <ion-item>
         <ion-label position="stacked">Password</ion-label>
         <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
         <ion-input type="password" placeholder="Password" [(ngModel)]="password"></ion-input>
       </ion-item>
 
-      <!-- Input Confirm Password -->
       <ion-item>
         <ion-label position="stacked">Confirm Password</ion-label>
         <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
         <ion-input type="password" placeholder="Confirm Password" [(ngModel)]="confirmPassword"></ion-input>
       </ion-item>
 
-      <!-- Tombol Register -->
       <ion-button expand="block" color="success" class="register-button" (click)="doRegister()">Registration</ion-button>
-      
-      <!-- Tombol Cancel -->
-      <ion-button expand="block"  color="success" class="cancel-button" (click)="goToLogin()">Cancel</ion-button>
+      <ion-button expand="block" color="medium" class="cancel-button" (click)="goToLogin()">Cancel</ion-button>
     </div>
   </div>
 </ion-content>

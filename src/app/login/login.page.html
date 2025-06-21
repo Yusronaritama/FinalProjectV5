@@ -4,35 +4,26 @@
     <div class="form-box login-box">
       <h2>Login</h2>
 
-      <!-- Notifikasi Invalid Login akan ditambahkan di sini -->
-      <!-- showLoginError dikontrol oleh login.page.ts -->
-      <div *ngIf="showLoginError" class="login-error-message">
-        Invalid login, please try again.
-      </div>
-
       <ion-item>
         <ion-label position="stacked">Email</ion-label>
         <ion-icon name="mail-outline" slot="start"></ion-icon>
-        <ion-input type="email" placeholder="Email" [(ngModel)]="email"></ion-input>
+        <ion-input type="email" placeholder="Email" [(ngModel)]="email" required></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label position="stacked">Password</ion-label>
         <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
-        <ion-input type="password" placeholder="Password" [(ngModel)]="password"></ion-input>
-        <!-- Tambahkan tombol "Forgot password?" di sini -->
+        <ion-input type="password" placeholder="Password" [(ngModel)]="password" required></ion-input>
         <ion-note slot="end" class="forgot-password-link">
           <ion-router-link routerLink="/forgot-password">Forgot password?</ion-router-link>
         </ion-note>
       </ion-item>
 
-      <ion-button expand="block" color="success" (click)="doLogin()">Login</ion-button>
+      <ion-button expand="block" color="success" (click)="doLogin()" [disabled]="!email || !password">Login</ion-button>
       
-      <!-- Mengubah "Daftar di sini" menjadi ion-button -->
-      <ion-button expand="block"  color="success" routerLink="/register">Registration</ion-button>
-
-      <!-- Mengubah "Kembali ke Beranda" menjadi ion-button -->
-      <ion-button expand="block"  color="success" routerLink="/home">Kembali ke Beranda</ion-button>
+      <ion-button expand="block" color="medium" routerLink="/register">Registration</ion-button>
+      
+      <ion-button expand="block" color="light" routerLink="/home">Kembali ke Beranda</ion-button>
     </div>
   </div>
 </ion-content>

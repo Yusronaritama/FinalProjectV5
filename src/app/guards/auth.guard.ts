@@ -1,31 +1,36 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
+import { AuthService } from '../services/auth.service'; // 1. Impor AuthService
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private router: Router) {}
+  constructor(
+    private authService: AuthService, // 2. Suntikkan AuthService
+    private router: Router
+  ) {}
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    
-    // Periksa apakah ada email pengguna yang tersimpan di localStorage
-    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
-
-    if (loggedInUserEmail) {
-      // Pengguna sudah login, izinkan akses ke rute
-      console.log('AuthGuard: User is logged in. Access granted.');
-      return true;
-    } else {
-      // Pengguna belum login, arahkan ke halaman login
-      console.log('AuthGuard: User is NOT logged in. Redirecting to login page.');
-      // Simpan URL yang ingin diakses pengguna, agar bisa kembali setelah login (opsional)
-      // return this.router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url } });
-      return this.router.parseUrl('/login'); // Langsung arahkan ke halaman login
-    }
+  canActivate(): Observable<boolean> {
+    // 3. Kembalikan observable dari service, bukan boolean langsung
+    // Ini akan secara reaktif memeriksa status login terkini
+    return this.authService.isAuthenticated$.pipe(
+      take(1), // Ambil 1 nilai terbaru lalu berhenti langganan untuk efisiensi
+      map(isAuthenticated => { // 'map' mengubah nilai (true/false) menjadi hasil akhir
+        if (isAuthenticated) {
+          // Jika statusnya true, izinkan akses ke halaman
+          console.log('AuthGuard: User is authenticated. Access granted.');
+          return true;
+        } else {
+          // Jika statusnya false, arahkan ke login dan tolak akses
+          console.log('AuthGuard: User is NOT authenticated. Redirecting to login page.');
+          this.router.navigateByUrl('/login');
+          return false;
+        }
+      })
+    );
   }
 }
