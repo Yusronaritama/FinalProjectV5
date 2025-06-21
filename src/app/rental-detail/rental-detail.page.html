@@ -15,8 +15,8 @@
       </ion-thumbnail>
       <ion-label>
         <h2>{{ car.name }}</h2>
-        <div class="package-chip">24 Hours Package</div>
-        <p class="price">{{ car.price | currency:'Rp ':'symbol':'1.0-0' }}</p>
+        <div class="package-chip">{{ rentalDuration }} Days Package</div>
+        <p class="price">{{ car.price | currency:'Rp ':'symbol':'1.0-0' }}/day</p>
       </ion-label>
     </ion-item>
 
@@ -34,52 +34,56 @@
       </ion-list>
 
       <h3 class="section-title">Driver Options</h3>
-      <ion-radio-group value="with-driver">
-        <ion-item>
-          <ion-label>Self-Drive</ion-label>
-          <ion-radio slot="end" value="self-drive"></ion-radio>
-        </ion-item>
-        <ion-item class="item-selected">
+      <ion-radio-group [(ngModel)]="driverOption" (ionChange)="onSelectionChange()">
+        <ion-item [class.item-selected]="driverOption === 'pickup'">
+          <ion-label>Pickup</ion-label>
+          <ion-radio slot="end" value="pickup"></ion-radio>
+        </ion-item> <ion-item [class.item-selected]="driverOption === 'delivered'">
           <ion-label>
-            With Driver
-            <p>Additional Rp 150.000/day</p>
+            Diantar
+            <p>Additional {{ DELIVERY_FEE_PER_DAY | currency:'Rp ':'symbol':'1.0-0' }}/day</p>
           </ion-label>
-          <ion-radio slot="end" value="with-driver"></ion-radio>
-        </ion-item>
-      </ion-radio-group>
+          <ion-radio slot="end" value="delivered"></ion-radio>
+        </ion-item> </ion-radio-group>
+      <ion-note *ngIf="driverOption === 'delivered'" class="delivery-note">
+        Layanan diantar tersedia di area jabodetabek saja.
+      </ion-note>
 
       <h3 class="section-title">Payment Summary</h3>
       <div class="payment-summary">
         <div class="summary-item">
-          <span>3 Days Rental</span>
-          <span>Rp 350.000</span>
+          <span>{{ rentalDuration }} Days Rental</span>
+          <span>{{ rentalCost | currency:'Rp ':'symbol':'1.0-0' }}</span>
         </div>
-        <div class="summary-item">
-          <span>Driver</span>
-          <span>Rp 150.000</span>
+        <div class="summary-item" *ngIf="deliveryCost > 0">
+          <span>Biaya Antar</span>
+          <span>{{ deliveryCost | currency:'Rp ':'symbol':'1.0-0' }}</span>
         </div>
         <div class="summary-item">
           <span>Security Deposit (Refundable)</span>
-          <span>Rp 500.000</span>
+          <span>{{ car.securityDeposit | currency:'Rp ':'symbol':'1.0-0' }}</span>
         </div>
         <ion-item-divider></ion-item-divider>
         <div class="summary-item total">
           <span>Total</span>
-          <span>Rp 1.650.000</span>
+          <span>{{ totalCost | currency:'Rp ':'symbol':'1.0-0' }}</span>
         </div>
       </div>
+      
+      <ion-button expand="block" color="primary" class="ion-margin-top" (click)="confirmBooking()">
+        Continue to Payment
+      </ion-button>
     </div>
   </div>
 
   <ion-modal [keepContentsMounted]="true">
     <ng-template>
-      <ion-datetime id="pickupDatetime"></ion-datetime>
+      <ion-datetime id="pickupDatetime" [(ngModel)]="pickupDateTime" (ionChange)="onSelectionChange()"></ion-datetime>
     </ng-template>
   </ion-modal>
   <ion-modal [keepContentsMounted]="true">
     <ng-template>
-      <ion-datetime id="returnDatetime"></ion-datetime>
+      <ion-datetime id="returnDatetime" [(ngModel)]="returnDateTime" (ionChange)="onSelectionChange()"></ion-datetime>
     </ng-template>
   </ion-modal>
-
 </ion-content>
