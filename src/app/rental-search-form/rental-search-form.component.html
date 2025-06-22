@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Mulai Sewa</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  
+  <ion-segment [(ngModel)]="driverOption" mode="ios">
+    <ion-segment-button value="dengan-sopir">
+      <ion-label>Dengan Sopir</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="lepas-kunci">
+      <ion-label>Lepas Kunci</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-list class="ion-no-padding">
+    <ion-item lines="none">
+      <ion-icon name="location-outline" slot="start"></ion-icon>
+      <ion-input placeholder="Pilih Lokasi Sewa" [(ngModel)]="location"></ion-input>
+    </ion-item>
+
+    <ion-item lines="none" id="open-date-picker-form">
+      <ion-icon name="calendar-outline" slot="start"></ion-icon>
+      <ion-label>{{ formattedPickupDate }}</ion-label>
+      <ion-text slot="end" class="time-display">
+        <ion-icon name="time-outline"></ion-icon>
+        {{ pickupDate | date:'HH:mm' }}
+      </ion-text>
+    </ion-item>
+    
+    <ion-item lines="none">
+      <ion-icon name="time-outline" slot="start"></ion-icon>
+      <ion-label>1 hari</ion-label>
+      <ion-note slot="end">Durasi sewa 12 jam/hari</ion-note>
+    </ion-item>
+  </ion-list>
+
+  <p class="summary-text">Selesai Sewa: {{ formattedReturnDate }}</p>
+
+  <ion-button expand="block" color="primary" (click)="search()">Ayo cari</ion-button>
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime
+        id="date-picker-in-form"
+        presentation="date-time"
+        [(ngModel)]="pickupDate"
+        (ionChange)="onDateChange($event)"
+        [showDefaultButtons]="true">
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
+  <ion-datetime-button datetime="date-picker-in-form" style="display: none;"></ion-datetime-button>
+
+</ion-content>

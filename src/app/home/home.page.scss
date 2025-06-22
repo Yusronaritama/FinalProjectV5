@@ -77,7 +77,20 @@ ion-header {
 /* Main Content Area */
 ion-content {
   --background: #f4f4f4; /* Light background for the content area */
-  
+  /* ... (semua kode SCSS Anda yang sudah ada) ... */
+
+/* GAYA UNTUK TOMBOL BARU */
+.pesan-button-container {
+  padding: 0 20px; /* Samakan dengan padding location-section */
+  margin-top: 15px; /* Beri jarak dari banner di atas */
+}
+
+.pesan-button {
+  --border-radius: 8px;
+  height: 48px;
+  font-weight: normal;
+  text-transform: none; /* Agar tulisan tidak menjadi kapital semua */
+}
   .top-banner-card {
     background: white;
     border-radius: 12px;
