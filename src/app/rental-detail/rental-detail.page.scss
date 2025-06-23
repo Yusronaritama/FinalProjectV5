@@ -1,0 +1,129 @@
+ion-toolbar {
+    --background: #27ae60;
+    --color: #ffffff;
+}
+
+ion-content {
+    --background: #f4f5f8;
+}
+
+.car-info-header {
+    --background: #ffffff;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+
+    ion-thumbnail {
+        width: 60px;
+        height: 60px;
+        border-radius: 6px;
+        --border-radius: 6px;
+    }
+
+    h2 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+
+    .package-chip {
+        font-size: 0.7rem;
+        font-weight: 500;
+        background: #e9f7ef;
+        color: #27ae60;
+        padding: 2px 8px;
+        border-radius: 20px;
+        display: inline-block;
+        margin-bottom: 4px;
+    }
+
+    .price {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #333;
+    }
+}
+
+.section-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    margin-top: 24px;
+    margin-bottom: 12px;
+}
+
+ion-list {
+    background: transparent;
+    padding: 0;
+}
+
+ion-item {
+    --background: #ffffff;
+    --border-radius: 8px;
+    margin-bottom: 12px;
+    
+    ion-icon {
+        color: #888;
+        margin-right: 8px;
+    }
+
+    p {
+        font-size: 0.8rem;
+        color: #666;
+    }
+}
+
+.item-selected {
+    border: 1px solid var(--ion-color-primary, #27ae60);
+    --background: #e9f7ef;
+}
+
+.delivery-note {
+  display: block;
+  padding: 8px 16px;
+  margin-top: -8px;
+  margin-bottom: 16px;
+  background: #fffbe6;
+  border-radius: 0 0 8px 8px;
+  font-size: 0.8rem;
+  color: #8a6d3b;
+}
+
+.payment-summary {
+    background: #ffffff;
+    padding: 16px;
+    border-radius: 8px;
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 0.9rem;
+
+        span:first-child {
+            color: #666;
+        }
+
+        span:last-child {
+            font-weight: 500;
+            color: #333; // <-- WARNA ANGKA DIUBAH MENJADI HITAM/GELAP
+        }
+
+        &.total {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 12px;
+            
+            span:first-child {
+                color: #333;
+            }
+            
+            // Memastikan warna total juga hitam/gelap
+            span:last-child {
+                color: #27ae60; // Warna total dibuat hijau agar menonjol
+            }
+        }
+    }
+}

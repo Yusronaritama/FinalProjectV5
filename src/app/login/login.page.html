@@ -1,26 +1,29 @@
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="login-background">
   <div class="login-container">
     <img src="assets/icon/Icon.png" alt="GoRentall Logo" class="logo" />
     <div class="form-box login-box">
       <h2>Login</h2>
 
       <ion-item>
+        <ion-label position="stacked">Email</ion-label>
         <ion-icon name="mail-outline" slot="start"></ion-icon>
-        <ion-input type="email" placeholder="Email" [(ngModel)]="email"></ion-input>
+        <ion-input type="email" placeholder="Email" [(ngModel)]="email" required></ion-input>
       </ion-item>
 
       <ion-item>
+        <ion-label position="stacked">Password</ion-label>
         <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
-        <ion-input type="password" placeholder="Password" [(ngModel)]="password"></ion-input>
+        <ion-input type="password" placeholder="Password" [(ngModel)]="password" required></ion-input>
         <ion-note slot="end" class="forgot-password-link">
           <ion-router-link routerLink="/forgot-password">Forgot password?</ion-router-link>
         </ion-note>
       </ion-item>
 
-      <ion-button expand="block" color="success" (click)="doLogin()">Login</ion-button>
-      <p class="toggle-link">
-        <ion-button expand="block" color="success" (click)="goToRegister()">Registration</ion-button>
-      </p>
+      <ion-button expand="block" color="success" (click)="doLogin()" [disabled]="!email || !password">Login</ion-button>
+      
+      <ion-button expand="block" color="success" routerLink="/register">Registration</ion-button>
+      
+      <ion-button expand="block" color="success" routerLink="/home">Kembali ke Beranda</ion-button>
     </div>
   </div>
 </ion-content>

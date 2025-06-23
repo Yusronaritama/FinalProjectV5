@@ -1,74 +1,132 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoadingController, AlertController } from '@ionic/angular';
+import { AuthService } from '../services/auth.service'; // Impor AuthService
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
-  standalone: false
-  // Ini adalah komponen non-standalone, jadi tidak ada 'standalone: true' di sini
+  standalone: false,
 })
-export class RegisterPage implements OnInit {
-
-  // Properti untuk two-way data binding ([(ngModel)])
-  fullName: string = '';
-  phoneNumber: string = '';
+export class RegisterPage {
+  // Properti disesuaikan agar cocok dengan nama field di backend
+  name: string = '';
+  nomor_telepon: string = '';
   email: string = '';
-  currentLocation: string = '';
-  birthDate: string = ''; // Akan menyimpan tanggal dalam format ISO 8601 (misal: "2023-10-26T00:00:00")
-  formattedBirthDate: string = ''; // Untuk menampilkan tanggal dalam format DD/MM/YYYY
+  alamat: string = '';
+  tanggal_lahir: string = ''; // Format YYYY-MM-DD, cocok untuk <ion-input type="date">
   password: string = '';
   confirmPassword: string = '';
+  
+  simFile: File | null = null; // Menyimpan file asli untuk di-upload
+  simFilePreview: string | null = null; // Menyimpan URL preview untuk ditampilkan
 
-  constructor(private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private loadingController: LoadingController,
+    private alertController: AlertController
+  ) {}
 
-  ngOnInit() {
-    // Optional: Logika inisialisasi
-  }
-
-  // Method untuk handle event perubahan tanggal dari ion-datetime
-  onDateChange(event: CustomEvent) {
-    if (event.detail.value) {
-      const date = new Date(event.detail.value);
-      this.formattedBirthDate = this.formatDate(date);
-    } else {
-      this.formattedBirthDate = '';
+  /**
+   * Menangani pemilihan file SIM dan membuat preview.
+   */
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.simFile = file;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.simFilePreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
     }
   }
 
-  // Helper function untuk format tanggal menjadi DD/MM/YYYY
-  formatDate(date: Date): string {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+  /**
+   * Menghapus file SIM yang sudah dipilih.
+   */
+  removeSimPhoto() {
+    this.simFile = null;
+    this.simFilePreview = null;
+    const fileInput = document.querySelector('#fileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
   }
 
-  doRegister() {
-    // Logika registrasi Anda di sini
-    console.log('Full Name:', this.fullName);
-    console.log('Phone Number:', this.phoneNumber);
-    console.log('Email:', this.email);
-    console.log('Current Location:', this.currentLocation);
-    console.log('Birth Date:', this.birthDate); // Format ISO
-    console.log('Formatted Birth Date:', this.formattedBirthDate); // Format tampilan
-    console.log('Password:', this.password);
-    console.log('Confirm Password:', this.confirmPassword);
-
-    // Contoh validasi sederhana
+  /**
+   * Logika utama untuk registrasi ke backend Laravel
+   */
+  async doRegister() {
     if (this.password !== this.confirmPassword) {
-      alert('Passwords do not match!'); // Ganti dengan Toast/Modal Ionic
+      this.showAlert('Error', 'Password dan konfirmasi password tidak cocok.');
       return;
     }
 
-    // Lanjutkan dengan pengiriman data ke server atau logika lainnya
-    alert('Registration successful! (Not really, just a demo)'); // Ganti dengan Toast/Modal Ionic
-    // Setelah register, bisa diarahkan ke halaman login atau home
-    // this.router.navigateByUrl('/login', { replaceUrl: true });
+    const loading = await this.loadingController.create({
+      message: 'Mendaftarkan...',
+    });
+    await loading.present();
+
+    // Buat objek FormData untuk mengirim file dan data teks
+    const formData = new FormData();
+    formData.append('name', this.name);
+    formData.append('email', this.email);
+    formData.append('password', this.password);
+    formData.append('password_confirmation', this.confirmPassword);
+    formData.append('nomor_telepon', this.nomor_telepon);
+    formData.append('alamat', this.alamat);
+    formData.append('tanggal_lahir', this.tanggal_lahir);
+    if (this.simFile) {
+      formData.append('path_sim', this.simFile);
+    }
+
+    // Panggil service untuk mengirim data ke API
+    this.authService.register(formData).subscribe({
+      next: async (response) => {
+        await loading.dismiss();
+        console.log('Registrasi sukses:', response);
+        // Simpan token dan data user (best practice)
+        localStorage.setItem('auth_token', response.data.access_token);
+        localStorage.setItem('user_data', JSON.stringify(response.data.user));
+        await this.showAlert(
+          'Sukses',
+          'Registrasi berhasil! Anda akan diarahkan ke halaman utama.'
+        );
+        this.router.navigateByUrl('/home', { replaceUrl: true });
+      },
+      error: async (error) => {
+        await loading.dismiss();
+        console.error('Registrasi gagal:', error);
+
+        // Menampilkan pesan error spesifik dari backend
+        let errorMessage = 'Terjadi kesalahan. Periksa kembali data Anda.';
+        if (error.status === 422 && error.error.errors) {
+          const firstErrorKey = Object.keys(error.error.errors)[0];
+          errorMessage = error.error.errors[firstErrorKey][0];
+        } else if (error.error?.message) {
+          errorMessage = error.error.message;
+        }
+        this.showAlert('Registrasi Gagal', errorMessage);
+      },
+    });
+  }
+
+  /**
+   * Fungsi bantuan untuk menampilkan alert
+   */
+  async showAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: ['OK'],
+    });
+    await alert.present();
   }
 
   goToLogin() {
-    // Logika untuk kembali ke halaman login
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 }

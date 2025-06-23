@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Profil Saya</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="profile-header-background"></div>
+
+  <div class="profile-container" *ngIf="user">
+    <div class="avatar-section">
+      <div class="avatar-circle">
+        <ion-icon [name]="currentAvatarIcon" class="avatar-icon"></ion-icon>
+      </div>
+      <ion-button expand="block" (click)="changeAvatar()" class="change-avatar-button">Ubah Avatar</ion-button>
+    </div>
+
+    <ion-card class="personal-info-card">
+      <ion-card-header>
+        <ion-card-title>Informasi Pribadi</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="none">
+          <ion-label position="stacked">Nama Lengkap</ion-label>
+          <ion-input [value]="user.name" readonly></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label position="stacked">Nomor Telepon</ion-label>
+          <ion-input [value]="user.nomor_telepon" readonly></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label position="stacked">Alamat Email</ion-label>
+          <ion-input [value]="user.email" readonly></ion-input>
+        </ion-item>
+        <ion-item lines="none" class="address-item">
+          <ion-label position="stacked">Alamat</ion-label>
+          <ion-textarea [value]="user.alamat" readonly auto-grow="true"></ion-textarea>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="account-settings-card">
+      <ion-card-header>
+        <ion-card-title>Pengaturan Akun</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item button detail="true" lines="full" (click)="goToChangePassword()">
+          <ion-label>Ubah Password</ion-label>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-button expand="block" color="danger" class="logout-button" (click)="logout()">
+      <ion-icon name="log-out-outline" slot="start"></ion-icon>
+      Logout
+    </ion-button>
+  </div>
+</ion-content>

@@ -1,27 +1,291 @@
-#container {
-  text-align: center;
+/* Header Styling */
+ion-header {
+  ion-toolbar.custom-toolbar {
+    --background: #B8ECBC;
+    height: 90px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding: 0 10px;
+    --color: #ffffff; 
 
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+    ion-buttons[slot="start"] {
+      order: 1;
+      flex-shrink: 0;
+    }
+
+    .logo-header {
+      order: 2;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 10%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .logo-img {
+        max-height: 150px; 
+        width: auto;
+        object-fit: contain;
+      }
+    }
+    
+    ion-buttons[slot="end"] {
+      order: 3;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      
+      
+      ion-button {
+        --color: #064420; 
+      }
+
+      // Gaya KHUSUS untuk tombol Sign In
+      .sign-in-button {
+        --background: transparent;
+        --background-activated: rgba(6, 68, 32, 0.1); // Efek klik yang lebih subtle
+        --color: #064420;
+        --border-radius: 8px;
+        --border-color: #064420;
+        --border-style: solid;
+        --border-width: 1.5px;
+        --padding-start: 12px;
+        --padding-end: 12px;
+        height: 38px;
+        font-size: 0.9em; // Ukuran font yang pas
+        font-weight: 600;
+        text-transform: none; // Teks tidak menjadi kapital semua
+        
+        ion-icon {
+          font-size: 1.2em;
+          margin-right: 5px;
+        }
+      }
+    }
+
+    ion-title {
+      display: none;
+    }
+  }
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+/* --- Bagian Lain dari SCSS Anda (Tidak Diubah) --- */
+
+/* Main Content Area */
+ion-content {
+  --background: #f4f4f4; /* Light background for the content area */
+  /* ... (semua kode SCSS Anda yang sudah ada) ... */
+
+/* GAYA UNTUK TOMBOL BARU */
+.pesan-button-container {
+  padding: 0 20px; /* Samakan dengan padding location-section */
+  margin-top: 15px; /* Beri jarak dari banner di atas */
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
+.pesan-button {
+  --border-radius: 8px;
+  height: 48px;
+  font-weight: normal;
+  text-transform: none; /* Agar tulisan tidak menjadi kapital semua */
+}
+  .top-banner-card {
+    background: white;
+    border-radius: 12px;
+    margin: 15px; /* Margin around the card */
+    overflow: hidden; /* Ensures image corners are rounded */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
 
-  color: #8c8c8c;
+    .banner-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 12px; /* Apply border-radius to the image itself for consistency */
+    }
+  }
 
-  margin: 0;
+  .location-section {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    color: #666666; /* Lighter text */
+    font-size: 0.9em;
+    margin-top: 10px;
+
+    ion-icon {
+      margin-right: 8px;
+      font-size: 1.2em;
+      color: #064420; /* Green color for location icon */
+    }
+  }
+  
+  .car-type-section {
+    padding: 20px;
+    h3 {
+      color: #333333; /* General dark text */
+      margin-bottom: 15px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    .car-type-grid {
+      display: flex;
+      gap: 10px; /* Space between items */
+      flex-wrap: nowrap; /* PENTING: Mencegah item melipat ke baris berikutnya */
+      overflow-x: auto; /* PENTING: Mengaktifkan scrolling horizontal */
+      padding-bottom: 10px; /* Tambahkan padding agar scrollbar tidak menutupi item */
+      
+      /* Opsional: Sembunyikan scrollbar untuk tampilan yang lebih bersih */
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+
+      .car-type-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border-radius: 12px;
+        padding: 10px;
+        flex: 0 0 auto; /* PENTING: Mencegah item menyusut agar bisa discroll */
+        min-width: 80px; /* Pastikan ada lebar minimum untuk setiap item */
+        max-width: 80px; /* Konsisten dengan lebar maksimum sebelumnya */
+        height: 80px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        cursor: pointer;
+
+        &:active {
+          transform: translateY(2px);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        &.active {
+          border: 2px solid #064420; /* Green border for active item */
+          box-shadow: 0 4px 8px rgba(39, 174, 96, 0.2); /* Adjusted shadow color */
+        }
+
+        img {
+          width: 40px; /* Size of brand logos */
+          height: 40px;
+          margin-bottom: 5px;
+          object-fit: contain; /* Ensure logo scales properly */
+        }
+        span {
+          font-size: 0.8em;
+          color: #333333; /* General dark text */
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  .popular-car-section {
+    padding: 20px;
+    padding-top: 0; /* Remove top padding if needed */
+    h3 {
+      color: #333333; /* General dark text */
+      margin-bottom: 15px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .car-card {
+      background: white;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      position: relative; /* For unavailable tag positioning */
+
+      .unavailable-tag {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: rgba(255, 0, 0, 0.7); /* Red transparent background */
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 0.8em;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        ion-icon {
+          font-size: 1em;
+        }
+      }
+
+      .car-image {
+        width: 100%;
+        height: 200px; /* Fixed height for consistency */
+        object-fit: cover; /* Cover the area */
+        display: block;
+      }
+
+      .car-details {
+        padding: 15px;
+        h4 {
+          font-size: 1.1em;
+          color: #333333; /* General dark text */
+          margin-top: 0;
+          margin-bottom: 5px;
+        }
+        p {
+          font-size: 0.9em;
+          color: #666666; /* Lighter text */
+          margin-bottom: 15px;
+        }
+        .view-detail-button {
+          --background: #064420; /* Dark green for buttons */
+          --background-activated: #05371c; /* Darker green on active (darken(#064420, 10%)) */
+          --border-radius: 8px;
+          height: 45px;
+          font-size: 1em;
+          font-weight: bold;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
 }
 
-#container a {
-  text-decoration: none;
+/* Bottom Tab Bar Styling */
+ion-footer {
+  ion-toolbar {
+    --background: white; /* Background putih untuk tab bar */
+    padding-top: 5px; /* Sedikit padding atas */
+    padding-bottom: 5px; /* Sedikit padding bawah */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); /* Shadow di atas tab bar */
+  }
+
+  ion-tab-bar {
+    --background: transparent; /* Pastikan tab bar transparent agar toolbar background terlihat */
+    --border: none; /* Hilangkan border default */
+    
+    ion-tab-button {
+      --color: #666666; /* Warna ikon/label tidak aktif */
+      --color-selected: #064420; /* Warna ikon/label aktif */
+      font-size: 0.7em; /* Ukuran font label */
+      text-transform: capitalize; /* Teks tidak kapital */
+      font-weight: 500;
+
+      ion-icon {
+        font-size: 1.6em; /* Ukuran ikon tab */
+        margin-bottom: 3px;
+      }
+      ion-label {
+        margin-top: 0;
+      }
+    }
+  }
+}
+
+/* Penyesuaian akhir untuk memastikan ikon menu dan profil memiliki warna yang tepat */
+ion-header ion-toolbar.custom-toolbar ion-buttons[slot="start"] ion-menu-button {
+  --color: #064420;
 }

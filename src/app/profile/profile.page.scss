@@ -1,0 +1,195 @@
+// Warna konsisten dengan tema GoRentall, langsung menggunakan nilai hex
+// Variabel $ telah dihapus
+
+ion-header {
+  ion-toolbar {
+    --background: #064420; // Dark green header
+    --color: #ffffff; // White text/icons
+  }
+}
+
+ion-content {
+  --background: #f4f4f4; // Light gray background for content
+}
+
+.profile-header-background {
+  height: 80px; // Height for the top green background band
+  background: #064420; // Dark green
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 0; // Ensure it stays behind the profile container
+}
+
+.profile-container {
+  position: relative; // Allow z-index positioning for elements inside
+  z-index: 1; // Bring container above the background band
+  padding: 15px;
+  margin-top: 20px; // Adjust margin to position content below header band
+}
+
+.location-display {
+  display: flex;
+  align-items: center;
+  justify-content: center; // Center horizontally
+  background: #e6ffe6; // Light green background
+  border-radius: 10px;
+  padding: 8px 15px;
+  width: fit-content; // Adjust width to content
+  margin: 0 auto 20px auto; // Center horizontally and add bottom margin
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); // Subtle shadow
+
+  ion-icon {
+    color: #27ae60; // Light green
+    margin-right: 8px;
+    font-size: 1.1em;
+  }
+  span {
+    color: #333333; // Dark text
+    font-size: 0.9em;
+    font-weight: 500;
+  }
+}
+
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 25px; // Space below avatar section
+
+  .avatar-circle {
+    background: #ffffff; // White background for the avatar circle
+    border-radius: 50%;
+    width: 100px; // Size of the avatar circle
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); // Shadow for depth
+    margin-bottom: 15px; // Space between avatar and button
+    border: 3px solid #27ae60; // Green border around avatar
+    overflow: hidden; // Ensures any image fits
+    
+    ion-icon {
+      font-size: 4em; // Size of the placeholder icon
+      color: #27ae60; // Color of the placeholder icon
+    }
+    // If you use an actual image, style it here
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .change-avatar-button {
+    --background: #27ae60; // Green button
+    --background-activated: #229954; // Darken(#27ae60, 10%)
+    --color: #ffffff;
+    --border-radius: 8px;
+    height: 40px;
+    font-size: 0.9em;
+    font-weight: bold;
+    text-transform: capitalize; // "Change Avatar" as seen in image
+    width: 160px; // Fixed width for the button
+  }
+}
+
+ion-card {
+  margin: 0 0 20px 0; // Reset default Ionic card margins, add bottom margin
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  background: #ffffff; // Card background
+
+  ion-card-header {
+    padding-bottom: 0; // Adjust padding
+    ion-card-title {
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #333333; // Dark text
+      padding-left: 15px; // Align with ion-item content
+    }
+  }
+
+  ion-card-content {
+    padding-top: 10px; // Adjust padding
+  }
+}
+
+ion-item {
+  --background: transparent; // Ensure item background is transparent over card
+  --padding-start: 15px; // Standard padding for item content
+  --padding-end: 15px;
+  --inner-padding-end: 0; // Remove default inner padding for full control
+  margin-bottom: 8px; // Space between items
+  
+  ion-label {
+    font-size: 0.85em;
+    color: #666666; // Lighter text for labels
+    font-weight: 500;
+  }
+
+  ion-input, ion-textarea {
+    --color: #333333; // Darker text for input values
+    font-size: 0.95em;
+    font-weight: 600;
+    padding-bottom: 5px !important; // Ensure minimal bottom padding
+    padding-top: 5px !important;    // Ensure minimal top padding
+  }
+  
+  // Specific style for address textarea to allow multiple lines
+  &.address-item {
+    ion-textarea {
+      --padding-top: 10px; // More padding for multiline textarea
+      --padding-bottom: 10px;
+      white-space: pre-wrap; // Ensures line breaks are preserved
+    }
+  }
+}
+
+/* Styling untuk ion-item di dalam account-settings-card (tombol Change Password) */
+.account-settings-card {
+  ion-item {
+    --background: #27ae60; // Hijau GoRent All untuk background tombol
+    --background-activated: #229954; // Warna saat diaktifkan
+    --color: #ffffff; // Warna teks putih
+    border-radius: 8px; // Sudut membulat
+    height: 48px; // Tinggi tombol
+    box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); // Shadow seperti tombol
+    margin-top: 15px; // Jarak dari judul card
+    margin-bottom: 15px; // Jarak bawah
+    display: flex; // Menggunakan flexbox
+    justify-content: center; // Menengahkan konten secara horizontal
+    align-items: center; // Menengahkan konten secara vertikal
+    
+    ion-label {
+      color: #ffffff; // Warna teks label putih
+      font-weight: bold; // Tebal
+      font-size: 1em; // Ukuran font
+      text-transform: uppercase; // Huruf kapital
+      flex: none; // Mencegah label mengambil ruang penuh
+    }
+
+    // Mengatur ikon detail (panah)
+    &.item-has-detail {
+      --detail-icon-color: #ffffff; // Warna panah putih
+      --detail-icon-opacity: 1; // Pastikan panah terlihat jelas
+    }
+  }
+}
+
+
+.logout-button {
+  --background: #eb445a; // Red for logout button
+  --background-activated: #d43b4e; // Darken(#eb445a, 10%)
+  --color: #ffffff;
+  --border-radius: 8px;
+  height: 48px;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 25px; // Margin above the button
+  ion-icon {
+    margin-right: 8px;
+  }
+}
