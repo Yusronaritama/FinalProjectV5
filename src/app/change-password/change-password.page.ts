@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular'; // Import ToastController
+import { ToastController, LoadingController } from '@ionic/angular'; // Import LoadingController
+import { AuthService } from '../services/auth.service'; // Import AuthService
 
 @Component({
   selector: 'app-change-password',
@@ -21,7 +22,9 @@ export class ChangePasswordPage implements OnInit {
 
   constructor(
     private router: Router,
-    private toastController: ToastController // Inject ToastController
+    private toastController: ToastController,
+    private authService: AuthService, // Inject AuthService
+    private loadingController: LoadingController // Inject LoadingController
   ) { }
 
   ngOnInit() { }
@@ -63,68 +66,47 @@ export class ChangePasswordPage implements OnInit {
     this.showConfirmNewPassword = !this.showConfirmNewPassword;
   }
 
+  // --- PERUBAHAN UTAMA PADA LOGIKA PENYIMPANAN ---
   async saveChanges() {
-    console.log('Attempting to save password changes...');
-
-    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
-    if (!loggedInUserEmail) {
-      this.presentToast('User not logged in.', 'danger');
-      this.router.navigateByUrl('/login', { replaceUrl: true });
-      return;
-    }
-
-    const storedUsersString = localStorage.getItem('registeredUsers');
-    let registeredUsers: any[] = [];
-    if (storedUsersString) {
-      try {
-        registeredUsers = JSON.parse(storedUsersString);
-      } catch (e) {
-        console.error('Error parsing registered users from localStorage:', e);
-        localStorage.removeItem('registeredUsers'); // Clear corrupted data
-        this.presentToast('Error loading user data. Please try again.', 'danger');
-        return;
-      }
-    }
-
-    const userIndex = registeredUsers.findIndex(u => u.email === loggedInUserEmail);
-    if (userIndex === -1) {
-      this.presentToast('User not found in registered list.', 'danger');
-      this.router.navigateByUrl('/login', { replaceUrl: true });
-      return;
-    }
-
-    const currentUser = registeredUsers[userIndex];
-
-    // 1. Validasi password lama
-    if (this.currentPassword !== currentUser.password) {
-      this.presentToast('Password lama tidak sesuai.', 'danger');
-      return;
-    }
-
-    // 2. Validasi password baru dan konfirmasi password baru
+    // Validasi frontend sederhana
     if (this.newPassword !== this.confirmNewPassword) {
-      this.presentToast('Password baru tidak cocok.', 'danger');
+      this.presentToast('Password baru dan konfirmasi tidak cocok.', 'danger');
       return;
     }
 
-    // 3. Validasi password baru tidak boleh sama dengan password lama
-    if (this.newPassword === this.currentPassword) {
-      this.presentToast('Password baru tidak boleh sama dengan password lama.', 'warning');
-      return;
+    if (!this.currentPassword || !this.newPassword) {
+        this.presentToast('Semua kolom wajib diisi.', 'warning');
+        return;
     }
 
-    // Perbarui password
-    currentUser.password = this.newPassword;
-    registeredUsers[userIndex] = currentUser; // Pastikan objek diperbarui dalam array
+    const loading = await this.loadingController.create({ message: 'Menyimpan...' });
+    await loading.present();
 
-    // Simpan kembali ke localStorage
-    localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
-    
-    this.presentToast('Password berhasil diubah!', 'success');
-    console.log('Password successfully changed for user:', loggedInUserEmail);
-    
-    // Navigasi kembali ke halaman profil setelah perubahan berhasil
-    this.router.navigateByUrl('/profile', { replaceUrl: true });
+    const passwordData = {
+      current_password: this.currentPassword,
+      new_password: this.newPassword,
+      new_password_confirmation: this.confirmNewPassword,
+    };
+
+    this.authService.changePassword(passwordData).subscribe({
+      next: async (response) => {
+        await loading.dismiss();
+        await this.presentToast('Password berhasil diubah!', 'success');
+        this.router.navigateByUrl('/profile', { replaceUrl: true });
+      },
+      error: async (error) => {
+        await loading.dismiss();
+        let errorMessage = 'Terjadi kesalahan.';
+        // Ambil pesan error dari backend jika ada
+        if (error.error?.message) {
+            errorMessage = error.error.message;
+        } else if (error.error?.errors) {
+            const firstErrorKey = Object.keys(error.error.errors)[0];
+            errorMessage = error.error.errors[firstErrorKey][0];
+        }
+        this.presentToast(errorMessage, 'danger');
+      }
+    });
   }
 
   // Metode ini tidak lagi diperlukan karena navigasi langsung ke halaman

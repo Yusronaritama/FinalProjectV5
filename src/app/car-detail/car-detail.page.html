@@ -8,36 +8,40 @@
 </ion-header>
 
 <ion-content>
-  <div *ngIf="car; else notFound">
+  <div *ngIf="isLoading" class="ion-text-center ion-padding">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
 
-    <div class="scroll-snap-container" *ngIf="car.images && car.images.length > 0">
-      <div class="scroll-snap-slide" *ngFor="let image of car.images">
-        <img [src]="image" class="slide-image"/>
+  <div *ngIf="!isLoading && vehicle; else notFound">
+
+    <div class="scroll-snap-container" *ngIf="vehicle.images && vehicle.images.length > 0">
+      <div class="scroll-snap-slide" *ngFor="let image of vehicle.images">
+        <img [src]="'http://127.0.0.1:8000' + image.path" class="slide-image"/>
       </div>
     </div>
-    <div class="pager-indicator">
-      <span *ngFor="let image of car.images" class="dot"></span>
+    <div class="pager-indicator" *ngIf="vehicle.images && vehicle.images.length > 0">
+      <span *ngFor="let image of vehicle.images" class="dot"></span>
     </div>
 
     <div class="ion-padding">
-      <h1 class="car-title">{{ car.name }} {{ car.year }}</h1>
-      <p class="car-price">{{ car.price | currency:'Rp ':'symbol':'1.0-0' }}<span class="per-day">/24 Jam</span></p>
+      <h1 class="car-title">{{ vehicle.merk }} {{ vehicle.nama }}</h1>
+      <p class="car-price">{{ vehicle.harga_sewa_harian | currency:'Rp ':'symbol':'1.0-0' }}<span class="per-day">/24 Jam</span></p>
 
-      <ion-grid class="specs-grid" *ngIf="car.specs">
+      <ion-grid class="specs-grid">
         <ion-row>
           <ion-col class="ion-text-center">
             <ion-icon name="people-outline"></ion-icon>
-            <p>{{ car.specs.seats }} Seats</p>
+            <p>{{ vehicle.jumlah_kursi }} Kursi</p>
           </ion-col>
           <ion-col class="ion-text-center">
             <ion-icon name="color-fill-outline"></ion-icon>
-            <p>{{ car.specs.fuel }}</p>
+            <p>{{ vehicle.bahan_bakar }}</p>
           </ion-col>
           <ion-col class="ion-text-center">
             <ion-icon name="hardware-chip-outline"></ion-icon>
-            <p>{{ car.specs.transmission }}</p>
+            <p>{{ vehicle.transmisi }}</p>
           </ion-col>
-          <ion-col class="ion-text-center">
+          <ion-col class="ion-text-center" *ngIf="vehicle.has_ac">
             <ion-icon name="snow-outline"></ion-icon>
             <p>AC</p>
           </ion-col>
@@ -45,39 +49,40 @@
       </ion-grid>
 
       <h2 class="section-title">Rental Options</h2>
-<ion-list lines="none" *ngIf="car.rentalOptions">
-  <ion-item *ngFor="let option of car.rentalOptions">
-    <ion-label>
-      <h3>{{ option.duration }}</h3>
-      <p>{{ option.desc }}</p>
-    </ion-label>
-    <div slot="end" class="option-price">
-      <p>{{ option.price | currency:'Rp ':'symbol':'1.0-0' }}</p>
-      <ion-button size="small" fill="solid" color="primary" class="select-button"
-                  [routerLink]="['/rental-detail', brand, car.id]">
-        Select
-      </ion-button>
-    </div>
-  </ion-item>
+      <ion-list lines="none">
+        <ion-item *ngFor="let option of rentalOptions">
+          <ion-label>
+            <h3>{{ option.durationText }}</h3>
+            <p>{{ option.desc }}</p>
+          </ion-label>
+          <div slot="end" class="option-price">
+            <p>{{ option.price | currency:'Rp ':'symbol':'1.0-0' }}</p>
+            
+            <ion-button size="small" fill="solid" color="primary" class="select-button"
+                        (click)="selectPackage(option)">
+              Select
+            </ion-button>
+          </div>
+        </ion-item>
 
-  <ion-item button detail="true" [routerLink]="['/rental-custom', brand, car.id]">
-    <ion-label><h3>Custom Days</h3></ion-label>
-  </ion-item>
-</ion-list>
+        <ion-item button detail="true" [routerLink]="['/rental-custom', vehicle.id]">
+          <ion-label><h3>Custom Days</h3></ion-label>
+        </ion-item>
+      </ion-list>
       
       <h2 class="section-title">Description</h2>
-      <p class="description-text">{{ car.description }}</p>
+      <p class="description-text">{{ vehicle.deskripsi }}</p>
 
       <h2 class="section-title">Security Deposit</h2>
       <p class="description-text">
-        Kami memberlakukan security deposit sebesar {{ car.securityDeposit | currency:'Rp ':'symbol':'1.0-0' }} sebagai jaminan selama masa sewa. Deposit akan dikembalikan penuh setelah kendaraan dikembalikan.
+        Kami memberlakukan security deposit sebesar {{ vehicle.security_deposit | currency:'Rp ':'symbol':'1.0-0' }} sebagai jaminan selama masa sewa. Deposit akan dikembalikan penuh setelah kendaraan dikembalikan.
       </p>
     </div>
 
   </div>
 
   <ng-template #notFound>
-    <div class="ion-padding ion-text-center">
+    <div *ngIf="!isLoading" class="ion-padding ion-text-center">
       <h2>Mobil Tidak Ditemukan</h2>
       <p>Detail untuk mobil ini tidak tersedia.</p>
     </div>

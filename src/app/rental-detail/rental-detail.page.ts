@@ -1,91 +1,127 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router'; // Import Router
-import { CarDataService, CarModel } from '../services/car-data.service';
-import { AlertController } from '@ionic/angular';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Vehicle, VehicleService } from '../services/vehicle.service';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-rental-detail',
   templateUrl: './rental-detail.page.html',
   styleUrls: ['./rental-detail.page.scss'],
-  standalone: false
+  standalone: false // Pastikan ini false jika Anda menggunakan Ionic dengan Angular
 })
 export class RentalDetailPage implements OnInit {
 
-  car: CarModel | undefined;
-  brand: string = ''; // <-- 1. TAMBAHKAN PROPERTI INI
+  vehicle: Vehicle | null = null;
+  isLoading: boolean = true;
 
   pickupDateTime: string = new Date().toISOString();
-  returnDateTime: string = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString();
-  driverOption: 'pickup' | 'delivered' = 'pickup';
-
+  returnDateTime: string = new Date().toISOString();
+  returnDateTimeDisplay: string = '';
+  
   rentalDuration: number = 1;
+  minPickupDate: string = '';
+  driverOption: 'pickup' | 'delivered' = 'pickup';
   rentalCost: number = 0;
   deliveryCost: number = 0;
   totalCost: number = 0;
+  public readonly FLAT_DELIVERY_FEE = 150000;
 
-  public readonly DELIVERY_FEE_PER_DAY = 150000;
+  // --- TAMBAHAN BARU: Definisikan jam operasional ---
+  public allowedHours: number[] = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
 
   constructor(
     private route: ActivatedRoute,
-    private carDataService: CarDataService,
-    private alertController: AlertController,
-    private router: Router // Inject Router untuk navigasi
-  ) { }
+    private vehicleService: VehicleService,
+    private router: Router,
+    private loadingController: LoadingController
+  ) {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { prefill: { durationInDays: number } };
+    if (state?.prefill) {
+      this.rentalDuration = state.prefill.durationInDays;
+    }
+  }
 
   ngOnInit() {
-    const brandParam = this.route.snapshot.paramMap.get('brand');
-    const carIdParam = this.route.snapshot.paramMap.get('carId');
-
-    if (brandParam && carIdParam) {
-      this.brand = brandParam; // <-- 2. SIMPAN NILAI BRAND DARI URL KE PROPERTI
-      this.car = this.carDataService.getCarDetails(brandParam, carIdParam);
-      this.calculateTotal();
+    // --- PERBAIKAN DI SINI ---
+    // Set tanggal minimal ke awal hari ini (pukul 00:00:00)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    this.minPickupDate = today.toISOString();
+    // --- AKHIR PERBAIKAN ---
+    this.minPickupDate = new Date().toISOString();
+    this.updateReturnDateTime();
+    
+    const carIdParam = this.route.snapshot.paramMap.get('id');
+    if (carIdParam) {
+      this.loadVehicleDetails(carIdParam);
+    } else {
+      this.isLoading = false;
+      console.error('ID Mobil tidak ditemukan di URL');
     }
   }
 
-  // ... (sisa fungsi Anda: calculateTotal, onSelectionChange, confirmBooking, dll. tidak perlu diubah) ...
+  async loadVehicleDetails(id: string) {
+    const loading = await this.loadingController.create({ message: 'Memuat data...' });
+    await loading.present();
+
+    this.vehicleService.getVehicleById(id).subscribe({
+      next: (response) => {
+        this.vehicle = response.data;
+        this.calculateTotal();
+        loading.dismiss();
+        // --- PERBAIKAN: Kembalikan baris ini ---
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error("Gagal memuat detail mobil:", err);
+        loading.dismiss();
+        // --- PERBAIKAN: Kembalikan baris ini ---
+        this.isLoading = false;
+      }
+    });
+  }
 
   calculateTotal() {
-    if (!this.car) return;
-
-    const pickup = new Date(this.pickupDateTime);
-    const returns = new Date(this.returnDateTime);
-    const diffTime = returns.getTime() - pickup.getTime();
-
-    if (diffTime <= 0) {
-      this.rentalDuration = 1;
-    } else {
-      this.rentalDuration = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    }
-
-    this.rentalCost = this.rentalDuration * this.car.price;
-
-    if (this.driverOption === 'delivered') {
-      this.deliveryCost = this.rentalDuration * this.DELIVERY_FEE_PER_DAY;
-    } else {
-      this.deliveryCost = 0;
-    }
-
-    this.totalCost = this.rentalCost + this.deliveryCost + this.car.securityDeposit;
+    if (!this.vehicle) return;
+    this.rentalCost = this.rentalDuration * this.vehicle.harga_sewa_harian;
+    this.deliveryCost = (this.driverOption === 'delivered') ? this.FLAT_DELIVERY_FEE : 0;
+    this.totalCost = this.rentalCost + this.deliveryCost + Number(this.vehicle.security_deposit);
   }
 
+  onPickupTimeChange() {
+    this.updateReturnDateTime();
+    this.calculateTotal();
+  }
+
+  updateReturnDateTime() {
+    const pickupDate = new Date(this.pickupDateTime);
+    const durationInMs = this.rentalDuration * 24 * 60 * 60 * 1000;
+    const newReturnDate = new Date(pickupDate.getTime() + durationInMs);
+    
+    this.returnDateTime = newReturnDate.toISOString();
+    this.returnDateTimeDisplay = newReturnDate.toLocaleString('id-ID', {
+      year: 'numeric', month: 'short', day: 'numeric',
+      hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Jakarta'
+    }).replace(/\./g, ':');
+  }
+  
   onSelectionChange() {
     this.calculateTotal();
   }
 
   async confirmBooking() {
-    // Fungsi ini tidak lagi menampilkan alert, tapi langsung navigasi dengan membawa data
-    if(this.car) {
+    if(this.vehicle) {
       const rentalData = {
-        car: this.car,
+        car: this.vehicle,
         duration: this.rentalDuration,
-        cost: this.rentalCost,
-        delivery: this.deliveryCost,
-        total: this.totalCost,
-        driverOption: this.driverOption
+        pickup: this.pickupDateTime,
+        return: this.returnDateTime,
+        driverOption: this.driverOption,
+        totalCost: this.totalCost
       };
-      this.router.navigate(['/payment-method', this.brand, this.car.id], {
-        state: { data: rentalData } // <-- Kirim data ke halaman payment-method
+      this.router.navigate(['/payment-method', this.vehicle.id], {
+        state: { data: rentalData }
       });
     }
   }

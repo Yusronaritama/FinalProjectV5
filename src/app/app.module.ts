@@ -1,9 +1,14 @@
-// --- TAMBAHKAN IMPORT INI ---
+// --- Bagian Locale Anda (Sudah Benar) ---
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import localeId from '@angular/common/locales/id';
-// -----------------------------
+
+// --- Perubahan Dimulai Di Sini ---
+// 1. Impor HttpClientModule dan HTTP_INTERCEPTORS
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'; 
+// 2. Impor AuthInterceptor yang sudah kita buat
+import { AuthInterceptor } from './services/auth.interceptor'; 
+// --- Akhir Perubahan ---
 
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -13,9 +18,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { LocationPermissionModalComponent } from './location-permission-modal/location-permission-modal.component';
 
-// --- TAMBAHKAN FUNGSI INI UNTUK MEREGISTRASIKAN LOCALE INDONESIA ---
 registerLocaleData(localeId, 'id');
-// --------------------------------------------------------------------
 
 @NgModule({
   declarations: [
@@ -31,9 +34,15 @@ registerLocaleData(localeId, 'id');
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    // --- TAMBAHKAN PROVIDER INI UNTUK MENGATUR LOCALE DEFAULT APLIKASI ---
-    { provide: LOCALE_ID, useValue: 'id' }
-    // -------------------------------------------------------------------
+    { provide: LOCALE_ID, useValue: 'id' },
+    
+    // --- TAMBAHKAN PROVIDER UNTUK INTERCEPTOR DI SINI ---
+    { 
+      provide: HTTP_INTERCEPTORS, 
+      useClass: AuthInterceptor, 
+      multi: true 
+    }
+    // --- AKHIR TAMBAHAN ---
   ],
   bootstrap: [AppComponent],
 })

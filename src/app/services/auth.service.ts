@@ -72,6 +72,12 @@ export class AuthService {
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 
+  // --- FUNGSI BARU UNTUK UBAH PASSWORD ---
+  changePassword(passwordData: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/change-password`, passwordData);
+  }
+
+
   // == FUNGSI BARU DI SINI ==
   /**
    * Mengambil data pengguna yang tersimpan dari localStorage.

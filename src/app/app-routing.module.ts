@@ -56,11 +56,11 @@ const routes: Routes = [
     loadChildren: () => import('./car-detail/car-detail.module').then( m => m.CarDetailPageModule)
   },
   {
-    path: 'rental-detail/:brand/:carId', // 
+    path: 'rental-detail/:id',  // 
     loadChildren: () => import('./rental-detail/rental-detail.module').then( m => m.RentalDetailPageModule)
   },
   {
-    path: 'rental-custom/:brand/:carId', // 
+    path: 'rental-custom/:id', // 
     loadChildren: () => import('./rental-custom/rental-custom.module').then( m => m.RentalCustomPageModule)
   },
   {
@@ -70,6 +70,15 @@ const routes: Routes = [
   {
     path: 'payment-instruction',
     loadChildren: () => import('./payment-instruction/payment-instruction.module').then( m => m.PaymentInstructionPageModule)
+  },
+  {
+    path: 'car-list/:brand',
+    loadChildren: () => import('./car-list/car-list.module').then( m => m.CarListPageModule)
+  },
+  {
+    // PERUBAHAN: Sederhanakan rute ini, kita hanya butuh ID mobil
+    path: 'car-detail/:id',
+    loadChildren: () => import('./car-detail/car-detail.module').then( m => m.CarDetailPageModule)
   },
 ];
 

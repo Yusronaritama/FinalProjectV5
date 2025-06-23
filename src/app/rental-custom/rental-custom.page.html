@@ -7,21 +7,46 @@
   </ion-toolbar>
 </ion-header>
 
+<style>
+  .fake-datetime-button {
+    --background: #f2f2f2; /* Warna latar belakang dari tombol ionic */
+    --padding-start: 10px;
+    --padding-end: 10px;
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+    
+    background: var(--background);
+    padding: var(--padding-top) var(--padding-end) var(--padding-bottom) var(--padding-start);
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    width: 53%;
+    color: var(--ion-color-step-850, #262626);
+    font-size: 1rem;
+    box-sizing: border-box;
+    height: 57%;
+    align-items: center;
+  }
+</style>
+
 <ion-content>
-  <div *ngIf="car">
+  <div *ngIf="isLoading" class="ion-text-center ion-padding">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <div *ngIf="!isLoading && vehicle">
     <ion-item lines="none" class="car-info-header">
       <ion-thumbnail slot="start">
-        <img [src]="car.imageUrl">
+        <img [src]="'http://127.0.0.1:8000' + vehicle.foto_utama">
       </ion-thumbnail>
       <ion-label>
-        <h2>{{ car.name }}</h2>
-        <p class="base-price">Base price: {{ car.price | currency:'Rp ':'symbol':'1.0-0' }}/day</p>
+        <h2>{{ vehicle.nama }}</h2>
+        <p class="base-price">Base price: {{ vehicle.harga_sewa_harian | currency:'Rp ':'symbol':'1.0-0' }}/day</p>
       </ion-label>
     </ion-item>
 
     <div class="ion-padding">
       <h3 class="section-title">Select Rental Duration</h3>
-      <p class="section-subtitle">Number of Days</p>
       <div class="duration-stepper">
         <ion-button fill="clear" (click)="decrementDays()" class="stepper-btn" [disabled]="numberOfDays <= 1">
           <ion-icon name="remove-circle-outline"></ion-icon>
@@ -32,6 +57,24 @@
         </ion-button>
       </div>
 
+      <!-- PERBAIKAN: Menambahkan pemilih tanggal & waktu di sini -->
+      <h3 class="section-title">Select Rental Period</h3>
+      <ion-list>
+        <ion-item>
+          <ion-label>Pickup Date & Time</ion-label>
+          <ion-datetime-button datetime="pickupDatetime"></ion-datetime-button>
+        </ion-item>
+        <ion-item>
+          <ion-label>Return Date & Time</ion-label>
+          <!-- PERBAIKAN: Menggunakan div dengan style agar terlihat seperti tombol -->
+          <div class="fake-datetime-button">
+            <span>{{ returnDateTimeDisplay | date:'d MMM, y' }}</span>
+            <span>{{ returnDateTimeDisplay | date:'HH:mm' }}</span>
+          </div>
+        </ion-item>
+      </ion-list>
+      <!-- AKHIR PERBAIKAN -->
+
       <h3 class="section-title">Driver Options</h3>
       <ion-radio-group [(ngModel)]="driverOption" (ionChange)="calculateTotal()">
         <ion-item [class.item-selected]="driverOption === 'pickup'">
@@ -41,7 +84,8 @@
         <ion-item [class.item-selected]="driverOption === 'delivered'">
           <ion-label>
             Diantar
-            <p>Additional {{ DELIVERY_FEE_PER_DAY | currency:'Rp ':'symbol':'1.0-0' }}/day</p>
+            <!-- PERBAIKAN: Menggunakan konstanta yang benar dan menghapus teks '/day' -->
+            <p>Additional {{ FLAT_DELIVERY_FEE | currency:'Rp ':'symbol':'1.0-0' }}</p>
           </ion-label>
           <ion-radio slot="end" value="delivered"></ion-radio>
         </ion-item>
@@ -62,7 +106,7 @@
         </div>
         <div class="summary-item">
           <span>Security Deposit (Refundable)</span>
-          <span>{{ car.securityDeposit | currency:'Rp ':'symbol':'1.0-0' }}</span>
+          <span>{{ vehicle.security_deposit | currency:'Rp ':'symbol':'1.0-0' }}</span>
         </div>
         <ion-item-divider></ion-item-divider>
         <div class="summary-item total">
@@ -76,4 +120,17 @@
       </ion-button>
     </div>
   </div>
+
+  <!-- PERBAIKAN: Menambahkan modal untuk kalender -->
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime 
+        id="pickupDatetime" 
+        [(ngModel)]="pickupDateTime" 
+        [min]="minPickupDate"
+        hour-cycle="h23"
+        (ionChange)="onPickupTimeChange()">
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>
 </ion-content>

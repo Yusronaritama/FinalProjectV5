@@ -3,48 +3,42 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
-    <ion-title>
-      {{ brandName }}
-    </ion-title>
+    <ion-title>{{ pageTitle }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div *ngIf="isBrandFound; else noData">
-    
-    <ion-card *ngFor="let car of carModels" class="car-card-item">
-
-      <div
-        class="availability-tag"
-        [ngClass]="{'available': car.isAvailable, 'unavailable': !car.isAvailable}">
-        {{ car.isAvailable ? 'TERSEDIA' : 'TIDAK TERSEDIA' }}
-      </div>
-
-      <img [src]="car.imageUrl" [alt]="car.name" class="car-image" (error)="img.src = 'assets/cars/default.jpg'" #img/>
-
-      <ion-card-content class="car-details">
-        <h4>{{ car.name }}</h4>
-        <p>{{ car.price | currency:'Rp ':'symbol':'1.0-0' }}/24 Jam</p>
-        
-        <ion-button
-          expand="block"
-          class="detail-button"
-          [routerLink]="['/car-detail', brandName.toLowerCase(), car.id]">
-          Detail
-        </ion-button>
-
-      </ion-card-content>
-
-    </ion-card>
+  <div *ngIf="isLoading" class="ion-text-center ion-padding">
+    <ion-spinner name="crescent"></ion-spinner>
   </div>
 
-  <ng-template #noData>
-    <div class="ion-text-center ion-padding">
+  <div *ngIf="!isLoading">
+    <div *ngIf="filteredVehicles.length > 0; else noData">
+      <ion-card *ngFor="let car of filteredVehicles" class="car-card-item" (click)="goToDetail(car.id)">
+        <div class="availability-tag" [ngClass]="{'available': car.status === 'tersedia'}">
+          {{ car.status === 'tersedia' ? 'TERSEDIA' : 'TIDAK TERSEDIA' }}
+        </div>
+
+        <img [src]="'http://127.0.0.1:8000' + car.foto_utama" [alt]="car.nama" class="car-image" (error)="img.src = 'assets/cars/default.jpg'" #img/>
+
+        <ion-card-content class="car-details">
+          <h4>{{ car.merk }} {{ car.nama }}</h4>
+          
+          <p>{{ car.harga_sewa_harian | currency:'Rp ':'symbol':'1.0-0' }}/24 Jam</p>
+          <ion-button expand="block" class="detail-button">
+            Detail
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <ng-template #noData>
+      <div class="ion-text-center ion-padding">
         <ion-icon name="car-sport-outline" size="large" color="medium"></ion-icon>
         <h3>Data Tidak Ditemukan</h3>
-        <p>Maaf, data untuk merek {{ brandName }} belum tersedia.</p>
+        <p>Maaf, data untuk merek {{ pageTitle }} belum tersedia.</p>
         <ion-button routerLink="/home" fill="clear">Kembali ke Beranda</ion-button>
-    </div>
-  </ng-template>
-
+      </div>
+    </ng-template>
+  </div>
 </ion-content>
