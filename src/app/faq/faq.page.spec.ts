@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { QnaPage } from './qna.page';
+import { FaqPage } from './faq.page';
 
-describe('QnaPage', () => {
-  let component: QnaPage;
-  let fixture: ComponentFixture<QnaPage>;
+describe('FaqPage', () => {
+  let component: FaqPage;
+  let fixture: ComponentFixture<FaqPage>;
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(QnaPage);
+    fixture = TestBed.createComponent(FaqPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -15,3 +15,4 @@ describe('QnaPage', () => {
     expect(component).toBeTruthy();
   });
 });
+

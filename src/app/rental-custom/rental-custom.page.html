@@ -46,7 +46,12 @@
     </ion-item>
 
     <div class="ion-padding">
+<<<<<<< HEAD
       <h3 class="section-title">Select Rental Duration</h3>
+=======
+      <h3 class="section-title">Select Rental Period</h3>
+      
+>>>>>>> a3d12b9506d20e0b4943fb112b8f4e36635d3d22
       <div class="duration-stepper">
         <ion-button fill="clear" (click)="decrementDays()" class="stepper-btn" [disabled]="numberOfDays <= 1">
           <ion-icon name="remove-circle-outline"></ion-icon>
@@ -57,6 +62,7 @@
         </ion-button>
       </div>
 
+<<<<<<< HEAD
       <!-- PERBAIKAN: Menambahkan pemilih tanggal & waktu di sini -->
       <h3 class="section-title">Select Rental Period</h3>
       <ion-list>
@@ -75,6 +81,20 @@
       </ion-list>
       <!-- AKHIR PERBAIKAN -->
 
+=======
+      <ion-list>
+        <ion-item>
+          <ion-label>Pickup Date & Time</ion-label>
+          <ion-datetime-button datetime="pickupDatetimeCustom"></ion-datetime-button>
+        </ion-item>
+        <ion-item>
+          <ion-label>Return Date & Time</ion-label>
+          <ion-datetime-button datetime="returnDatetimeCustom"></ion-datetime-button>
+        </ion-item>
+      </ion-list>
+      
+      
+>>>>>>> a3d12b9506d20e0b4943fb112b8f4e36635d3d22
       <h3 class="section-title">Driver Options</h3>
       <ion-radio-group [(ngModel)]="driverOption" (ionChange)="calculateTotal()">
         <ion-item [class.item-selected]="driverOption === 'pickup'">
@@ -121,6 +141,7 @@
     </div>
   </div>
 
+<<<<<<< HEAD
   <!-- PERBAIKAN: Menambahkan modal untuk kalender -->
   <ion-modal [keepContentsMounted]="true">
     <ng-template>
@@ -133,4 +154,17 @@
       </ion-datetime>
     </ng-template>
   </ion-modal>
+=======
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="pickupDatetimeCustom" [(ngModel)]="pickupDateTime" (ionChange)="calculateTotal()"></ion-datetime>
+    </ng-template>
+  </ion-modal>
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="returnDatetimeCustom" [(ngModel)]="returnDateTime" (ionChange)="calculateTotal()"></ion-datetime>
+    </ng-template>
+  </ion-modal>
+
+>>>>>>> a3d12b9506d20e0b4943fb112b8f4e36635d3d22
 </ion-content>

@@ -1,0 +1,42 @@
+<ion-header class="faq-header" [class.header-hidden]="isHeaderHidden">
+
+  <ion-toolbar>
+    <div class="centered-title">
+      <span class="faq-text">FAQ</span>
+      <img [src]="logoUrl" alt="Logo Aplikasi" class="header-logo-img">
+    </div>
+    <div>
+    <ion-searchbar
+      class="custom-searchbar"
+      animated="true"
+      placeholder="Search"
+      show-clear-button="always">
+    </ion-searchbar>
+  </div>
+  
+
+
+    
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content [fullscreen]="true" [scrollEvents]="true" (ionScroll)="onScroll($event)">
+
+  <ion-list class="faq-accordion" lines="none">
+    <div class="faq-item" *ngFor="let faq of faqList">
+      <ion-item (click)="toggleFaq(faq)" detail="false">
+        <ion-label class="question">{{ faq.question }}</ion-label>
+        <ion-icon
+          slot="end"
+          [name]="faq.isOpen ? 'chevron-up-outline' : 'chevron-down-outline'">
+        </ion-icon>
+      </ion-item>
+
+      <div class="answer" *ngIf="faq.isOpen">
+        {{ faq.answer }}
+      </div>
+    </div>
+  </ion-list>
+
+</ion-content>

@@ -1,95 +1,73 @@
 /* Header Styling */
 ion-header {
-  ion-toolbar.custom-toolbar { 
-    --background: #B8ECBC; /* Menggunakan background dari input Anda */
-    width: 100%;          /* Menggunakan width dari input Anda */
-    height: 90px;         /* Menggunakan height dari input Anda */
-    display: flex;        /* Menggunakan display dari input Anda */
-    justify-content: center; /* Menggunakan justify-content dari input Anda */
-    align-items: center;  /* Menggunakan align-items dari input Anda */
-    position: relative;   /* Menggunakan position dari input Anda */
-    
-    // Properti yang sudah ada sebelumnya, dipertahankan atau disesuaikan
-    --color: #ffffff;      /* Warna teks/ikon di header */
-    padding-left: 10px;    /* Sedikit padding kiri */
-    padding-right: 10px;   /* Sedikit padding kanan */
+  ion-toolbar.custom-toolbar {
+    --background: #B8ECBC;
+    height: 90px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding: 0 10px;
+    --color: #ffffff; 
 
     ion-buttons[slot="start"] {
-      order: 1; 
-      // MENAMBAHKAN: Memastikan ikon tidak menyusut
+      order: 1;
       flex-shrink: 0;
     }
 
     .logo-header {
-      order: 2; 
-      position: absolute; 
+      order: 2;
+      position: absolute;
       left: 50%;
-      transform: translateX(-50%); 
-      height: 15%; 
+      transform: translateX(-50%);
+      height: 10%;
       display: flex;
-      align-items: center; 
-      justify-content: center; 
-      width: auto; /* Disesuaikan agar logo tidak terlalu membatasi lebar */
-      z-index: 1; 
-      // MENAMBAHKAN: Properti untuk mencegah logo header menyusut
-      flex-shrink: 0; 
+      align-items: center;
+      justify-content: center;
 
-      .logo-img { 
-        // PENTING: Mengatur height ke auto untuk memperbaiki tampilan logo
-        height: 200px ; /* Memungkinkan gambar untuk menyesuaikan tingginya secara otomatis */
-        width: auto;   
-        display: block;
-        max-height: 150px; // Tinggi maksimum yang akan diterapkan
-        object-fit: contain; 
-        flex-shrink: 0;
+      .logo-img {
+        max-height: 150px; 
+        width: auto;
+        object-fit: contain;
       }
     }
     
     ion-buttons[slot="end"] {
-      order: 3; 
-      position: absolute; 
-      right: 10px;
-      z-index: 2; 
-      // MENAMBAHKAN: Memastikan tombol tidak menyusut
+      order: 3;
+      display: flex;
+      align-items: center;
       flex-shrink: 0;
-
+      
+      
       ion-button {
-        --color: #ffffff; 
-        font-size: 1.5em; 
-        min-width: unset; 
+        --color: #064420; 
       }
 
+      // Gaya KHUSUS untuk tombol Sign In
       .sign-in-button {
-        --background: transparent; 
-        --background-activated: rgba(255, 255, 255, 0.2); 
-        --color: #ffffff; 
-        --border-radius: 8px; 
-        --border-color: #ffffff; 
-        --border-style: solid; 
-        --border-width: 1px; 
-        padding: 5px 12px; 
-        height: 38px; 
-        font-size: 0.9em; 
-        font-weight: bold;
-        text-transform: capitalize; 
-        box-shadow: none; 
-
+        --background: transparent;
+        --background-activated: rgba(6, 68, 32, 0.1); // Efek klik yang lebih subtle
+        --color: #064420;
+        --border-radius: 8px;
+        --border-color: #064420;
+        --border-style: solid;
+        --border-width: 1.5px;
+        --padding-start: 12px;
+        --padding-end: 12px;
+        height: 38px;
+        font-size: 0.9em; // Ukuran font yang pas
+        font-weight: 600;
+        text-transform: none; // Teks tidak menjadi kapital semua
+        
         ion-icon {
-          font-size: 1.2em; 
-          margin-right: 5px; 
-          color: #ffffff; 
-        }
-
-        ion-label {
-          color: #ffffff; 
-          font-size: 0.9em;
-          font-weight: bold;
+          font-size: 1.2em;
+          margin-right: 5px;
         }
       }
     }
 
     ion-title {
-      display: none; 
+      display: none;
     }
   }
 }
@@ -99,7 +77,20 @@ ion-header {
 /* Main Content Area */
 ion-content {
   --background: #f4f4f4; /* Light background for the content area */
-  
+  /* ... (semua kode SCSS Anda yang sudah ada) ... */
+
+/* GAYA UNTUK TOMBOL BARU */
+.pesan-button-container {
+  padding: 0 20px; /* Samakan dengan padding location-section */
+  margin-top: 15px; /* Beri jarak dari banner di atas */
+}
+
+.pesan-button {
+  --border-radius: 8px;
+  height: 48px;
+  font-weight: normal;
+  text-transform: none; /* Agar tulisan tidak menjadi kapital semua */
+}
   .top-banner-card {
     background: white;
     border-radius: 12px;
@@ -294,15 +285,7 @@ ion-footer {
   }
 }
 
-/* --- Penambahan Styling untuk Header agar Icon Profil Berubah --- */
-/* Menyesuaikan warna dan ukuran ikon menu di slot start */
+/* Penyesuaian akhir untuk memastikan ikon menu dan profil memiliki warna yang tepat */
 ion-header ion-toolbar.custom-toolbar ion-buttons[slot="start"] ion-menu-button {
-  --color: #ffffff; /* Warna ikon menu menjadi putih */
-  font-size: 1.5em; /* Ukuran ikon menu */
-}
-
-/* Menyesuaikan warna dan ukuran ikon profil di slot end */
-ion-header ion-toolbar.custom-toolbar ion-buttons[slot="end"] ion-button ion-icon {
-  --color: #ffffff; /* Warna ikon profil menjadi putih */
-  font-size: 1.5em; /* Ukuran ikon profil */
+  --color: #064420;
 }

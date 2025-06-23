@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { QnaPage } from './qna.page';
+// PERBAIKI INI: Gunakan 'FaqPage' bukan 'FAQPage'
+import { FaqPage } from './faq.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: QnaPage
+    // PERBAIKI INI: Gunakan 'FaqPage' bukan 'FAQPage'
+    component: FaqPage
   }
 ];
 
@@ -14,4 +16,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class QnaPageRoutingModule {}
+export class FaqPageRoutingModule {}

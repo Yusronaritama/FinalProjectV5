@@ -1,2 +1,69 @@
-// For information on how to create your own theme, please see:
-// http://ionicframework.com/docs/theming/
+/* Untuk informasi lebih lanjut tentang theming, kunjungi:
+https://ionicframework.com/docs/theming/theming-with-css-variables */
+
+:root {
+  /** Warna dasar untuk mode terang */
+  --ion-color-primary: #27ae60;
+  --ion-color-primary-rgb: 39,174,96;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255,255,255;
+  --ion-color-primary-shade: #229954;
+  --ion-color-primary-tint: #3db170;
+
+  --ion-color-secondary: #064420;
+  --ion-color-secondary-rgb: 6,68,32;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255,255,255;
+  --ion-color-secondary-shade: #053b1c;
+  --ion-color-secondary-tint: #1f5636;
+
+  // Warna lain...
+  --ion-color-tertiary: #B8ECBC;
+  --ion-background-color: #f4f5f8;
+  --ion-text-color: #000000;
+  --ion-item-background: #ffffff;
+}
+
+
+/* -- DARK MODE SETTINGS -- */
+/* Secara otomatis diterapkan saat perangkat dalam mode gelap.
+  Kita mendefinisikan ulang variabel warna untuk mode gelap.
+*/
+@media (prefers-color-scheme: dark) {
+  body {
+    --ion-color-primary: #2dd36f;
+    --ion-color-primary-rgb: 45,211,111;
+    --ion-color-primary-contrast: #ffffff;
+    --ion-color-primary-contrast-rgb: 255,255,255;
+    --ion-color-primary-shade: #28ba62;
+    --ion-color-primary-tint: #42d77d;
+
+    --ion-color-secondary: #50c8ff;
+    --ion-color-secondary-rgb: 80,200,255;
+    --ion-color-secondary-contrast: #ffffff;
+    --ion-color-secondary-contrast-rgb: 255,255,255;
+    --ion-color-secondary-shade: #46b0e0;
+    --ion-color-secondary-tint: #62ceff;
+
+    --ion-color-tertiary: #6a64ff;
+    
+    /** Warna dasar untuk mode gelap */
+    --ion-background-color: #121212;
+    --ion-background-color-rgb: 18,18,18;
+
+    --ion-text-color: #ffffff;
+    --ion-text-color-rgb: 255,255,255;
+
+    --ion-border-color: #222222;
+
+    --ion-item-background: #1e1e1e;
+  }
+
+  /* Khusus untuk iOS, atur warna status bar */
+  @supports (-webkit-text-size-adjust: none) {
+    .ios body {
+      --ion-background-color: #000000;
+      --ion-background-color-rgb: 0,0,0;
+    }
+  }
+}
