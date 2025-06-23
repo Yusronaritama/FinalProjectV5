@@ -39,10 +39,6 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'qna',
-    loadChildren: () => import('./qna/qna.module').then( m => m.QnaPageModule)
-  },
-  {
     path: 'activity',
     loadChildren: () => import('./activity/activity.module').then( m => m.ActivityPageModule)
   },

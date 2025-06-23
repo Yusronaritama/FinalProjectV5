@@ -20,8 +20,8 @@
     </ion-item>
 
     <div class="ion-padding">
-      <h3 class="section-title">Select Rental Duration</h3>
-      <p class="section-subtitle">Number of Days</p>
+      <h3 class="section-title">Select Rental Period</h3>
+      
       <div class="duration-stepper">
         <ion-button fill="clear" (click)="decrementDays()" class="stepper-btn" [disabled]="numberOfDays <= 1">
           <ion-icon name="remove-circle-outline"></ion-icon>
@@ -32,6 +32,18 @@
         </ion-button>
       </div>
 
+      <ion-list>
+        <ion-item>
+          <ion-label>Pickup Date & Time</ion-label>
+          <ion-datetime-button datetime="pickupDatetimeCustom"></ion-datetime-button>
+        </ion-item>
+        <ion-item>
+          <ion-label>Return Date & Time</ion-label>
+          <ion-datetime-button datetime="returnDatetimeCustom"></ion-datetime-button>
+        </ion-item>
+      </ion-list>
+      
+      
       <h3 class="section-title">Driver Options</h3>
       <ion-radio-group [(ngModel)]="driverOption" (ionChange)="calculateTotal()">
         <ion-item [class.item-selected]="driverOption === 'pickup'">
@@ -76,4 +88,16 @@
       </ion-button>
     </div>
   </div>
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="pickupDatetimeCustom" [(ngModel)]="pickupDateTime" (ionChange)="calculateTotal()"></ion-datetime>
+    </ng-template>
+  </ion-modal>
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="returnDatetimeCustom" [(ngModel)]="returnDateTime" (ionChange)="calculateTotal()"></ion-datetime>
+    </ng-template>
+  </ion-modal>
+
 </ion-content>
