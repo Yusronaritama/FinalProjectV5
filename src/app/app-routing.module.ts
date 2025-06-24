@@ -60,14 +60,6 @@ const routes: Routes = [
     loadChildren: () => import('./rental-custom/rental-custom.module').then( m => m.RentalCustomPageModule)
   },
   {
-     path: 'payment-method/:brand/:carId', // <-- UBAH PATH
-    loadChildren: () => import('./payment-method/payment-method.module').then( m => m.PaymentMethodPageModule)
-  },
-  {
-    path: 'payment-instruction',
-    loadChildren: () => import('./payment-instruction/payment-instruction.module').then( m => m.PaymentInstructionPageModule)
-  },
-  {
     path: 'car-list/:brand',
     loadChildren: () => import('./car-list/car-list.module').then( m => m.CarListPageModule)
   },
