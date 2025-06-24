@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Vehicle, VehicleService } from '../services/vehicle.service';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-rental-detail',
@@ -29,11 +29,13 @@ export class RentalDetailPage implements OnInit {
   // --- TAMBAHAN BARU: Definisikan jam operasional ---
   public allowedHours: number[] = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
 
+  private isUserInJabodetabek: boolean = false
   constructor(
     private route: ActivatedRoute,
     private vehicleService: VehicleService,
     private router: Router,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
+    private alertController: AlertController
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as { prefill: { durationInDays: number } };
@@ -106,8 +108,30 @@ export class RentalDetailPage implements OnInit {
     }).replace(/\./g, ':');
   }
   
-  onSelectionChange() {
-    this.calculateTotal();
+   onSelectionChange() {
+    // Jika user memilih 'diantar' dan dia di luar Jabodetabek
+    if (this.driverOption === 'delivered' && !this.isUserInJabodetabek) {
+      this.presentDeliveryAlert();
+    } else {
+      // Jika tidak, langsung kalkulasi total
+      this.calculateTotal();
+    }
+  }
+
+  async presentDeliveryAlert() {
+    const alert = await this.alertController.create({
+      header: 'Oops!',
+      message: 'Lokasi Anda berada di luar wilayah Jabodetabek. Layanan pengantaran belum tersedia di area ini. Silakan pilih opsi ambil sendiri.',
+      buttons: ['OK'],
+      backdropDismiss: false // Mencegah user menutup alert dengan klik di luar
+    });
+
+    await alert.present();
+
+    // Setelah alert ditutup, kembalikan pilihan ke 'pickup'
+    await alert.onDidDismiss();
+    this.driverOption = 'pickup';
+    this.calculateTotal(); // Hitung ulang total biaya dengan opsi yang benar
   }
 
   async confirmBooking() {
@@ -120,7 +144,9 @@ export class RentalDetailPage implements OnInit {
         driverOption: this.driverOption,
         totalCost: this.totalCost
       };
-      this.router.navigate(['/payment-method', this.vehicle.id], {
+      // --- INI PERBAIKANNYA ---
+      // Hapus this.vehicle.id dari array navigasi
+      this.router.navigate(['/payment-method'], {
         state: { data: rentalData }
       });
     }

@@ -1,0 +1,95 @@
+ion-content {
+  --background: #e9e9e9; // Latar belakang abu-abu
+}
+
+.receipt-card-inner {
+  margin: 16px auto;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --background: #ffffff;
+  padding-bottom: 16px;
+
+  .brand-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--ion-color-primary);
+  }
+
+  ion-card-header {
+    padding-bottom: 8px;
+    border-bottom: 1px dashed #ccc;
+    margin-bottom: 16px;
+  }
+
+  .section {
+    margin-bottom: 20px;
+    padding: 0 16px;
+
+    .section-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--ion-color-medium);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+  }
+
+  ion-item {
+    --background: transparent;
+    --padding-start: 0;
+
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    p {
+      font-size: 0.85rem;
+      color: var(--ion-color-medium);
+    }
+    ion-thumbnail {
+      --size: 60px;
+      --border-radius: 8px;
+      background-color: #f0f0f0;
+    }
+  }
+  
+  .cost-item, .info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+
+    span:first-child {
+      color: var(--ion-color-medium);
+    }
+    span:last-child {
+      font-weight: 500;
+    }
+
+    &.total {
+      font-size: 1.1rem;
+      color: var(--ion-color-primary);
+    }
+    
+    ion-chip {
+        height: 24px;
+        font-size: 0.8rem;
+    }
+  }
+
+  .footer-text {
+    margin-top: 30px;
+    p {
+      margin: 0;
+      color: var(--ion-color-medium-shade);
+      font-size: 0.8rem;
+    }
+  }
+}
+
+ion-footer ion-toolbar {
+  --background: var(--ion-item-background);
+  --border-width: 0;
+}

@@ -8,11 +8,11 @@ import { AlertController, LoadingController } from '@ionic/angular';
   selector: 'app-rental-custom',
   templateUrl: './rental-custom.page.html',
   styleUrls: ['./rental-custom.page.scss'],
-  standalone: false // Pastikan ini false jika Anda menggunakan Ionic dengan Angular
+  standalone: false 
 })
 export class RentalCustomPage implements OnInit {
 
-  // --- PERBAIKAN: Menggunakan semua properti dari versi Anda yang lebih lengkap ---
+  
   vehicle: Vehicle | null = null;
   isLoading: boolean = true;
   pickupDateTime: string = new Date().toISOString();
@@ -26,9 +26,9 @@ export class RentalCustomPage implements OnInit {
   totalCost: number = 0;
   public readonly FLAT_DELIVERY_FEE = 150000;
 
+  private isUserInJabodetabek: boolean = true;
   constructor(
     private route: ActivatedRoute,
-    // --- PERBAIKAN: Menggunakan semua inject yang dibutuhkan dari versi Anda ---
     private vehicleService: VehicleService,
     private alertController: AlertController,
     private router: Router,
@@ -36,7 +36,7 @@ export class RentalCustomPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    // --- PERBAIKAN: Menggunakan logika ngOnInit dari versi Anda ---
+    
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     this.minPickupDate = today.toISOString();
@@ -71,6 +71,29 @@ export class RentalCustomPage implements OnInit {
     });
   }
   
+  async presentDeliveryAlert() {
+    const alert = await this.alertController.create({
+      header: 'Oops!',
+      message: 'Lokasi Anda berada di luar wilayah Jabodetabek. Layanan pengantaran belum tersedia di area ini. Silakan pilih opsi ambil sendiri.',
+      buttons: ['OK'],
+      backdropDismiss: false
+    });
+
+    await alert.present();
+
+    await alert.onDidDismiss();
+    this.driverOption = 'pickup';
+    this.calculateTotal();
+  }
+
+  onDriverOptionChange() {
+    if (this.driverOption === 'delivered' && !this.isUserInJabodetabek) {
+      this.presentDeliveryAlert();
+    } else {
+      this.calculateTotal();
+    }
+  }
+
   calculateTotal() {
     if (!this.vehicle) return;
     
@@ -110,6 +133,8 @@ export class RentalCustomPage implements OnInit {
     }).replace(/\./g, ':');
   }
 
+  // ... (kode lain di atasnya tetap sama)
+
   goToPayment() {
     if(this.vehicle) {
       const rentalData = {
@@ -122,11 +147,15 @@ export class RentalCustomPage implements OnInit {
         total: this.totalCost,
         driverOption: this.driverOption
       };
-      this.router.navigate(['/payment-method', this.vehicle.id], {
+      // --- INI PERBAIKANNYA ---
+      // Hapus this.vehicle.id dari array navigasi
+      this.router.navigate(['/payment-method'], {
         state: { data: rentalData }
       });
     }
   }
+
+  // ... (kode lain di bawahnya tetap sama)
 
 
   

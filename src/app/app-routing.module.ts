@@ -42,32 +42,47 @@ const routes: Routes = [
     path: 'activity',
     loadChildren: () => import('./activity/activity.module').then( m => m.ActivityPageModule)
   },
-  // --- TAMBAHKAN RUTE BARU DI SINI ---
-  {
-    path: 'car-list/:brand', // 
-    loadChildren: () => import('./car-list/car-list.module').then( m => m.CarListPageModule)
-  },
-  {
-    path: 'car-detail/:brand/:carId', // 
-    loadChildren: () => import('./car-detail/car-detail.module').then( m => m.CarDetailPageModule)
-  },
-  {
-    path: 'rental-detail/:id',  // 
-    loadChildren: () => import('./rental-detail/rental-detail.module').then( m => m.RentalDetailPageModule)
-  },
-  {
-    path: 'rental-custom/:id', // 
-    loadChildren: () => import('./rental-custom/rental-custom.module').then( m => m.RentalCustomPageModule)
-  },
   {
     path: 'car-list/:brand',
     loadChildren: () => import('./car-list/car-list.module').then( m => m.CarListPageModule)
   },
   {
-    // PERUBAHAN: Sederhanakan rute ini, kita hanya butuh ID mobil
+    // Rute ini sudah benar, hanya menggunakan ID mobil
     path: 'car-detail/:id',
     loadChildren: () => import('./car-detail/car-detail.module').then( m => m.CarDetailPageModule)
   },
+  {
+    path: 'rental-detail/:id',
+    loadChildren: () => import('./rental-detail/rental-detail.module').then( m => m.RentalDetailPageModule)
+  },
+  {
+    path: 'rental-custom/:id',
+    loadChildren: () => import('./rental-custom/rental-custom.module').then( m => m.RentalCustomPageModule)
+  },
+  {
+    // --- INI PERBAIKANNYA ---
+    // Hapus parameter dari path, karena data dikirim via state
+    path: 'payment-method', 
+    loadChildren: () => import('./payment-method/payment-method.module').then( m => m.PaymentMethodPageModule)
+  },
+  {
+    path: 'waiting-confirmation',
+    loadChildren: () => import('./waiting-confirmation/waiting-confirmation.module').then( m => m.WaitingConfirmationPageModule)
+  },
+  {
+    path: 'receipt',
+    loadChildren: () => import('./receipt/receipt.module').then( m => m.ReceiptPageModule)
+  },
+  {
+    path: 'transaction-success',
+    loadChildren: () => import('./transaction-success/transaction-success.module').then( m => m.TransactionSuccessPageModule)
+  },
+  {
+    path: 'faq',
+    loadChildren: () => import('./faq/faq.module').then( m => m.FaqPageModule)
+  },
+
+  
 ];
 
 @NgModule({

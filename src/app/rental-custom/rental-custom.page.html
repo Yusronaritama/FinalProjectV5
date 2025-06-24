@@ -77,20 +77,19 @@
       <!-- AKHIR PERBAIKAN -->
 
       <h3 class="section-title">Driver Options</h3>
-      <ion-radio-group [(ngModel)]="driverOption" (ionChange)="calculateTotal()">
-        <ion-item [class.item-selected]="driverOption === 'pickup'">
-          <ion-label>Pickup</ion-label>
-          <ion-radio slot="end" value="pickup"></ion-radio>
-        </ion-item>
-        <ion-item [class.item-selected]="driverOption === 'delivered'">
-          <ion-label>
-            Diantar
-            <!-- PERBAIKAN: Menggunakan konstanta yang benar dan menghapus teks '/day' -->
-            <p>Additional {{ FLAT_DELIVERY_FEE | currency:'Rp ':'symbol':'1.0-0' }}</p>
-          </ion-label>
-          <ion-radio slot="end" value="delivered"></ion-radio>
-        </ion-item>
-      </ion-radio-group>
+<ion-radio-group [(ngModel)]="driverOption" (ionChange)="onDriverOptionChange()">
+  <ion-item [class.item-selected]="driverOption === 'pickup'">
+    <ion-label>Pickup</ion-label>
+    <ion-radio slot="end" value="pickup"></ion-radio>
+  </ion-item>
+  <ion-item [class.item-selected]="driverOption === 'delivered'">
+    <ion-label>
+      Diantar
+      <p>Additional {{ FLAT_DELIVERY_FEE | currency:'Rp ':'symbol':'1.0-0' }}</p>
+    </ion-label>
+    <ion-radio slot="end" value="delivered"></ion-radio>
+  </ion-item>
+</ion-radio-group>
       <ion-note *ngIf="driverOption === 'delivered'" class="delivery-note">
         Layanan diantar tersedia di area jabodetabek saja.
       </ion-note>

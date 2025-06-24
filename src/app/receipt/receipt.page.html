@@ -1,0 +1,114 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Receipt</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div id="receipt-card" #receiptCard>
+    <ion-card class="receipt-card-inner">
+      <ion-card-header class="ion-text-center">
+        <div class="brand-title">GoRent</div>
+        <ion-card-title>Payment Receipt</ion-card-title>
+        <ion-card-subtitle>{{ transactionDetails.orderId }}</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content *ngIf="rentalData">
+        
+        <div class="section">
+          <p class="section-title">Rental Details</p>
+          <ion-item lines="none">
+            <ion-thumbnail slot="start">
+              <img [src]="'http://127.0.0.1:8000' + rentalData.car?.foto_utama" (error)="carImg.src = 'assets/icon/placeholder.png'" #carImg>
+            </ion-thumbnail>
+            <ion-label>
+              <h3>{{ rentalData.car.nama }}</h3>
+              <p>{{ rentalData.pickup | date:'d MMM y' }} - {{ rentalData.return | date:'d MMM y' }} ({{ rentalData.duration }} days)</p>
+              <p>{{ rentalData.driverOption === 'delivered' ? 'Diantar' : 'Self-Drive' }}</p>
+            </ion-label>
+          </ion-item>
+        </div>
+
+        <div class="section">
+          <p class="section-title">Payment Breakdown</p>
+          <div class="cost-item">
+            <span>Rental Fee ({{ rentalData.duration }} days)</span>
+            <span>{{ rentalData.cost | currency:'Rp ':'symbol':'1.0-0' }}</span>
+          </div>
+          <div class="cost-item" *ngIf="rentalData.delivery > 0">
+            <span>Driver</span>
+            <span>{{ rentalData.delivery | currency:'Rp ':'symbol':'1.0-0' }}</span>
+          </div>
+          <div class="cost-item">
+            <span>Security Deposit</span>
+            <span>{{ rentalData.car.security_deposit | currency:'Rp ':'symbol':'1.0-0' }}</span>
+          </div>
+          <ion-item-divider></ion-item-divider>
+          <div class="cost-item total">
+            <strong>Total Paid</strong>
+            <strong>{{ rentalData.totalCost | currency:'Rp ':'symbol':'1.0-0' }}</strong>
+          </div>
+        </div>
+
+        <div class="section">
+          <p class="section-title">Payment Method</p>
+          <ion-item lines="none">
+            <ion-icon name="card-outline" slot="start" color="medium"></ion-icon>
+            <ion-label>
+              <h3>{{ rentalData.paymentMethod }}</h3>
+              <p>**** **** **** 1234</p>
+            </ion-label>
+          </ion-item>
+        </div>
+        
+        <div class="section">
+          <p class="section-title">Transaction Information</p>
+          <div class="info-item">
+            <span>Transaction ID</span>
+            <span>{{ transactionDetails.transactionId }}</span>
+          </div>
+          <div class="info-item">
+            <span>Payment Date</span>
+            <span>{{ transactionDetails.paymentDate | date:'d MMM y, HH:mm a' }}</span>
+          </div>
+          <div class="info-item">
+            <span>Status</span>
+            <ion-chip [color]="transactionDetails.statusColor" outline="true">
+              <ion-label>{{ transactionDetails.status }}</ion-label>
+            </ion-chip>
+          </div>
+        </div>
+
+        <div class="footer-text ion-text-center">
+          <p>Thank you for choosing GoRent!</p>
+          <p>For support, contact us at support&#64;gorent.com</p>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-button expand="block" fill="outline" (click)="saveReceipt()">
+            <ion-icon slot="start" name="download-outline"></ion-icon>
+            Simpan
+          </ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button expand="block" (click)="shareReceipt()">
+            <ion-icon slot="start" name="share-social-outline"></ion-icon>
+            Bagikan
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

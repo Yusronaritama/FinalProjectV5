@@ -1,0 +1,20 @@
+<ion-content [fullscreen]="true">
+  <div class="container">
+    <div class="main-content">
+      <ion-icon name="checkmark-circle" color="success" class="success-icon"></ion-icon>
+      <h1 class="title">Pembayaran Berhasil!</h1>
+      <p class="subtitle">
+        Terima kasih telah melakukan pembayaran. Transaksi Anda akan segera kami proses.
+      </p>
+    </div>
+
+    <div class="action-buttons">
+      <ion-button expand="block" fill="outline" (click)="goToActivity()">
+        Lihat Aktivitas
+      </ion-button>
+      <ion-button expand="block" (click)="goToHome()">
+        Kembali ke Beranda
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

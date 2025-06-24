@@ -1,0 +1,93 @@
+ion-content {
+  --background: #f4f5f8;
+}
+
+.order-card {
+  margin: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  .card-header {
+    --background: #f9f9f9;
+    h2 {
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+    p {
+      font-size: 0.8rem;
+    }
+    .status-chip-main {
+      font-size: 0.7rem;
+      height: 22px;
+    }
+  }
+
+  .car-details {
+    ion-thumbnail {
+      --size: 70px;
+      --border-radius: 8px;
+    }
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .return-info {
+      font-size: 0.75rem;
+      white-space: normal;
+      color: var(--ion-color-medium-shade);
+    }
+  }
+
+  .divider {
+    height: 1px;
+    background-color: var(--ion-border-color);
+    margin: 8px 16px;
+  }
+
+  .deposit-section {
+    padding: 8px 16px;
+    
+    .deposit-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      h4 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+      .status-chip-deposit {
+        font-size: 0.7rem;
+        height: 22px;
+        --padding-start: 8px;
+        --padding-end: 8px;
+      }
+    }
+    
+    .deposit-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+
+      span:first-child {
+        color: var(--ion-color-medium-shade);
+      }
+      .danger-text {
+        color: var(--ion-color-danger);
+      }
+      &.refunded {
+        color: var(--ion-color-success);
+        margin-top: 8px;
+      }
+    }
+  }
+
+  .action-buttons {
+    padding: 0 8px 8px 8px;
+    ion-button {
+      --border-radius: 8px;
+    }
+  }
+}

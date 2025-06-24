@@ -1,13 +1,76 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>activity</ion-title>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Aktivitas</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="search-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">activity</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-list lines="none">
+    <ion-card *ngFor="let order of orderHistory" class="order-card">
+      
+      <ion-item class="card-header" lines="none">
+        <ion-label>
+          <h2>{{ order.id }}</h2>
+          <p>{{ order.dateRange }}</p>
+        </ion-label>
+        <ion-chip [color]="getStatusColor(order.status)" outline="true" class="status-chip-main">{{ order.status }}</ion-chip>
+      </ion-item>
+
+      <ion-item lines="none" class="car-details">
+        <ion-thumbnail slot="start">
+          <img [src]="order.car.imageUrl" (error)="carImg.src = 'assets/icon/placeholder.png'" #carImg>
+        </ion-thumbnail>
+        <ion-label>
+          <h3>{{ order.car.name }}</h3>
+          <p>{{ order.car.priceInfo }}</p>
+          <p class="return-info">{{ order.car.returnInfo }}</p>
+        </ion-label>
+      </ion-item>
+      
+      <div class="divider"></div>
+
+      <div class="deposit-section">
+        <div class="deposit-header">
+          <h4>Security Deposit</h4>
+          <ion-chip [color]="getStatusColor(order.securityDeposit.status)" class="status-chip-deposit">{{ order.securityDeposit.status }}</ion-chip>
+        </div>
+        <div class="deposit-row">
+          <span>Original Deposit</span>
+          <span>{{ order.securityDeposit.original | currency:'Rp ':'symbol':'1.0-0' }}</span>
+        </div>
+        <div class="deposit-row" *ngIf="order.securityDeposit.deductions">
+          <span>Deductions</span>
+          <span class="danger-text">- {{ order.securityDeposit.deductions | currency:'Rp ':'symbol':'1.0-0' }}</span>
+        </div>
+        <div class="deposit-row refunded">
+          <strong>Refunded Amount</strong>
+          <strong>{{ order.securityDeposit.refunded | currency:'Rp ':'symbol':'1.0-0' }}</strong>
+        </div>
+        <div class="deposit-row" *ngIf="order.securityDeposit.refundDate">
+          <span>Refund Date</span>
+          <span>{{ order.securityDeposit.refundDate }}</span>
+        </div>
+      </div>
+
+      <ion-grid class="action-buttons">
+        <ion-row>
+          <ion-col>
+            <ion-button expand="block" fill="outline" (click)="viewReceipt(order)">Receipt</ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button expand="block" (click)="bookAgain(order)">Book Again</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+    </ion-card>
+  </ion-list>
 </ion-content>
