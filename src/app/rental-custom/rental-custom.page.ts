@@ -127,4 +127,7 @@ export class RentalCustomPage implements OnInit {
       });
     }
   }
+
+
+  
 }
