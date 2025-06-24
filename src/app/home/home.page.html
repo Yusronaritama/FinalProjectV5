@@ -20,14 +20,12 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="top-banner-card">
-    <img src="assets/image/tank.jpeg" onerror="this.src='https://placehold.co/600x400/E0E0E0/white?text=Image+Not+Found';" alt="Promo Banner" class="banner-image">
+  <div #bannerScroller class="banner-scroll-container">
+    <div class="banner-slide" *ngFor="let image of bannerImages">
+      <img [src]="image" class="banner-image" onerror="this.src='https://placehold.co/600x400/E0E0E0/white?text=Image+Not+Found';"/>
+    </div>
   </div>
-  <div class="pesan-button-container">
-    <ion-button expand="block" class="pesan-button" color="success" (click)="openRentalModal()">
-      Ayok Pesan!
-    </ion-button>
-  </div>
+  
 
   <div class="location-section">
     <div class="location-box" (click)="requestLocationPermission()">
@@ -48,21 +46,52 @@
       </div>
     </div>
   </div>
+  
+  <div class="rental-form-container ion-padding">
+    <ion-segment [(ngModel)]="searchDriverOption" mode="ios">
+      <ion-segment-button value="dengan-sopir">
+        <ion-label>Dengan Sopir</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="lepas-kunci">
+        <ion-label>Lepas Kunci</ion-label>
+      </ion-segment-button>
+    </ion-segment>
 
-  <div class="popular-car-section">
-    <h3>Populer Car</h3>
-    <div class="car-card">
-      <div class="unavailable-tag">
-        <ion-icon name="star"></ion-icon> TIDAK TERSEDIA
-      </div>
-      <img src="https://placehold.co/300x200/FFB380/white?text=Avanza" alt="Avanza" class="car-image">
-      <div class="car-details">
-        <h4>Avanza</h4>
-        <p>Rp 275.000/24 Jam</p>
-        <ion-button expand="block" class="view-detail-button">View Detail</ion-button>
-      </div>
-    </div>
+    <ion-list class="ion-no-padding">
+      
+      
+      <ion-item lines="none" [button]="true" id="open-home-datepicker">
+        <ion-icon name="calendar-outline" slot="start"></ion-icon>
+        <ion-label>{{ formattedDate }}</ion-label>
+        <ion-text slot="end" class="time-display">
+          <ion-icon name="time-outline"></ion-icon>
+          {{ searchPickupDate | date:'HH:mm' }}
+        </ion-text>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-icon name="time-outline" slot="start"></ion-icon>
+        <ion-label>1 hari</ion-label>
+        <ion-note slot="end">Durasi sewa 12 jam/hari</ion-note>
+      </ion-item>
+    </ion-list>
+
+    <p class="summary-text">Selesai Sewa: {{ formattedReturnDate }}</p>
+
+    <ion-button expand="block" color="primary" class="search-button" (click)="searchCars()">Ayo cari</ion-button>
   </div>
+
+  <ion-popover trigger="open-home-datepicker" [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime
+        presentation="date-time"
+        [(ngModel)]="searchPickupDate"
+        (ionChange)="dateChanged($event)">
+      </ion-datetime>
+    </ng-template>
+  </ion-popover>
+
+  
 </ion-content>
 
 <ion-footer>

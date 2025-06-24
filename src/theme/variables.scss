@@ -17,53 +17,50 @@ https://ionicframework.com/docs/theming/theming-with-css-variables */
   --ion-color-secondary-shade: #053b1c;
   --ion-color-secondary-tint: #1f5636;
 
-  // Warna lain...
+  // --- TAMBAHKAN DEFINISI WARNA TERTIARY DI SINI ---
   --ion-color-tertiary: #B8ECBC;
+  --ion-color-tertiary-rgb: 184,236,188;
+  --ion-color-tertiary-contrast: #000000; // Teks di atasnya berwarna hitam
+  --ion-color-tertiary-contrast-rgb: 0,0,0;
+  --ion-color-tertiary-shade: #a2cfab;
+  --ion-color-tertiary-tint: #bfedc8;
+  
+  /** Warna dasar aplikasi */
   --ion-background-color: #f4f5f8;
   --ion-text-color: #000000;
   --ion-item-background: #ffffff;
+  --ion-border-color: #d7d8da;
 }
 
 
 /* -- DARK MODE SETTINGS -- */
-/* Secara otomatis diterapkan saat perangkat dalam mode gelap.
-  Kita mendefinisikan ulang variabel warna untuk mode gelap.
-*/
 @media (prefers-color-scheme: dark) {
   body {
     --ion-color-primary: #2dd36f;
     --ion-color-primary-rgb: 45,211,111;
-    --ion-color-primary-contrast: #ffffff;
-    --ion-color-primary-contrast-rgb: 255,255,255;
+    --ion-color-primary-contrast: #000000;
+    --ion-color-primary-contrast-rgb: 0,0,0;
     --ion-color-primary-shade: #28ba62;
     --ion-color-primary-tint: #42d77d;
 
-    --ion-color-secondary: #50c8ff;
+    --ion-color-secondary: #064420;
     --ion-color-secondary-rgb: 80,200,255;
-    --ion-color-secondary-contrast: #ffffff;
-    --ion-color-secondary-contrast-rgb: 255,255,255;
-    --ion-color-secondary-shade: #46b0e0;
-    --ion-color-secondary-tint: #62ceff;
+    --ion-color-secondary-contrast: #000000;
+    --ion-color-secondary-contrast-rgb: 0,0,0;
+    --ion-color-secondary-shade: #053b1c;
+    --ion-color-secondary-tint: #1f5636;
 
-    --ion-color-tertiary: #6a64ff;
-    
+    --ion-color-tertiary: #B8ECBC; // Warna tersier untuk mode gelap
+    --ion-color-tertiary-rgb: 75,87,49;
+    --ion-color-tertiary-contrast: #ffffff;
+    --ion-color-tertiary-contrast-rgb: 255,255,255;
+    --ion-color-tertiary-shade: #424d2b;
+    --ion-color-tertiary-tint: #5d6846;
+
     /** Warna dasar untuk mode gelap */
     --ion-background-color: #121212;
-    --ion-background-color-rgb: 18,18,18;
-
     --ion-text-color: #ffffff;
-    --ion-text-color-rgb: 255,255,255;
-
-    --ion-border-color: #222222;
-
     --ion-item-background: #1e1e1e;
-  }
-
-  /* Khusus untuk iOS, atur warna status bar */
-  @supports (-webkit-text-size-adjust: none) {
-    .ios body {
-      --ion-background-color: #000000;
-      --ion-background-color-rgb: 0,0,0;
-    }
+    --ion-border-color: #222222;
   }
 }

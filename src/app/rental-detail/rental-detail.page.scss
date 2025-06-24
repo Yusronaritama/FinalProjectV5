@@ -1,132 +1,133 @@
-ion-toolbar {
-    --background: #27ae60;
-    --color: #ffffff;
-}
+// Menggunakan :host untuk memastikan gaya ini hanya berlaku untuk halaman ini
+:host {
+  ion-toolbar {
+    --background: var(--ion-color-primary);
+    --color: var(--ion-color-primary-contrast);
+  }
 
-ion-content {
-    --background: #f4f5f8;
-}
+  ion-content {
+    --background: var(--ion-background-color);
+  }
 
-.car-info-header {
-    --background: #ffffff;
+  .car-info-header {
+    --background: var(--ion-item-background);
     --padding-start: 16px;
     --padding-end: 16px;
     --padding-top: 16px;
     --padding-bottom: 16px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--ion-border-color, #eee);
 
     ion-thumbnail {
-    width: 150px;
-    height: 70px;
-    border-radius: 8px;
-    --border-radius: 8px;
+      width: 150px;
+      height: 70px;
+      border-radius: 8px;
+      --border-radius: 8px;
     }
 
-
     h2 {
-        font-size: 1.4rem;      // dari 1.1rem → 1.4rem
-        font-weight: bold;
-        margin-bottom: 6px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: var(--ion-text-color); // Menggunakan variabel
     }
 
     .package-chip {
-        font-size: 0.9rem;      // dari 0.7rem → 0.9rem
-        font-weight: 500;
-        background: #e9f7ef;
-        color: #27ae60;
-        padding: 4px 10px;      // sedikit lebih besar
-        border-radius: 20px;
-        display: inline-block;
-        margin-bottom: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      background: rgba(var(--ion-color-primary-rgb), 0.1); // Background transparan dari warna primary
+      color: var(--ion-color-primary-shade); // Warna teks lebih gelap dari primary
+      padding: 4px 10px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 6px;
     }
 
     .price {
-        font-size: 1.2rem;      // dari 1rem → 1.2rem
-        font-weight: bold;
-        color: #333;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--ion-text-color); // Menggunakan variabel
     }
-}
+  }
 
-
-.section-title {
+  .section-title {
     font-size: 1rem;
     font-weight: bold;
-    color: #333;
+    color: var(--ion-text-color); // Menggunakan variabel
     margin-top: 24px;
     margin-bottom: 12px;
-}
+  }
 
-ion-list {
+  ion-list {
     background: transparent;
     padding: 0;
-}
+  }
 
-ion-item {
-    --background: #ffffff;
+  ion-item {
+    --background: var(--ion-item-background); // Menggunakan variabel
     --border-radius: 8px;
     margin-bottom: 12px;
+    border: 1px solid var(--ion-border-color, #eee);
     
     ion-icon {
-        color: #888;
-        margin-right: 8px;
+      color: var(--ion-color-medium-shade); // Menggunakan variabel
+      margin-right: 8px;
     }
 
     p {
-        font-size: 0.8rem;
-        color: #666;
+      font-size: 0.8rem;
+      color: var(--ion-color-medium-shade); // Menggunakan variabel
     }
-}
+  }
 
-.item-selected {
-    border: 1px solid var(--ion-color-primary, #27ae60);
-    --background: #e9f7ef;
-}
+  .item-selected {
+    border: 1px solid var(--ion-color-primary);
+    --background: rgba(var(--ion-color-primary-rgb), 0.1);
+  }
 
-.delivery-note {
-  display: block;
-  padding: 8px 16px;
-  margin-top: -8px;
-  margin-bottom: 16px;
-  background: #fffbe6;
-  border-radius: 0 0 8px 8px;
-  font-size: 0.8rem;
-  color: #8a6d3b;
-}
+  .delivery-note {
+    display: block;
+    padding: 8px 16px;
+    margin-top: -8px;
+    margin-bottom: 16px;
+    background: #fffbe6; // Warna kuning bisa tetap untuk penekanan
+    border-radius: 0 0 8px 8px;
+    font-size: 0.8rem;
+    color: #8a6d3b;
+  }
 
-.payment-summary {
-    background: #ffffff;
+  .payment-summary {
+    background: var(--ion-item-background); // Menggunakan variabel
     padding: 16px;
     border-radius: 8px;
 
     .summary-item {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 12px;
-        font-size: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 0.9rem;
 
+      span:first-child {
+        color: var(--ion-color-medium-shade); // Menggunakan variabel
+      }
+
+      span:last-child {
+        font-weight: 500;
+        color: var(--ion-text-color); // Menggunakan variabel
+      }
+
+      &.total {
+        font-weight: bold;
+        font-size: 1.1rem;
+        margin-top: 12px;
+        
         span:first-child {
-            color: #666;
+          color: var(--ion-text-color);
         }
-
+        
         span:last-child {
-            font-weight: 500;
-            color: #333; // <-- WARNA ANGKA DIUBAH MENJADI HITAM/GELAP
+          color: var(--ion-color-primary); // Warna total dibuat sesuai warna primary tema
         }
-
-        &.total {
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin-top: 12px;
-            
-            span:first-child {
-                color: #333;
-            }
-            
-            // Memastikan warna total juga hitam/gelap
-            span:last-child {
-                color: #27ae60; // Warna total dibuat hijau agar menonjol
-            }
-        }
+      }
     }
+  }
 }
-

@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController, ToastController } from '@ionic/angular';
-import html2canvas from 'html2canvas';
+import { ToastController, ModalController } from '@ionic/angular';
 import { LocationPermissionModalComponent } from '../location-permission-modal/location-permission-modal.component';
+import { format, parseISO, add } from 'date-fns';
 
-// Definisikan interface CarType di sini agar dikenali
 interface CarType {
   id: string;
   name: string;
@@ -19,7 +18,23 @@ interface CarType {
 })
 export class HomePage implements OnInit {
 
-  // Properti untuk data dan state halaman
+  @ViewChild('bannerScroller') bannerScroller!: ElementRef<HTMLElement>;
+  private scrollInterval: any;
+
+  bannerImages = [
+    'assets/image/tankleopard.jpeg', // Gambar pertama Anda
+    'assets/image/tankarbrams.jpeg', // Contoh gambar kedua
+    'assets/image/tankt90m.jpg'  // Contoh gambar ketiga
+    // Anda bisa menambahkan gambar lain di sini
+  ];
+  // Properti untuk form pencarian
+  searchDriverOption: 'dengan-sopir' | 'lepas-kunci' = 'dengan-sopir';
+  // Properti searchLocation dihapus
+  searchPickupDate: string = new Date().toISOString();
+  formattedDate: string = '';
+  formattedReturnDate: string = '';
+
+  // Properti lain yang sudah ada
   isLoggedIn: boolean = false;
   profileAvatarIcon: string = 'person-circle-outline';
   displayedLocation: string = 'Izinkan lokasi untuk pengalaman yang lebih baik';
@@ -37,93 +52,100 @@ export class HomePage implements OnInit {
 
   constructor(
     private router: Router,
-    private toastController: ToastController,
-    private modalController: ModalController
+    private modalController: ModalController,
   ) { }
 
   ngOnInit() {
+    this.updateFormattedDates();
   }
 
   ionViewWillEnter() {
     this.checkLoginStatusAndLoadAvatar();
   }
 
-  // Fungsi untuk memeriksa status login dan avatar
+  ionViewDidEnter() {
+    this.startBannerAutoScroll(); // Mulai auto-scroll saat halaman aktif
+  }
+
+  ionViewWillLeave() {
+    this.stopBannerAutoScroll(); // Hentikan auto-scroll saat halaman ditinggalkan
+  }
+
+  ngOnDestroy() {
+    this.stopBannerAutoScroll(); // Pastikan interval dibersihkan saat komponen dihancurkan
+  }
+
+  dateChanged(event: any) {
+    this.searchPickupDate = event.detail.value;
+    this.updateFormattedDates();
+  }
+
+  updateFormattedDates() {
+    const pickup = parseISO(this.searchPickupDate);
+    const returnD = add(pickup, { hours: 12 });
+    this.formattedDate = format(pickup, 'EEE, d MMM');
+    this.formattedReturnDate = format(returnD, 'EEE, d MMM • HH:mm');
+  }
+
+  searchCars() {
+    // Objek searchParams sekarang tidak lagi menyertakan location
+    const searchParams = {
+      driverOption: this.searchDriverOption,
+      pickupDate: this.searchPickupDate
+    };
+    console.log('Mencari mobil dengan parameter:', searchParams);
+  }
+
   checkLoginStatusAndLoadAvatar() {
     const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
     this.isLoggedIn = !!loggedInUserEmail;
-
     if (this.isLoggedIn) {
       const storedUsersString = localStorage.getItem('registeredUsers');
       if (storedUsersString) {
-        try {
-          const registeredUsers = JSON.parse(storedUsersString);
-          const user = registeredUsers.find((u: any) => u.email === loggedInUserEmail);
-          this.profileAvatarIcon = user?.avatarIcon || 'person-circle-outline';
-        } catch (e) {
-          console.error('Error parsing users from localStorage', e);
-          this.profileAvatarIcon = 'person-circle-outline';
-        }
+        const registeredUsers = JSON.parse(storedUsersString);
+        const user = registeredUsers.find((u: any) => u.email === loggedInUserEmail);
+        this.profileAvatarIcon = user?.avatarIcon || 'person-circle-outline';
       }
     } else {
       this.profileAvatarIcon = 'person-circle-outline';
     }
   }
 
-  // Fungsi untuk membuka pop-up pencarian sewa
-  async openRentalModal() {
-    // Karena kita sepakat menggunakan trigger di HTML, fungsi ini bisa dikosongkan
-    // atau digunakan untuk logika tambahan jika perlu di masa depan.
-    // Keberadaan fungsi ini akan menyelesaikan error "property does not exist".
-    console.log('Tombol "Ayok Pesan!" diklik. Modal akan terbuka melalui trigger di HTML.');
+  // --- FUNGSI BARU UNTUK BANNER CAROUSEL ---
+  startBannerAutoScroll() {
+    this.stopBannerAutoScroll(); // Hentikan dulu jika ada yang berjalan
+    this.scrollInterval = setInterval(() => {
+      const el = this.bannerScroller.nativeElement;
+      const nextScrollLeft = el.scrollLeft + el.clientWidth;
+      // Jika sudah di akhir, kembali ke awal
+      if (nextScrollLeft >= el.scrollWidth) {
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        el.scrollTo({ left: nextScrollLeft, behavior: 'smooth' });
+      }
+    }, 3000); // Ganti gambar setiap 3 detik
+  }
+  
+  stopBannerAutoScroll() {
+    if (this.scrollInterval) {
+      clearInterval(this.scrollInterval);
+    }
+  }
+  // ------------------------------------
+
+  async requestLocationPermission() {
+    const modal = await this.modalController.create({
+      component: LocationPermissionModalComponent,
+      cssClass: 'location-permission-modal'
+    });
+    return await modal.present();
   }
 
-  // Fungsi untuk navigasi
   navigateToCarList(carId: string) {
-    if (carId) {
-      this.router.navigate(['/car-list', carId.toLowerCase()]);
-    }
+    this.router.navigate(['/car-list', carId.toLowerCase()]);
   }
 
   goToLogin() {
     this.router.navigateByUrl('/login');
-  }
-
-  // Fungsi untuk menangani izin lokasi
-  async requestLocationPermission() {
-    const modal = await this.modalController.create({
-      component: LocationPermissionModalComponent,
-      cssClass: 'location-permission-modal',
-      backdropDismiss: false,
-    });
-    await modal.present();
-
-    const { role } = await modal.onWillDismiss();
-    if (role === 'confirm') {
-      this.getCurrentLocation();
-    } else {
-      this.presentToast('Izin lokasi ditolak.', 'warning');
-      this.displayedLocation = 'Izin lokasi ditolak';
-    }
-  }
-  
-  // Fungsi untuk mendapatkan lokasi saat ini
-  getCurrentLocation() {
-    this.displayedLocation = 'Mencari lokasi...';
-    // ... (logika geolocation Anda) ...
-    setTimeout(() => {
-        this.displayedLocation = 'Karawang, Jawa Barat';
-        this.presentToast('Lokasi ditemukan!', 'success');
-    }, 1500);
-  }
-
-  // Fungsi helper untuk menampilkan notifikasi toast
-  async presentToast(message: string, color: string) {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 2000,
-      color: color,
-    });
-    toast.present();
   }
 }

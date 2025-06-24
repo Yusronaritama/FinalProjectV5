@@ -1,14 +1,12 @@
-// Menggunakan :host untuk menargetkan komponen ini secara spesifik
-// Ini membantu menimpa gaya global.
+// Menggunakan :host untuk memastikan gaya ini hanya berlaku untuk halaman ini
 :host {
-  ion-content {
-    --background: #ffffff; // Memaksa background konten menjadi putih
-    --color: #333333; // Memaksa warna teks default menjadi gelap
+  ion-toolbar {
+    --background: var(--ion-color-primary); // Menggunakan variabel
+    --color: var(--ion-color-primary-contrast); // Warna teks di atasnya
   }
 
-  ion-toolbar {
-    --background: #27ae60;
-    --color: #ffffff;
+  ion-content {
+    --background: var(--ion-background-color); // Background utama halaman
   }
 
   // Memberi padding utama pada konten
@@ -16,17 +14,15 @@
     padding: 16px;
   }
 
-  .section-title {
-    font-size: 1.1rem;
+  .section-title,
+  .payment-group-title {
     font-weight: bold;
-    color: #333;
-    margin-bottom: 16px;
+    color: var(--ion-text-color); // Warna teks utama
   }
 
   .payment-group-title {
     font-size: 0.9rem;
-    font-weight: 500;
-    color: #666;
+    color: var(--ion-color-medium-shade, #666); // Warna teks abu-abu
     margin-top: 24px;
     margin-bottom: 8px;
   }
@@ -39,16 +35,16 @@
   ion-item {
     --padding-start: 12px;
     --inner-padding-end: 12px;
-    --background: #ffffff;
-    border: 1.5px solid #e0e0e0;
+    --background: var(--ion-item-background); // Background untuk setiap item
+    border: 1.5px solid var(--ion-border-color, #e0e0e0); // Border yang beradaptasi
     border-radius: 8px;
     margin-bottom: 12px;
-    font-family: 'Arial', sans-serif; // Contoh penggunaan font yang konsisten
+    font-family: 'Arial', sans-serif;
 
     // Gaya saat item terpilih
     &.item-selected {
-      border-color: var(--ion-color-primary, #27ae60);
-      box-shadow: 0 0 0 1.5px var(--ion-color-primary, #27ae60);
+      border-color: var(--ion-color-primary);
+      box-shadow: 0 0 0 1.5px var(--ion-color-primary);
     }
 
     ion-thumbnail {
@@ -60,7 +56,7 @@
       justify-content: center;
       
       img {
-        object-fit: contain; // Memastikan logo tidak penyok
+        object-fit: contain;
       }
     }
 
@@ -68,12 +64,12 @@
       h3 {
         font-size: 1rem;
         font-weight: 600;
-        color: #333;
+        color: var(--ion-text-color); // Warna teks utama
       }
 
       p {
         font-size: 0.8rem;
-        color: #888;
+        color: var(--ion-color-medium-shade, #888); // Warna teks abu-abu
         white-space: normal;
       }
     }
@@ -84,18 +80,18 @@
   }
 
   ion-footer {
-    background: #ffffff;
+    background: var(--ion-item-background); // Background footer
     padding: 16px;
 
-    // Menghilangkan garis aneh di atas footer
     &::before {
       background-image: none;
       display: none;
     }
     
     ion-button {
-      --background: #27ae60;
-      --background-activated: #229954;
+      --background: var(--ion-color-primary);
+      --background-activated: var(--ion-color-primary-shade);
+      --color: var(--ion-color-primary-contrast); // Warna teks di atas tombol
       --border-radius: 8px;
       height: 48px;
       font-weight: bold;
