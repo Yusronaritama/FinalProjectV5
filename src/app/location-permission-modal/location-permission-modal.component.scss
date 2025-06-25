@@ -42,7 +42,7 @@ ion-content {
 }
 
 .modal-location-icon-container {
-  background: #e6ffe6; /* Light green background untuk lingkaran */
+  background: #1f5736; /* Light green background untuk lingkaran */
   border-radius: 50%; /* Membuat bentuk lingkaran */
   width: 80px; /* Ukuran lingkaran */
   height: 80px; /* Ukuran lingkaran */
@@ -83,8 +83,8 @@ ion-content {
 }
 
 .modal-button-primary {
-  --background: #27ae60; /* Warna hijau GoRent All */
-  --background-activated: #229954; /* Warna hijau sedikit lebih gelap saat diaktifkan */
+  --background: #1f5736; /* Warna hijau GoRent All */
+  --background-activated: #1f5736; /* Warna hijau sedikit lebih gelap saat diaktifkan */
   --color: #ffffff; /* Warna teks putih */
   --border-radius: 8px;
   height: 48px;
@@ -97,8 +97,8 @@ ion-content {
 .modal-button-secondary {
   --background: transparent; /* Background transparan */
   --background-activated: rgba(39, 174, 96, 0.1); /* Efek saat diaktifkan */
-  --color: #27ae60; /* Warna teks hijau */
-  --border-color: #27ae60; /* Warna border hijau */
+  --color: #1f5736; /* Warna teks hijau */
+  --border-color: #1f5736; /* Warna border hijau */
   --border-width: 2px;
   --border-style: solid;
   --border-radius: 8px;

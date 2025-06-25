@@ -50,6 +50,8 @@ export class HomePage implements OnInit {
     { id: 'toyota', name: 'TOYOTA', imageUrl: 'assets/logomobil/toyota.jpg' },
   ];
 
+   
+
   constructor(
     private router: Router,
     private modalController: ModalController,

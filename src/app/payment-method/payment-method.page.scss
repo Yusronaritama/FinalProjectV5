@@ -1,3 +1,8 @@
+// ===================================================================
+// KODE PENGGANTI LENGKAP UNTUK: src/app/payment-method/payment-method.page.scss
+// Versi ini sudah sepenuhnya responsif terhadap tema terang & gelap
+// ===================================================================
+
 :host {
   ion-toolbar {
     --background: var(--ion-color-primary);
@@ -12,28 +17,28 @@
     font-weight: bold;
     color: var(--ion-text-color);
     margin-bottom: 1rem;
-    padding-left: 4px;
+    padding: 0 16px;
   }
 
   .payment-group-title {
     font-size: 0.9rem;
     font-weight: 500;
-    color: var(--ion-color-medium-shade, #666);
+    color: var(--ion-color-medium-shade);
     margin-top: 1.5rem;
     margin-bottom: 0.5rem;
-    padding-left: 4px;
+    padding: 0 16px;
   }
 
   .accordion-list {
     background: transparent;
-    padding: 0;
+    padding: 0 16px; // Beri padding agar tidak menempel di tepi
   }
 
   ion-item {
     --padding-start: 12px;
     --inner-padding-end: 12px;
-    --background: var(--ion-item-background);
-    border: 1px solid var(--ion-border-color, #e0e0e0);
+    --background: var(--ion-item-background); // Menggunakan variabel
+    border: 1px solid var(--ion-border-color); // Menggunakan variabel
     border-radius: 8px;
     margin-bottom: 12px;
     transition: all 0.2s ease-in-out;
@@ -61,7 +66,7 @@
   ion-label h3 {
     font-size: 1rem;
     font-weight: 600;
-    color: var(--ion-text-color);
+    color: var(--ion-text-color); // Menggunakan variabel
     display: flex;
     align-items: center;
 
@@ -74,13 +79,13 @@
 
   ion-label p {
     font-size: 0.8rem;
-    color: var(--ion-color-medium-shade, #888);
+    color: var(--ion-color-medium-shade);
   }
 
   .expanded-content {
     margin: -12px 0 12px 0;
     animation: fadeIn 0.3s ease-in-out;
-    border: 1px solid var(--ion-border-color, #e0e0e0);
+    border: 1px solid var(--ion-border-color); // Menggunakan variabel
     border-top: none;
     border-radius: 0 0 8px 8px;
     
@@ -97,140 +102,66 @@
 
     .copy-button {
       --color: var(--ion-color-primary);
-      --background: var(--ion-color-primary-contrast);
-      --border-radius: 6px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .qr-code-container {
-      padding: 16px;
-      text-align: center;
-      background: rgba(var(--ion-color-primary-rgb), 0.05);
-      border-radius: 0 0 8px 8px;
-      
-      img {
-        max-width: 220px;
-        width: 100%;
-        height: auto;
-        margin-bottom: 12px;
-        border-radius: 8px;
-        border: 1px solid var(--ion-border-color, #e0e0e0);
-      }
-  
-      p {
-        font-size: 0.9rem;
-        color: var(--ion-text-color);
-        margin: 0;
-      }
     }
   }
-
+  
+  // Rincian Pembayaran
   .payment-details-card {
-    margin-top: 2rem;
+    margin: 2rem 16px 0 16px; // Samakan margin
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    background: var(--ion-item-background); // Menggunakan variabel
+    padding: 16px;
 
     .car-info-header {
       --background: transparent;
-      ion-thumbnail {
-        width: 100px;
-        height: 60px;
-      }
       h2 {
         font-size: 1.2rem;
         font-weight: bold;
+        color: var(--ion-text-color); // Menggunakan variabel
       }
       ion-chip {
         --background: rgba(var(--ion-color-primary-rgb), 0.1);
         --color: var(--ion-color-primary);
-        height: 24px;
-        font-size: 0.75rem;
       }
       .price {
         font-weight: 600;
+        color: var(--ion-text-color); // Menggunakan variabel
       }
     }
   
     .card-content {
-      padding: 16px;
+      padding: 0; // Padding sudah di parent
     }
   
     .rental-period {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      text-align: center;
-      margin-bottom: 8px;
-  
-      .date-col {
-        p {
-          color: var(--ion-color-medium);
-          margin: 0 0 4px 0;
-          font-size: 0.8rem;
-        }
-        h3 {
-          font-weight: bold;
-          margin: 0;
-          font-size: 1rem;
-        }
+      .date-col h3 {
+        color: var(--ion-text-color);
       }
       ion-icon {
-        font-size: 1.5rem;
-      }
-    }
-    
-    .total-duration {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--ion-color-medium);
-      font-size: 0.8rem;
-      margin-bottom: 16px;
-      ion-icon {
-        margin-right: 4px;
+        color: var(--ion-color-primary);
       }
     }
     
     .driver-option {
-      --background: #f9f9f9;
+      --background: var(--ion-background-color); // PERBAIKAN: Gunakan variabel
       border-radius: 8px;
-      margin-bottom: 16px;
-    }
-  
-    .cost-breakdown {
-      .cost-item {
-        display: flex;
-        justify-content: space-between;
-        font-size: 0.9rem;
-        margin-bottom: 8px;
-  
-        span:first-child {
-          color: var(--ion-color-medium);
-        }
-        span:last-child {
-          font-weight: 500;
-        }
-      }
-    }
-    
-    .divider-line {
       margin: 16px 0;
     }
   
-    .upload-section {
-      h3 {
-        font-size: 1rem;
-        font-weight: bold;
-        margin-top: 0;
-        margin-bottom: 12px;
-      }
-      ion-button {
-        --border-color: var(--ion-color-medium);
-        --color: var(--ion-color-medium);
-        text-transform: none;
-      }
+    .cost-breakdown .cost-item span:last-child {
+      font-weight: 500;
+      color: var(--ion-text-color); // Menggunakan variabel
+    }
+    
+    .divider-line {
+      --background: var(--ion-border-color); // Menggunakan variabel
+      margin: 16px 0;
+      height: 1px;
+    }
+  
+    .upload-section h3 {
+      color: var(--ion-text-color);
     }
   }
   

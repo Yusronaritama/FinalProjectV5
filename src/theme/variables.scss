@@ -1,31 +1,40 @@
-/* Untuk informasi lebih lanjut tentang theming, kunjungi:
-https://ionicframework.com/docs/theming/theming-with-css-variables */
+// ===================================================================
+// KODE PENGGANTI FINAL UNTUK: src/theme/variables.scss
+// Versi ini memiliki palet warna yang berbeda untuk Mode Terang dan Gelap.
+// ===================================================================
 
 :root {
-  /** Warna dasar untuk mode terang */
-  --ion-color-primary: #27ae60;
-  --ion-color-primary-rgb: 39,174,96;
+  /** Warna-warna dasar aplikasi (Mode Terang) **/
+  --ion-color-primary: #008080; // Hijau Toska
+  --ion-color-primary-rgb: 0,128,128;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255,255,255;
-  --ion-color-primary-shade: #229954;
-  --ion-color-primary-tint: #3db170;
+  --ion-color-primary-shade: #007171;
+  --ion-color-primary-tint: #1a8d8d;
 
-  --ion-color-secondary: #064420;
+  --ion-color-secondary: #064420; // Hijau Tua
   --ion-color-secondary-rgb: 6,68,32;
   --ion-color-secondary-contrast: #ffffff;
   --ion-color-secondary-contrast-rgb: 255,255,255;
-  --ion-color-secondary-shade: #053b1c;
-  --ion-color-secondary-tint: #1f5636;
+  --ion-color-secondary-shade: #053c1c;
+  --ion-color-secondary-tint: #1f5736;
 
-  // --- TAMBAHKAN DEFINISI WARNA TERTIARY DI SINI ---
-  --ion-color-tertiary: #B8ECBC;
+  --ion-color-tertiary: #b8ecbc; // Hijau Muda
   --ion-color-tertiary-rgb: 184,236,188;
-  --ion-color-tertiary-contrast: #000000; // Teks di atasnya berwarna hitam
+  --ion-color-tertiary-contrast: #000000;
   --ion-color-tertiary-contrast-rgb: 0,0,0;
-  --ion-color-tertiary-shade: #a2cfab;
-  --ion-color-tertiary-tint: #bfedc8;
+  --ion-color-tertiary-shade: #a2cfa5;
+  --ion-color-tertiary-tint: #bfecc2;
   
-  /** Warna dasar aplikasi */
+  --ion-color-success: #2dd36f;
+  --ion-color-warning: #ffc409;
+  --ion-color-danger: #eb445a;
+  
+  --ion-color-dark: #222428;
+  --ion-color-medium: #92949c;
+  --ion-color-light: #f4f5f8;
+
+  /** Variabel Semantik untuk Mode Terang */
   --ion-background-color: #f4f5f8;
   --ion-text-color: #000000;
   --ion-item-background: #ffffff;
@@ -33,34 +42,54 @@ https://ionicframework.com/docs/theming/theming-with-css-variables */
 }
 
 
-/* -- DARK MODE SETTINGS -- */
-@media (prefers-color-scheme: dark) {
-  body {
-    --ion-color-primary: #2dd36f;
-    --ion-color-primary-rgb: 45,211,111;
-    --ion-color-primary-contrast: #000000;
-    --ion-color-primary-contrast-rgb: 0,0,0;
-    --ion-color-primary-shade: #28ba62;
-    --ion-color-primary-tint: #42d77d;
+/*
+   * Dark Theme Colors
+   * -------------------------------------------
+   */
 
-    --ion-color-secondary: #064420;
-    --ion-color-secondary-rgb: 80,200,255;
-    --ion-color-secondary-contrast: #000000;
-    --ion-color-secondary-contrast-rgb: 0,0,0;
-    --ion-color-secondary-shade: #053b1c;
-    --ion-color-secondary-tint: #1f5636;
+body.dark {
+  /* PERUBAHAN UTAMA ADA DI SINI.
+    Kita akan membuat warna-warna utama menjadi lebih cerah
+    agar kontrasnya bagus di atas latar belakang gelap.
+  */
 
-    --ion-color-tertiary: #B8ECBC; // Warna tersier untuk mode gelap
-    --ion-color-tertiary-rgb: 75,87,49;
-    --ion-color-tertiary-contrast: #ffffff;
-    --ion-color-tertiary-contrast-rgb: 255,255,255;
-    --ion-color-tertiary-shade: #424d2b;
-    --ion-color-tertiary-tint: #5d6846;
+  /** primary (Dark Mode) **/
+  --ion-color-primary: #25a1a1; // Dibuat lebih cerah dari #008080
+  --ion-color-primary-rgb: 37,161,161;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255,255,255;
+  --ion-color-primary-shade: #218e8e;
+  --ion-color-primary-tint: #3babab;
 
-    /** Warna dasar untuk mode gelap */
-    --ion-background-color: #121212;
-    --ion-text-color: #ffffff;
-    --ion-item-background: #1e1e1e;
-    --ion-border-color: #222222;
-  }
+  /** secondary (Dark Mode) **/
+  --ion-color-secondary: #50c878; // Dibuat lebih cerah dari #064420
+  --ion-color-secondary-rgb: 80,200,120;
+  --ion-color-secondary-contrast: #000000;
+  --ion-color-secondary-contrast-rgb: 0,0,0;
+  --ion-color-secondary-shade: #46b06a;
+  --ion-color-secondary-tint: #62ce85;
+
+  /** tertiary (Dark Mode) **/
+  --ion-color-tertiary: #4c5a4d; // Dibuat lebih gelap dari #b8ecbc
+  --ion-color-tertiary-rgb: 76,90,77;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255,255,255;
+  --ion-color-tertiary-shade: #434f44;
+  --ion-color-tertiary-tint: #5e6b5f;
+  
+  /** Warna-warna fungsional untuk mode gelap **/
+  --ion-color-success: #2fdf75;
+  --ion-color-warning: #ffd534;
+  --ion-color-danger: #ff4961;
+
+  /** Variabel Semantik untuk Mode Gelap */
+  --ion-background-color: #121212;
+  --ion-text-color: #ffffff;
+  --ion-item-background: #1e1e1e;
+  --ion-border-color: #2e2e2e;
+  
+  /** Variabel Light, Medium, Dark dibalik untuk Mode Gelap */
+  --ion-color-light: #222428;
+  --ion-color-medium: #989aa2;
+  --ion-color-dark: #f4f5f8;
 }

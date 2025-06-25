@@ -1,20 +1,32 @@
+// ===================================================================
+// KODE PENGGANTI LENGKAP UNTUK: src/app/activity/activity.page.scss
+// Versi ini sudah sepenuhnya responsif terhadap tema terang & gelap
+// ===================================================================
+
 ion-content {
-  --background: #f4f5f8;
+  // Gunakan variabel untuk latar belakang utama halaman
+  --background: var(--ion-background-color);
 }
 
 .order-card {
   margin: 16px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  // Gunakan variabel untuk latar belakang kartu
+  background: var(--ion-item-background); 
 
   .card-header {
-    --background: #f9f9f9;
+    // Untuk header kartu, kita bisa buat sedikit berbeda dari item-background
+    --background: rgba(var(--ion-color-medium-rgb), 0.05); 
+    
     h2 {
       font-size: 1.1rem;
       font-weight: bold;
+      color: var(--ion-text-color); // Gunakan variabel
     }
     p {
       font-size: 0.8rem;
+      color: var(--ion-color-medium-shade); // Gunakan variabel
     }
     .status-chip-main {
       font-size: 0.7rem;
@@ -23,24 +35,23 @@ ion-content {
   }
 
   .car-details {
-    ion-thumbnail {
-      --size: 70px;
-      --border-radius: 8px;
-    }
+    --background: transparent; // Buat transparan karena parent-nya (kartu) sudah punya warna
+    
     h3 {
       font-size: 1rem;
       font-weight: 600;
+      color: var(--ion-text-color); // Gunakan variabel
     }
     .return-info {
       font-size: 0.75rem;
       white-space: normal;
-      color: var(--ion-color-medium-shade);
+      color: var(--ion-color-medium-shade); // Gunakan variabel
     }
   }
 
   .divider {
     height: 1px;
-    background-color: var(--ion-border-color);
+    background-color: var(--ion-border-color); // Gunakan variabel
     margin: 8px 16px;
   }
 
@@ -56,6 +67,7 @@ ion-content {
         margin: 0;
         font-size: 1rem;
         font-weight: 600;
+        color: var(--ion-text-color); // Gunakan variabel
       }
       .status-chip-deposit {
         font-size: 0.7rem;
@@ -72,14 +84,16 @@ ion-content {
       margin-bottom: 4px;
 
       span:first-child {
-        color: var(--ion-color-medium-shade);
+        color: var(--ion-color-medium-shade); // Gunakan variabel
+      }
+      span:last-child {
+          color: var(--ion-text-color); // Gunakan variabel
       }
       .danger-text {
         color: var(--ion-color-danger);
       }
       &.refunded {
         color: var(--ion-color-success);
-        margin-top: 8px;
       }
     }
   }
