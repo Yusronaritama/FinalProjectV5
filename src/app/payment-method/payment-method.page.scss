@@ -191,3 +191,15 @@
     }
   }
 }
+
+.total-cost {
+  font-size: 1.1rem; // Sedikit lebih besar
+  color: var(--ion-color-primary); // Menggunakan warna utama
+  margin-top: 5px;
+}
+
+.total-divider {
+  margin-top: 8px;
+  min-height: 1px;
+  background-color: #e0e0e0;
+}

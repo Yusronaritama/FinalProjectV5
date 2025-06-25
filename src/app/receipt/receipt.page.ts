@@ -7,10 +7,9 @@ import html2canvas from 'html2canvas';
   selector: 'app-receipt',
   templateUrl: './receipt.page.html',
   styleUrls: ['./receipt.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class ReceiptPage implements OnInit {
-
   // Menangkap elemen div struk untuk diubah menjadi gambar
   @ViewChild('receiptCard', { static: false }) receiptCard!: ElementRef;
 
@@ -19,47 +18,46 @@ export class ReceiptPage implements OnInit {
 
   constructor(
     private router: Router,
-    private toastController: ToastController
+    private toastController: ToastController,
   ) {
     const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras.state && navigation.extras.state['data']) {
-      this.rentalData = navigation.extras.state['data'];
+    if (navigation?.extras.state && navigation.extras.state['rental']) {
+      this.rentalData = navigation.extras.state['rental'];
     } else {
-      // Jika tidak ada data, kembali ke home untuk mencegah error
       this.router.navigateByUrl('/home');
     }
   }
 
   ngOnInit() {
-    if (this.rentalData) {
-      // Buat data transaksi palsu untuk ditampilkan di struk
+    if (this.rentalData && this.rentalData.payment) {
       this.transactionDetails = {
-        orderId: `#GR${new Date().getTime().toString().slice(-6)}`,
-        transactionId: `TXN${Date.now()}`,
-        paymentDate: new Date(),
-        status: 'Paid',
-        statusColor: 'success'
+        orderId: `#GR${String(this.rentalData.id).padStart(6, '0')}`,
+        transactionId: `TXN${this.rentalData.payment.id}`,
+        paymentDate: new Date(this.rentalData.payment.updated_at),
+        status:
+          this.rentalData.payment.status_pembayaran === 'lunas'
+            ? 'Paid'
+            : 'Pending',
+        statusColor:
+          this.rentalData.payment.status_pembayaran === 'lunas'
+            ? 'success'
+            : 'warning',
       };
     }
   }
 
   // Fungsi untuk menyimpan struk sebagai gambar
-   async saveReceipt() {
+  async saveReceipt() {
     const card = this.receiptCard.nativeElement;
-    
+
     this.presentToast('Menyiapkan struk untuk diunduh...', 'primary');
 
     try {
       const canvas = await html2canvas(card, { scale: 2, useCORS: true });
       const a = document.createElement('a');
       a.href = canvas.toDataURL('image/png');
-      a.download = `receipt-${this.transactionDetails.orderId.replace('#','')}.png`;
+      a.download = `receipt-${this.transactionDetails.orderId.replace('#', '')}.png`;
       a.click();
-      
-      // --- INI TAMBAHANNYA ---
-      // Setelah proses unduh dimulai, arahkan ke halaman sukses
-      this.navigateToSuccessPage();
-
     } catch (error) {
       console.error('Gagal menyimpan struk:', error);
       this.presentToast('Gagal menyimpan struk.', 'danger');
@@ -68,14 +66,11 @@ export class ReceiptPage implements OnInit {
 
   // Fungsi untuk membagikan struk menggunakan Web Share API
   async shareReceipt() {
-    // --- INI TAMBAHANNYA ---
-    // Langsung arahkan ke halaman sukses setelah tombol diklik
-    this.navigateToSuccessPage();
-
     // Proses berbagi tetap berjalan di latar belakang jika didukung
     const shareData = {
       title: 'GoRent Payment Receipt',
-      text: `Berikut adalah rincian sewa mobil ${this.rentalData.car.name} dengan Order ID: ${this.transactionDetails.orderId}`,
+      // PERBAIKAN: Gunakan `this.rentalData.vehicle.nama` bukan `this.rentalData.car.name`
+      text: `Berikut adalah rincian sewa mobil ${this.rentalData.vehicle.nama} dengan Order ID: ${this.transactionDetails.orderId}`,
       url: window.location.href,
     };
 
@@ -90,17 +85,19 @@ export class ReceiptPage implements OnInit {
       console.warn('Browser Anda tidak mendukung fitur berbagi.');
     }
   }
-  
-  async presentToast(message: string, color: 'primary' | 'success' | 'warning' | 'danger') {
+
+  async presentToast(
+    message: string,
+    color: 'primary' | 'success' | 'warning' | 'danger',
+  ) {
     const toast = await this.toastController.create({
       message,
       duration: 3000,
       color,
-      position: 'top'
+      position: 'top',
     });
     toast.present();
   }
-
 
   navigateToSuccessPage() {
     // `replaceUrl: true` agar pengguna tidak bisa kembali ke halaman struk dengan tombol back

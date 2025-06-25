@@ -4,59 +4,57 @@
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
     <ion-title>Aktivitas</ion-title>
-    <ion-buttons slot="end">
-      <ion-button>
-        <ion-icon slot="icon-only" name="search-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-list lines="none">
+  <div *ngIf="isLoading" class="ion-text-center ion-padding">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <div *ngIf="!isLoading && orderHistory.length === 0" class="ion-text-center ion-padding">
+    <p>Belum ada riwayat aktivitas.</p>
+  </div>
+
+  <ion-list lines="none" *ngIf="!isLoading && orderHistory.length > 0">
     <ion-card *ngFor="let order of orderHistory" class="order-card">
-      
+
       <ion-item class="card-header" lines="none">
         <ion-label>
-          <h2>{{ order.id }}</h2>
-          <p>{{ order.dateRange }}</p>
+          <h2>#GR{{ order.id }}</h2>
+          <p>{{ order.waktu_sewa | date:'d MMM y' }} - {{ order.waktu_kembali | date:'d MMM y' }}</p>
         </ion-label>
-        <ion-chip [color]="getStatusColor(order.status)" outline="true" class="status-chip-main">{{ order.status }}</ion-chip>
+        <ion-chip [color]="getStatusColor(order.status_pemesanan)" outline="true" class="status-chip-main">
+          {{ order.status_pemesanan }}
+        </ion-chip>
       </ion-item>
 
       <ion-item lines="none" class="car-details">
         <ion-thumbnail slot="start">
-          <img [src]="order.car.imageUrl" (error)="carImg.src = 'assets/icon/placeholder.png'" #carImg>
-        </ion-thumbnail>
+          <img [src]="'http://127.0.0.1:8000' + order.vehicle?.foto_utama"
+               (error)="carImg.src = 'assets/icon/placeholder.png'" #carImg>
+          </ion-thumbnail>
         <ion-label>
-          <h3>{{ order.car.name }}</h3>
-          <p>{{ order.car.priceInfo }}</p>
-          <p class="return-info">{{ order.car.returnInfo }}</p>
+          <h3>{{ order.vehicle?.merk }} {{ order.vehicle?.nama }}</h3>
+          <p>{{ order.total_harga | currency:'Rp ':'symbol':'1.0-0' }}</p>
+          <p class="return-info">
+            {{ order.delivery_option === 'delivered' ? 'Diantar ke lokasi Anda' : 'Ambil Sendiri' }}
+          </p>
         </ion-label>
       </ion-item>
-      
+
       <div class="divider"></div>
 
-      <div class="deposit-section">
+      <div class="deposit-section" *ngIf="order.payment">
         <div class="deposit-header">
           <h4>Security Deposit</h4>
-          <ion-chip [color]="getStatusColor(order.securityDeposit.status)" class="status-chip-deposit">{{ order.securityDeposit.status }}</ion-chip>
+          <ion-chip [color]="getStatusColor(order.payment.status_deposit)" class="status-chip-deposit">
+            {{ order.payment.status_deposit }}
+          </ion-chip>
         </div>
         <div class="deposit-row">
           <span>Original Deposit</span>
-          <span>{{ order.securityDeposit.original | currency:'Rp ':'symbol':'1.0-0' }}</span>
-        </div>
-        <div class="deposit-row" *ngIf="order.securityDeposit.deductions">
-          <span>Deductions</span>
-          <span class="danger-text">- {{ order.securityDeposit.deductions | currency:'Rp ':'symbol':'1.0-0' }}</span>
-        </div>
-        <div class="deposit-row refunded">
-          <strong>Refunded Amount</strong>
-          <strong>{{ order.securityDeposit.refunded | currency:'Rp ':'symbol':'1.0-0' }}</strong>
-        </div>
-        <div class="deposit-row" *ngIf="order.securityDeposit.refundDate">
-          <span>Refund Date</span>
-          <span>{{ order.securityDeposit.refundDate }}</span>
+          <span>{{ order.vehicle?.security_deposit | currency:'Rp ':'symbol':'1.0-0' }}</span>
         </div>
       </div>
 

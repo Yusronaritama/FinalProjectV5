@@ -15,9 +15,10 @@
     --padding-end: 10px;
     --padding-top: 10px;
     --padding-bottom: 10px;
-    
+
     background: var(--background);
-    padding: var(--padding-top) var(--padding-end) var(--padding-bottom) var(--padding-start);
+    padding: var(--padding-top) var(--padding-end) var(--padding-bottom)
+      var(--padding-start);
     border-radius: 6px;
     display: flex;
     justify-content: space-between;
@@ -38,12 +39,14 @@
   <div *ngIf="!isLoading && vehicle">
     <ion-item lines="none" class="car-info-header">
       <ion-thumbnail slot="start">
-        <img [src]="'http://127.0.0.1:8000' + vehicle.foto_utama">
+        <img [src]="'http://127.0.0.1:8000' + vehicle.foto_utama" />
       </ion-thumbnail>
       <ion-label>
         <h2>{{ vehicle.nama }}</h2>
         <div class="package-chip">{{ rentalDuration }} Days Package</div>
-        <p class="price">{{ vehicle.harga_sewa_harian | currency:'Rp ':'symbol':'1.0-0' }}/day</p>
+        <p class="price">
+          {{ vehicle.harga_sewa_harian | currency:'Rp ':'symbol':'1.0-0' }}/day
+        </p>
       </ion-label>
     </ion-item>
 
@@ -65,7 +68,10 @@
       </ion-list>
 
       <h3 class="section-title">Driver Options</h3>
-      <ion-radio-group [(ngModel)]="driverOption" (ionChange)="onSelectionChange()">
+      <ion-radio-group
+        [(ngModel)]="driverOption"
+        (ionChange)="onSelectionChange()"
+      >
         <ion-item [class.item-selected]="driverOption === 'pickup'">
           <ion-label>Pickup</ion-label>
           <ion-radio slot="end" value="pickup"></ion-radio>
@@ -73,7 +79,10 @@
         <ion-item [class.item-selected]="driverOption === 'delivered'">
           <ion-label>
             Diantar
-            <p>Additional {{ FLAT_DELIVERY_FEE | currency:'Rp ':'symbol':'1.0-0' }}</p>
+            <p>
+              Additional {{ FLAT_DELIVERY_FEE | currency:'Rp ':'symbol':'1.0-0'
+              }}
+            </p>
           </ion-label>
           <ion-radio slot="end" value="delivered"></ion-radio>
         </ion-item>
@@ -94,7 +103,10 @@
         </div>
         <div class="summary-item">
           <span>Security Deposit (Refundable)</span>
-          <span>{{ vehicle.security_deposit | currency:'Rp ':'symbol':'1.0-0' }}</span>
+          <span
+            >{{ vehicle.security_deposit | currency:'Rp ':'symbol':'1.0-0'
+            }}</span
+          >
         </div>
         <ion-item-divider></ion-item-divider>
         <div class="summary-item total">
@@ -102,23 +114,26 @@
           <span>{{ totalCost | currency:'Rp ':'symbol':'1.0-0' }}</span>
         </div>
       </div>
-      
-      <ion-button expand="block" color="primary" class="ion-margin-top" (click)="confirmBooking()">
-        Continue to Payment
-      </ion-button>
+
+      <ion-button
+        expand="block"
+        (click)="confirmBooking()"
+        [disabled]="isLoading || isProfileLoading"
+        >CONTINUE TO PAYMENT</ion-button
+      >
     </div>
   </div>
 
-
   <ion-modal [keepContentsMounted]="true">
     <ng-template>
-      <ion-datetime 
-        id="pickupDatetime" 
-        [(ngModel)]="pickupDateTime" 
+      <ion-datetime
+        id="pickupDatetime"
+        [(ngModel)]="pickupDateTime"
         [min]="minPickupDate"
         [hourValues]="allowedHours"
         hour-cycle="h23"
-        (ionChange)="onPickupTimeChange()">
+        (ionChange)="onPickupTimeChange()"
+      >
       </ion-datetime>
     </ng-template>
   </ion-modal>

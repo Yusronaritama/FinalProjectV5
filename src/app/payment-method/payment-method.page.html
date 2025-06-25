@@ -96,6 +96,10 @@
           <span>Security Deposit (Refundable)</span>
           <span>{{ rentalData.car.security_deposit | currency:'Rp ':'symbol':'1.0-0' }}</span>
         </div>
+        <div class="cost-item total-cost">
+            <strong>Jumlah Total</strong>
+            <strong>{{ (Number(rentalData.cost) || 0) + (Number(rentalData.delivery) || 0) + (Number(rentalData.car.security_deposit) || 0) | currency:'Rp ':'symbol':'1.0-0' }}</strong>
+        </div>
       </div>
       
       <ion-item-divider class="divider-line"></ion-item-divider>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { VehicleService } from '../services/vehicle.service';
 
 // Interface untuk mendefinisikan struktur data setiap item riwayat
 interface OrderHistory {
@@ -25,88 +26,34 @@ interface OrderHistory {
   selector: 'app-activity',
   templateUrl: './activity.page.html',
   styleUrls: ['./activity.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class ActivityPage implements OnInit {
+  public orderHistory: any[] = []; // Ubah tipe menjadi any[]
+  public isLoading: boolean = true;
 
-  public orderHistory: OrderHistory[] = [];
-
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private rentalService: VehicleService,
+  ) {}
 
   ngOnInit() {
     this.loadOrderHistory();
   }
 
-  // Membuat data sampel untuk ditampilkan
   loadOrderHistory() {
-    this.orderHistory = [
-      {
-        id: '#GR001234',
-        dateRange: '15 Jul 2023 - 20 Jul 2023',
-        status: 'REFUNDED',
-        car: {
-          name: 'Toyota Harrier 2019 LT',
-          priceInfo: 'Rp 1.750.000 (5 days)',
-          returnInfo: 'Returned: 20 Jul 2023, 10:15 AM. Pengembalian dana sukses.',
-          imageUrl: 'assets/image/tankleopard.jpeg' // Ganti dengan path gambar Anda
-        },
-        securityDeposit: {
-          status: 'REFUNDED',
-          original: 500000,
-          refunded: 500000,
-          refundDate: '20 Jul 2023'
-        }
+    this.isLoading = true;
+    this.rentalService.getHistory().subscribe({
+      // Panggil API riwayat
+      next: (response) => {
+        this.orderHistory = response.data;
+        this.isLoading = false;
       },
-      {
-        id: '#GR001235',
-        dateRange: '22 Jul 2023 - 23 Jul 2023',
-        status: 'PENDING',
-        car: {
-          name: 'Honda Brio 2022',
-          priceInfo: 'Rp 700.000 (2 days)',
-          returnInfo: 'Menunggu konfirmasi pembayaran.',
-          imageUrl: 'assets/image/tankleopard.jpeg' // Ganti dengan path gambar Anda
-        },
-        securityDeposit: {
-          status: 'PROSES',
-          original: 300000,
-          refunded: 0,
-        }
+      error: (err) => {
+        console.error('Gagal memuat riwayat:', err);
+        this.isLoading = false;
       },
-      {
-        id: '#GR001236',
-        dateRange: '25 Jul 2023 - 28 Jul 2023',
-        status: 'ACTIVE',
-        car: {
-          name: 'Mitsubishi Pajero Sport',
-          priceInfo: 'Rp 2.400.000 (3 days)',
-          returnInfo: 'Mobil ini sedang dalam masa sewa Anda.',
-          imageUrl: 'assets/image/tankleopard.jpeg' // Ganti dengan path gambar Anda
-        },
-        securityDeposit: {
-          status: 'DI TAHAN',
-          original: 1000000,
-          deductions: 250000, // Contoh ada potongan
-          refunded: 0,
-        }
-      },
-      {
-        id: '#GR001237',
-        dateRange: '10 Jul 2023 - 11 Jul 2023',
-        status: 'CANCEL',
-        car: {
-          name: 'Daihatsu Ayla',
-          priceInfo: 'Rp 500.000 (2 days)',
-          returnInfo: 'Pesanan dibatalkan.',
-          imageUrl: 'assets/image/tankleopard.jpeg' // Ganti dengan path gambar Anda
-        },
-        securityDeposit: {
-          status: 'TIDAK ADA',
-          original: 0,
-          refunded: 0,
-        }
-      },
-    ];
+    });
   }
 
   // Helper function untuk mendapatkan warna status
@@ -127,10 +74,22 @@ export class ActivityPage implements OnInit {
   }
 
   // Placeholder untuk fungsi tombol
-  viewReceipt(order: OrderHistory) {
-    console.log('Melihat struk untuk order:', order.id);
-    // Navigasi ke halaman receipt dengan membawa data order
-    this.router.navigate(['/receipt'], { state: { data: order } });
+  viewReceipt(order: any) {
+    // Ubah tipe menjadi any
+    // Cek status pembayaran dari data order
+    if (
+      order.payment &&
+      (order.payment.status_pembayaran === 'lunas' ||
+        order.payment.status_pembayaran === 'paid')
+    ) {
+      // Jika sudah lunas, ke halaman receipt
+      this.router.navigate(['/receipt'], { state: { rental: order } });
+    } else {
+      // Jika masih pending, ke halaman tunggu
+      this.router.navigate(['/waiting-confirmation'], {
+        state: { rental: order },
+      });
+    }
   }
 
   bookAgain(order: OrderHistory) {

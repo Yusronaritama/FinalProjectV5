@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { VehicleService } from '../services/vehicle.service'; // Tambahkan import ini
+
+
 
 // Interface untuk struktur data pembayaran
 interface PaymentMethod {
@@ -9,7 +12,8 @@ interface PaymentMethod {
   logo: string;
   isOpen: boolean;
   virtualAccount?: string; // Untuk Bank Transfer dan E-Wallet
-  qrCodeImageUrl?: string;  // Khusus untuk QRIS
+  dbValue: string; // <-- TAMBAHKAN BARIS INI
+  qrCodeImageUrl?: string; // Khusus untuk QRIS
 }
 
 interface PaymentGroup {
@@ -21,21 +25,22 @@ interface PaymentGroup {
   selector: 'app-payment-method',
   templateUrl: './payment-method.page.html',
   styleUrls: ['./payment-method.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class PaymentMethodPage implements OnInit {
-
   public rentalData: any;
   public paymentGroups: PaymentGroup[] = [];
   public selectedMethod: PaymentMethod | null = null;
-  
+
   // Properti untuk menangani unggahan file
   public paymentProofFile: File | null = null;
   public paymentProofFilename: string = 'Choose File';
+  public Number = Number;
 
   constructor(
     private router: Router,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private vehicleService: VehicleService, // <-- TAMBAHKAN INI
   ) {
     // Mengambil data rental dari halaman sebelumnya
     const navigation = this.router.getCurrentNavigation();
@@ -47,33 +52,68 @@ export class PaymentMethodPage implements OnInit {
   ngOnInit() {
     // Jika tidak ada data rental, kembali ke home
     if (!this.rentalData) {
-      console.error("Data rental tidak ditemukan! Kembali ke halaman utama.");
+      console.error('Data rental tidak ditemukan! Kembali ke halaman utama.');
       this.router.navigateByUrl('/home');
       return;
     }
     this.initializePaymentMethods();
   }
-  
+
   // Inisialisasi semua data metode pembayaran
   private initializePaymentMethods() {
     this.paymentGroups = [
       {
         group: 'Bank Transfer',
         methods: [
-          
-          { name: 'Bank Mandiri', desc: 'Transfer via ATM, Mobile Banking, Internet Banking', logo: 'assets/logopayment/mandiri.jpg', virtualAccount: '2345 678 901', isOpen: false },
-          
-        ]
+          // Path logo dikembalikan ke folder "payment" seperti di kode Anda sebelumnya
+          {
+            name: 'Bank Mandiri',
+            desc: 'Transfer via ATM, Mobile Banking, Internet Banking',
+            logo: 'assets/logopayment/mandiri.jpg',
+            virtualAccount: '2345 678 901',
+            isOpen: false,
+            dbValue: 'transfer',
+          },
+        ],
       },
       {
         group: 'E-Wallet',
         methods: [
-          { name: 'GoPay', desc: 'Pay with your GoPay balance', logo: 'assets/logopayment/mandiri.jpg', virtualAccount: '0812 3456 7890 (a/n GoRent)', isOpen: false },
-          { name: 'OVO', desc: 'Pay with your OVO balance', logo: 'assets/logopayment/mandiri.jpg', virtualAccount: '0812 3456 7891 (a/n GoRent)', isOpen: false },
-          { name: 'DANA', desc: 'Pay with your DANA balance', logo: 'assets/logopayment/mandiri.jpg', virtualAccount: '0812 3456 7892 (a/n GoRent)', isOpen: false },
-          { name: 'QRIS', desc: 'Pay with any supporting app', logo: 'assets/logopayment/mandiri.jpg', qrCodeImageUrl: 'assets/logopayment/mandiri.jpg', isOpen: false },
-        ]
-      }
+          // Path logo dikembalikan ke folder "payment" seperti di kode Anda sebelumnya
+          {
+            name: 'GoPay',
+            desc: 'Pay with your GoPay balance',
+            logo: 'assets/logopayment/mandiri.jpg',
+            virtualAccount: '0812 3456 7890 (a/n GoRent)',
+            isOpen: false,
+            dbValue: 'transfer',
+          },
+          {
+            name: 'OVO',
+            desc: 'Pay with your OVO balance',
+            logo: 'assets/logopayment/mandiri.jpg',
+            virtualAccount: '0812 3456 7891 (a/n GoRent)',
+            isOpen: false,
+            dbValue: 'transfer',
+          },
+          {
+            name: 'DANA',
+            desc: 'Pay with your DANA balance',
+            logo: 'assets/logopayment/mandiri.jpg',
+            virtualAccount: '0812 3456 7892 (a/n GoRent)',
+            isOpen: false,
+            dbValue: 'transfer',
+          },
+          {
+            name: 'QRIS',
+            desc: 'Pay with any supporting app',
+            logo: 'assets/logopayment/mandiri.jpg',
+            qrCodeImageUrl: 'assets/payment/qris-example.png',
+            isOpen: false,
+            dbValue: 'qris',
+          },
+        ],
+      },
     ];
   }
 
@@ -82,8 +122,8 @@ export class PaymentMethodPage implements OnInit {
     const wasOpen = selectedMethod.isOpen;
 
     // Tutup semua dropdown
-    this.paymentGroups.forEach(group => {
-      group.methods.forEach(method => {
+    this.paymentGroups.forEach((group) => {
+      group.methods.forEach((method) => {
         method.isOpen = false;
       });
     });
@@ -102,7 +142,7 @@ export class PaymentMethodPage implements OnInit {
   async copyVirtualAccount(event: Event, virtualAccount: string | undefined) {
     event.stopPropagation(); // Mencegah dropdown tertutup
     if (!virtualAccount) return;
-    
+
     try {
       await navigator.clipboard.writeText(virtualAccount);
       this.presentToast('Nomor pembayaran disalin!', 'success');
@@ -124,34 +164,58 @@ export class PaymentMethodPage implements OnInit {
   async confirmPayment() {
     // Validasi 1: Metode pembayaran harus dipilih
     if (!this.selectedMethod) {
-      this.presentToast('Silakan pilih metode pembayaran terlebih dahulu.', 'warning');
+      this.presentToast(
+        'Silakan pilih metode pembayaran terlebih dahulu.',
+        'warning',
+      );
       return;
     }
-    
-    // Validasi 2: Bukti pembayaran harus diunggah jika metode memerlukannya
-    if (this.selectedMethod.virtualAccount || this.selectedMethod.qrCodeImageUrl) {
-        if (!this.paymentProofFile) {
-            this.presentToast('Silakan unggah bukti pembayaran.', 'warning');
-            return;
-        }
+
+    // Validasi 2: Bukti pembayaran harus diunggah
+    if (!this.paymentProofFile) {
+      this.presentToast('Silakan unggah bukti pembayaran.', 'warning');
+      return;
     }
 
-    if (this.rentalData) {
-      const finalData = { 
-        ...this.rentalData, 
-        paymentMethod: this.selectedMethod.name,
-        paymentProof: this.paymentProofFile ? this.paymentProofFile.name : null
-      };
-      
-      console.log('Validasi berhasil! Memulai proses pembayaran...', finalData);
-      
-      // --- INI PERUBAHANNYA ---
-      // Arahkan ke halaman tunggu yang baru dibuat
-      // Kita tetap bisa mengirim data via state jika nanti diperlukan
-      this.router.navigate(['/waiting-confirmation'], {
-        state: { data: finalData }
-      });
-    }
+    // Siapkan data akhir untuk dikirim
+    const finalData = {
+      ...this.rentalData,
+      paymentMethod: this.selectedMethod.dbValue, // <-- UBAH MENJADI dbValue
+      paymentProofFile: this.paymentProofFile, // Sertakan objek File-nya
+      deliveryAddress: this.rentalData.deliveryAddress, // <-- TAMBAHKAN BARIS INI
+    };
+
+    // Tampilkan loading jika perlu
+    console.log('Memulai proses pengiriman data...', finalData);
+
+    // Panggil service untuk menyimpan data
+    this.vehicleService.createRental(finalData).subscribe({
+      next: (response) => {
+        console.log(
+          'Pesanan berhasil dibuat, data diterima dari server:',
+          response.data,
+        );
+        this.presentToast(
+          'Pemesanan Anda telah diterima. Mohon tunggu konfirmasi.',
+          'success',
+        );
+
+        // Arahkan ke halaman tunggu dengan membawa data rental yang baru dibuat
+        this.router.navigate(['/waiting-confirmation'], {
+          replaceUrl: true,
+          state: {
+            rental: response.data, // Kirim seluruh data rental dari server
+          },
+        });
+      },
+      error: (err) => {
+        console.error('Gagal mengirim data:', err);
+        this.presentToast(
+          'Gagal membuat pesanan. Silakan coba lagi.',
+          'danger',
+        );
+      },
+    });
   }
 
   // Fungsi bantuan untuk menampilkan pesan toast
@@ -160,7 +224,7 @@ export class PaymentMethodPage implements OnInit {
       message: message,
       duration: 2500,
       color: color,
-      position: 'top'
+      position: 'top',
     });
     toast.present();
   }

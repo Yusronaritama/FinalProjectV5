@@ -1,3 +1,4 @@
+<!-- GANTI SELURUH ISI FILE receipt.page.html DENGAN KODE INI -->
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
@@ -22,44 +23,52 @@
           <p class="section-title">Rental Details</p>
           <ion-item lines="none">
             <ion-thumbnail slot="start">
-              <img [src]="'http://127.0.0.1:8000' + rentalData.car?.foto_utama" (error)="carImg.src = 'assets/icon/placeholder.png'" #carImg>
+              <!-- PERBAIKAN: Gunakan rentalData.vehicle -->
+              <img [src]="'http://127.0.0.1:8000' + rentalData.vehicle?.foto_utama" (error)="carImg.src = 'assets/icon/placeholder.png'" #carImg>
             </ion-thumbnail>
             <ion-label>
-              <h3>{{ rentalData.car.nama }}</h3>
-              <p>{{ rentalData.pickup | date:'d MMM y' }} - {{ rentalData.return | date:'d MMM y' }} ({{ rentalData.duration }} days)</p>
-              <p>{{ rentalData.driverOption === 'delivered' ? 'Diantar' : 'Self-Drive' }}</p>
+              <!-- PERBAIKAN: Gunakan rentalData.vehicle.merk dan .nama -->
+              <h3>{{ rentalData.vehicle?.merk }} {{ rentalData.vehicle?.nama }}</h3>
+              <!-- PERBAIKAN: Gunakan waktu_sewa dan waktu_kembali -->
+              <p>{{ rentalData.waktu_sewa | date:'d MMM y' }} - {{ rentalData.waktu_kembali | date:'d MMM y' }}</p>
+              <!-- PERBAIKAN: Gunakan delivery_option -->
+              <p>{{ rentalData.delivery_option === 'delivered' ? 'Diantar' : 'Self-Drive' }}</p>
             </ion-label>
           </ion-item>
         </div>
 
         <div class="section">
           <p class="section-title">Payment Breakdown</p>
+          <!-- Perhitungan biaya sewa (ini perlu logika tambahan di .ts jika tidak ada) -->
           <div class="cost-item">
-            <span>Rental Fee ({{ rentalData.duration }} days)</span>
-            <span>{{ rentalData.cost | currency:'Rp ':'symbol':'1.0-0' }}</span>
+            <span>Rental Fee</span>
+            <!-- Asumsi total_harga sudah termasuk semuanya kecuali deposit -->
+            <span>{{ (rentalData.total_harga - rentalData.vehicle?.security_deposit) | currency:'Rp ':'symbol':'1.0-0' }}</span>
           </div>
-          <div class="cost-item" *ngIf="rentalData.delivery > 0">
-            <span>Driver</span>
-            <span>{{ rentalData.delivery | currency:'Rp ':'symbol':'1.0-0' }}</span>
+          <div class="cost-item" *ngIf="rentalData.delivery_fee > 0">
+            <span>Biaya Antar</span>
+            <span>{{ rentalData.delivery_fee | currency:'Rp ':'symbol':'1.0-0' }}</span>
           </div>
           <div class="cost-item">
             <span>Security Deposit</span>
-            <span>{{ rentalData.car.security_deposit | currency:'Rp ':'symbol':'1.0-0' }}</span>
+            <span>{{ rentalData.vehicle?.security_deposit | currency:'Rp ':'symbol':'1.0-0' }}</span>
           </div>
           <ion-item-divider></ion-item-divider>
           <div class="cost-item total">
             <strong>Total Paid</strong>
-            <strong>{{ rentalData.totalCost | currency:'Rp ':'symbol':'1.0-0' }}</strong>
+            <!-- PERBAIKAN: Gunakan total_harga -->
+            <strong>{{ rentalData.total_harga | currency:'Rp ':'symbol':'1.0-0' }}</strong>
           </div>
         </div>
 
         <div class="section">
           <p class="section-title">Payment Method</p>
-          <ion-item lines="none">
+          <ion-item lines="none" *ngIf="rentalData.payment">
             <ion-icon name="card-outline" slot="start" color="medium"></ion-icon>
             <ion-label>
-              <h3>{{ rentalData.paymentMethod }}</h3>
-              <p>**** **** **** 1234</p>
+              <!-- PERBAIKAN: Gunakan metode_pembayaran dari relasi payment -->
+              <h3>{{ rentalData.payment.metode_pembayaran | titlecase }}</h3>
+              <p>Pembayaran telah dikonfirmasi</p>
             </ion-label>
           </ion-item>
         </div>

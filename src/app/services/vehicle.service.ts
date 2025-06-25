@@ -29,14 +29,13 @@ export interface Vehicle {
 
 // TAMBAHKAN DECORATOR INJECTABLE
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 // PASTIKAN CLASS DIEKSPOR
 export class VehicleService {
-
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAllVehicles(): Observable<{ data: Vehicle[] }> {
     return this.http.get<{ data: Vehicle[] }>(`${this.apiUrl}/vehicles`);
@@ -44,5 +43,45 @@ export class VehicleService {
 
   getVehicleById(id: string | number): Observable<{ data: Vehicle }> {
     return this.http.get<{ data: Vehicle }>(`${this.apiUrl}/vehicles/${id}`);
+  }
+  // Letakkan method ini di dalam class VehicleService
+
+  createRental(rentalData: any): Observable<any> {
+    const formData = new FormData();
+
+    formData.append('vehicle_id', rentalData.car.id);
+    formData.append('waktu_sewa', rentalData.pickup);
+    formData.append('waktu_kembali', rentalData.return);
+    formData.append('delivery_option', rentalData.driverOption);
+    formData.append('payment_method', rentalData.paymentMethod);
+
+    // -- PENTING: TAMBAHKAN BLOK IF INI --
+    if (rentalData.deliveryAddress) {
+      formData.append('delivery_address', rentalData.deliveryAddress);
+    }
+
+    if (rentalData.paymentProofFile) {
+      formData.append(
+        'payment_proof',
+        rentalData.paymentProofFile,
+        rentalData.paymentProofFile.name,
+      );
+    }
+
+    return this.http.post(`${this.apiUrl}/rentals`, formData);
+  }
+
+  /**
+   * Mengambil riwayat rental milik pengguna yang sedang login.
+   */
+  getHistory(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/rentals/history`);
+  }
+
+  /**
+   * Memeriksa status dari satu rental spesifik berdasarkan ID-nya.
+   */
+  getRentalStatus(rentalId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/rentals/${rentalId}/status`);
   }
 }

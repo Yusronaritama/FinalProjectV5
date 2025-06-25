@@ -35,6 +35,11 @@ export class AuthService {
   private isAuthenticated = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticated.asObservable();
 
+  // ===== TAMBAHKAN METHOD INI =====
+  getProfile(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/user`);
+  }
+
   constructor(private http: HttpClient, private router: Router) {
     this.checkTokenOnLoad();
   }

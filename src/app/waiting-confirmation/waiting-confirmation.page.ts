@@ -1,31 +1,70 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, Navigation } from '@angular/router';
+// GANTI SELURUH ISI FILE DENGAN KODE INI
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { VehicleService } from '../services/vehicle.service';
 
 @Component({
   selector: 'app-waiting-confirmation',
   templateUrl: './waiting-confirmation.page.html',
   styleUrls: ['./waiting-confirmation.page.scss'],
-  standalone: false
+  standalone: false, // Pastikan ini false jika Anda menggunakan Ionic dengan Angular
 })
-export class WaitingConfirmationPage implements OnInit {
+export class WaitingConfirmationPage implements OnInit, OnDestroy {
 
-  private navigation: Navigation | null;
+  private rental: any;
+  private pollingInterval: any;
 
-  constructor(private router: Router) {
-    // Ambil data navigasi saat ini untuk diteruskan lagi nanti
-    this.navigation = this.router.getCurrentNavigation();
+  constructor(
+    private router: Router,
+    private rentalService: VehicleService // Inject service Anda
+  ) {
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras.state && navigation.extras.state['rental']) {
+      this.rental = navigation.extras.state['rental'];
+    } else {
+      console.error('Data rental tidak ditemukan, kembali ke home.');
+      this.router.navigateByUrl('/home', { replaceUrl: true });
+    }
   }
 
   ngOnInit() {
-    setTimeout(() => {
-      // Ambil state dari navigasi sebelumnya
-      const state = this.navigation?.extras.state;
-      
-      // Arahkan ke halaman receipt, teruskan state yang sama
-      this.router.navigate(['/receipt'], { 
-        state, // Ini akan meneruskan { data: rentalData } ke halaman receipt
-        replaceUrl: true 
-      });
-    }, 5000); // Tunggu 5 detik
+    if (this.rental && this.rental.id) {
+      // Mulai memeriksa status setiap 5 detik
+      this.pollingInterval = setInterval(() => {
+        this.checkPaymentStatus();
+      }, 5000);
+    }
+  }
+
+  checkPaymentStatus() {
+    console.log(`Mengecek status untuk rental ID: ${this.rental.id}`);
+    this.rentalService.getRentalStatus(this.rental.id).subscribe({
+      next: (response) => {
+        // Asumsikan backend mengembalikan status 'lunas' atau 'paid'
+        if (response.status_pembayaran === 'lunas' || response.status_pembayaran === 'paid') {
+          console.log('Pembayaran terkonfirmasi!');
+          this.stopPollingAndNavigate();
+        } else {
+          console.log('Status masih:', response.status_pembayaran);
+        }
+      },
+      error: (err) => {
+        console.error('Gagal mengecek status:', err);
+        // Anda bisa hentikan polling jika ada error, atau biarkan berlanjut
+      }
+    });
+  }
+
+  stopPollingAndNavigate() {
+    clearInterval(this.pollingInterval);
+    // Arahkan ke halaman sukses setelah pembayaran dikonfirmasi
+    this.router.navigate(['/transaction-success'], { replaceUrl: true });
+  }
+
+  // Pastikan interval berhenti jika pengguna meninggalkan halaman
+  ngOnDestroy() {
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+    }
   }
 }
