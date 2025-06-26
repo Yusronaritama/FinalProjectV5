@@ -1,11 +1,15 @@
-// Ganti seluruh isi file src/app/home/home.page.ts dengan kode ini
+// ===================================================================
+// KODE PENGGANTI LENGKAP UNTUK: src/app/home/home.page.ts
+// Versi ini sudah menggunakan AuthService secara reaktif.
+// ===================================================================
 
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController, ModalController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { LocationPermissionModalComponent } from '../location-permission-modal/location-permission-modal.component';
 import { format, parseISO, add } from 'date-fns';
-import { VehicleService } from '../services/vehicle.service'; // Pastikan VehicleService diimpor
+import { Subscription } from 'rxjs'; // 1. Impor Subscription
+import { AuthService, User } from '../services/auth.service'; // 2. Impor AuthService dan User
 
 interface CarType {
   id: string;
@@ -23,6 +27,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   @ViewChild('bannerScroller') bannerScroller!: ElementRef<HTMLElement>;
   private scrollInterval: any;
+  private authSubscription!: Subscription; // 3. Properti untuk menyimpan langganan
 
   bannerImages = [
     'assets/image/tankleopard.jpeg',
@@ -30,12 +35,7 @@ export class HomePage implements OnInit, OnDestroy {
     'assets/image/tankt90m.jpg'
   ];
   
-  // --- INI PERBAIKANNYA ---
-  // Nama properti diubah dari 'searchDriverOption' menjadi 'driverOption'
-  // Nilai defaultnya juga diubah menjadi 'pickup'
   public driverOption: 'pickup' | 'diantar' = 'pickup';
-  // -------------------------
-
   public searchPickupDate: string = new Date().toISOString();
   public formattedDate: string = '';
   public formattedReturnDate: string = '';
@@ -60,15 +60,25 @@ export class HomePage implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private modalController: ModalController,
+    private authService: AuthService // 4. Suntikkan AuthService
   ) { }
 
   ngOnInit() {
     this.updateFormattedDates();
+
+    // 5. Mulai mendengarkan status login dari AuthService
+    this.authSubscription = this.authService.isAuthenticated$.subscribe(isAuth => {
+      this.isLoggedIn = isAuth;
+      if (isAuth) {
+        // Jika login, coba ambil data user untuk avatar
+        // Untuk masa depan, Anda bisa menambahkan properti avatar ke interface User
+        // dan menyimpannya di localStorage saat login.
+        this.profileAvatarIcon = 'person-circle'; // Contoh perubahan ikon saat login
+      }
+    });
   }
 
-  ionViewWillEnter() {
-    this.checkLoginStatusAndLoadAvatar();
-  }
+  // 6. Hapus ionViewWillEnter, karena sudah digantikan oleh ngOnInit subscription
 
   ionViewDidEnter() {
     this.startBannerAutoScroll();
@@ -80,14 +90,19 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.stopBannerAutoScroll();
+    // 7. Hentikan langganan untuk mencegah kebocoran memori
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 
-  // Fungsi untuk highlight car type
   selectCarType(type: any) {
     if (this.selectedCarType === type) {
       this.selectedCarType = null;
     } else {
       this.selectedCarType = type;
+      // Langsung navigasi ke halaman list mobil dengan filter
+      this.navigateToCarList(type.id);
     }
   }
 
@@ -105,27 +120,13 @@ export class HomePage implements OnInit, OnDestroy {
 
   searchCars() {
     const searchParams = {
-      driverOption: this.driverOption, // Sekarang menggunakan properti yang benar
+      driverOption: this.driverOption,
       pickupDate: this.searchPickupDate
     };
-    console.log('Mencari mobil dengan parameter:', searchParams);
     this.router.navigate(['/car-random-list'], { state: searchParams });
   }
 
-  checkLoginStatusAndLoadAvatar() {
-    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
-    this.isLoggedIn = !!loggedInUserEmail;
-    if (this.isLoggedIn && loggedInUserEmail) {
-      const storedUsersString = localStorage.getItem('registeredUsers');
-      if (storedUsersString) {
-        const registeredUsers = JSON.parse(storedUsersString);
-        const user = registeredUsers.find((u: any) => u.email === loggedInUserEmail);
-        this.profileAvatarIcon = user?.avatarIcon || 'person-circle-outline';
-      }
-    } else {
-      this.profileAvatarIcon = 'person-circle-outline';
-    }
-  }
+  // 8. Hapus fungsi checkLoginStatusAndLoadAvatar() karena logikanya sudah terpusat
 
   startBannerAutoScroll() {
     if (!this.bannerScroller?.nativeElement) return;

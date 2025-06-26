@@ -1,8 +1,12 @@
-// Ganti seluruh isi file auth.service.ts Anda dengan ini
+// ===================================================================
+// KODE PENGGANTI LENGKAP UNTUK: src/app/services/auth.service.ts
+// Versi ini lebih efisien dan akan menyelesaikan masalah tombol Anda.
+// ===================================================================
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 
@@ -32,24 +36,24 @@ export interface AuthResponse {
 })
 export class AuthService {
   private apiUrl = environment.apiUrl;
-  private isAuthenticated = new BehaviorSubject<boolean>(false);
-  public isAuthenticated$ = this.isAuthenticated.asObservable();
 
-  // ===== TAMBAHKAN METHOD INI =====
-  getProfile(): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/user`);
-  }
+  // --- PERUBAHAN UTAMA ADA DI SINI ---
+  // BehaviorSubject sekarang langsung diinisialisasi dengan status token yang benar.
+  private isAuthenticated = new BehaviorSubject<boolean>(this.hasToken());
+  public isAuthenticated$ = this.isAuthenticated.asObservable();
+  // --- AKHIR PERUBAHAN ---
 
   constructor(private http: HttpClient, private router: Router) {
-    this.checkTokenOnLoad();
+    // Constructor sekarang bisa kosong, karena pengecekan token sudah dilakukan saat inisialisasi.
   }
 
-  private checkTokenOnLoad() {
+  // --- PERUBAHAN: Fungsi checkTokenOnLoad() digantikan dengan hasToken() yang lebih efisien ---
+  private hasToken(): boolean {
     const token = localStorage.getItem('auth_token');
-    this.isAuthenticated.next(!!token);
+    return !!token; // Mengembalikan true jika token ada, false jika tidak ada
   }
   
-  // ... (method register dan login tetap sama) ...
+  // Method register dan login Anda sudah benar dan tidak perlu diubah.
   register(userData: FormData): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, userData).pipe(
       tap(response => {
@@ -77,16 +81,14 @@ export class AuthService {
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 
-  // --- FUNGSI BARU UNTUK UBAH PASSWORD ---
   changePassword(passwordData: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/change-password`, passwordData);
   }
+  
+  getProfile(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/user`);
+  }
 
-
-  // == FUNGSI BARU DI SINI ==
-  /**
-   * Mengambil data pengguna yang tersimpan dari localStorage.
-   */
   getUser(): User | null {
     const userString = localStorage.getItem('user_data');
     if (userString) {
@@ -95,7 +97,6 @@ export class AuthService {
     return null;
   }
   
-  // Fungsi bantuan untuk menyimpan data
   private storeAuthData(response: AuthResponse) {
     localStorage.setItem('auth_token', response.data.access_token);
     localStorage.setItem('user_data', JSON.stringify(response.data.user));

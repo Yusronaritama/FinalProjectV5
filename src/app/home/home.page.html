@@ -8,14 +8,21 @@
     </ion-buttons>
 
     <ion-buttons slot="end">
-      <ion-button *ngIf="isLoggedIn" routerLink="/profile">
-        <ion-icon [name]="profileAvatarIcon" slot="icon-only"></ion-icon>
-      </ion-button>
-      <ion-button *ngIf="!isLoggedIn" (click)="goToLogin()">
-        <ion-icon name="log-in-outline" slot="start"></ion-icon>
-        <ion-label>Sign In</ion-label>
-      </ion-button>
-    </ion-buttons>
+  
+  <ng-container *ngIf="!isLoggedIn">
+    <ion-button fill="fill" class="sign-in-button" (click)="goToLogin()">
+      <ion-icon slot="start" name="log-in-outline"></ion-icon>
+      Sign In
+    </ion-button>
+  </ng-container>
+
+  <ng-container *ngIf="isLoggedIn">
+    <ion-button shape="circle" routerLink="/profile">
+      <ion-icon slot="icon-only" [name]="profileAvatarIcon"></ion-icon>
+    </ion-button>
+  </ng-container>
+
+</ion-buttons>
   </ion-toolbar>
 </ion-header>
 
