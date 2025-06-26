@@ -1,8 +1,11 @@
+// Ganti seluruh isi file src/app/home/home.page.ts dengan kode ini
+
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController, ModalController } from '@ionic/angular';
 import { LocationPermissionModalComponent } from '../location-permission-modal/location-permission-modal.component';
 import { format, parseISO, add } from 'date-fns';
+import { VehicleService } from '../services/vehicle.service'; // Pastikan VehicleService diimpor
 
 interface CarType {
   id: string;
@@ -16,25 +19,27 @@ interface CarType {
   styleUrls: ['./home.page.scss'],
   standalone: false
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnDestroy {
 
   @ViewChild('bannerScroller') bannerScroller!: ElementRef<HTMLElement>;
   private scrollInterval: any;
 
   bannerImages = [
-    'assets/image/tankleopard.jpeg', // Gambar pertama Anda
-    'assets/image/tankarbrams.jpeg', // Contoh gambar kedua
-    'assets/image/tankt90m.jpg'  // Contoh gambar ketiga
-    // Anda bisa menambahkan gambar lain di sini
+    'assets/image/tankleopard.jpeg',
+    'assets/image/tankarbrams.jpeg',
+    'assets/image/tankt90m.jpg'
   ];
-  // Properti untuk form pencarian
-  searchDriverOption: 'dengan-sopir' | 'lepas-kunci' = 'dengan-sopir';
-  // Properti searchLocation dihapus
-  searchPickupDate: string = new Date().toISOString();
-  formattedDate: string = '';
-  formattedReturnDate: string = '';
+  
+  // --- INI PERBAIKANNYA ---
+  // Nama properti diubah dari 'searchDriverOption' menjadi 'driverOption'
+  // Nilai defaultnya juga diubah menjadi 'pickup'
+  public driverOption: 'pickup' | 'diantar' = 'pickup';
+  // -------------------------
 
-  // Properti lain yang sudah ada
+  public searchPickupDate: string = new Date().toISOString();
+  public formattedDate: string = '';
+  public formattedReturnDate: string = '';
+
   isLoggedIn: boolean = false;
   profileAvatarIcon: string = 'person-circle-outline';
   displayedLocation: string = 'Izinkan lokasi untuk pengalaman yang lebih baik';
@@ -49,8 +54,8 @@ export class HomePage implements OnInit {
     { id: 'suzuki', name: 'SUZUKI', imageUrl: 'assets/logomobil/suzuki.jpg' },
     { id: 'toyota', name: 'TOYOTA', imageUrl: 'assets/logomobil/toyota.jpg' },
   ];
-
-   
+  
+  public selectedCarType: any = null;
 
   constructor(
     private router: Router,
@@ -66,15 +71,24 @@ export class HomePage implements OnInit {
   }
 
   ionViewDidEnter() {
-    this.startBannerAutoScroll(); // Mulai auto-scroll saat halaman aktif
+    this.startBannerAutoScroll();
   }
 
   ionViewWillLeave() {
-    this.stopBannerAutoScroll(); // Hentikan auto-scroll saat halaman ditinggalkan
+    this.stopBannerAutoScroll();
   }
 
   ngOnDestroy() {
-    this.stopBannerAutoScroll(); // Pastikan interval dibersihkan saat komponen dihancurkan
+    this.stopBannerAutoScroll();
+  }
+
+  // Fungsi untuk highlight car type
+  selectCarType(type: any) {
+    if (this.selectedCarType === type) {
+      this.selectedCarType = null;
+    } else {
+      this.selectedCarType = type;
+    }
   }
 
   dateChanged(event: any) {
@@ -90,18 +104,18 @@ export class HomePage implements OnInit {
   }
 
   searchCars() {
-    // Objek searchParams sekarang tidak lagi menyertakan location
     const searchParams = {
-      driverOption: this.searchDriverOption,
+      driverOption: this.driverOption, // Sekarang menggunakan properti yang benar
       pickupDate: this.searchPickupDate
     };
     console.log('Mencari mobil dengan parameter:', searchParams);
+    this.router.navigate(['/car-random-list'], { state: searchParams });
   }
 
   checkLoginStatusAndLoadAvatar() {
     const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
     this.isLoggedIn = !!loggedInUserEmail;
-    if (this.isLoggedIn) {
+    if (this.isLoggedIn && loggedInUserEmail) {
       const storedUsersString = localStorage.getItem('registeredUsers');
       if (storedUsersString) {
         const registeredUsers = JSON.parse(storedUsersString);
@@ -113,19 +127,20 @@ export class HomePage implements OnInit {
     }
   }
 
-  // --- FUNGSI BARU UNTUK BANNER CAROUSEL ---
   startBannerAutoScroll() {
-    this.stopBannerAutoScroll(); // Hentikan dulu jika ada yang berjalan
+    if (!this.bannerScroller?.nativeElement) return;
+    this.stopBannerAutoScroll();
     this.scrollInterval = setInterval(() => {
       const el = this.bannerScroller.nativeElement;
-      const nextScrollLeft = el.scrollLeft + el.clientWidth;
-      // Jika sudah di akhir, kembali ke awal
-      if (nextScrollLeft >= el.scrollWidth) {
-        el.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        el.scrollTo({ left: nextScrollLeft, behavior: 'smooth' });
+      if (el) {
+        const nextScrollLeft = el.scrollLeft + el.clientWidth;
+        if (nextScrollLeft >= el.scrollWidth) {
+          el.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          el.scrollTo({ left: nextScrollLeft, behavior: 'smooth' });
+        }
       }
-    }, 3000); // Ganti gambar setiap 3 detik
+    }, 3000);
   }
   
   stopBannerAutoScroll() {
@@ -133,14 +148,13 @@ export class HomePage implements OnInit {
       clearInterval(this.scrollInterval);
     }
   }
-  // ------------------------------------
 
   async requestLocationPermission() {
     const modal = await this.modalController.create({
       component: LocationPermissionModalComponent,
       cssClass: 'location-permission-modal'
     });
-    return await modal.present();
+    await modal.present();
   }
 
   navigateToCarList(carId: string) {

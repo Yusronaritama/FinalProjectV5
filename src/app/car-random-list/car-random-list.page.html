@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Pilih Mobil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="car-type-grid">
+    <div class="car-type-item" 
+         *ngFor="let type of carTypes" 
+         (click)="selectCarType(type)"> 
+         <div class="icon-wrapper">
+        <img [src]="type.imageUrl" [alt]="type.name">
+      </div>
+      <span>{{ type.name }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="ion-text-center ion-padding">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <ion-list *ngIf="!isLoading">
+    <ion-card *ngFor="let car of allVehicles" (click)="viewCarDetail(car.id)" class="car-card">
+      <img [src]="'http://127.0.0.1:8000' + car.foto_utama" [alt]="car.nama" class="car-image">
+      <ion-card-header>
+        <ion-card-title>{{ car.nama }}</ion-card-title>
+        <ion-card-subtitle>{{ car.merk }} - {{ car.transmisi | titlecase }}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="price-info">
+          <span class="price">{{ car.harga_sewa_harian | currency:'Rp ':'symbol':'1.0-0' }} / hari</span>
+          <ion-chip [color]="car.status === 'tersedia' ? 'success' : 'danger'" outline="true">
+            <ion-label>{{ car.status | titlecase }}</ion-label>
+          </ion-chip>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+  
+  <div *ngIf="!isLoading && allVehicles.length === 0" class="ion-text-center ion-padding">
+    <ion-icon name="car-sport-outline" style="font-size: 3rem; color: #ccc;"></ion-icon>
+    <p>Tidak ada mobil yang tersedia.</p>
+  </div>
+</ion-content>

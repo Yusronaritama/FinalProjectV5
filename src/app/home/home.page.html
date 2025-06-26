@@ -48,14 +48,9 @@
   </div>
   
   <div class="rental-form-container ion-padding">
-    <ion-segment [(ngModel)]="searchDriverOption" mode="android">
-      <ion-segment-button value="dengan-sopir">
-        <ion-label>Dengan Sopir</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="lepas-kunci">
-        <ion-label>Lepas Kunci</ion-label>
-      </ion-segment-button>
-    </ion-segment>
+    <h3 class="rental-form-title">Rental Form</h3>
+
+
 
     <ion-list class="ion-no-padding">
       
@@ -69,11 +64,7 @@
         </ion-text>
       </ion-item>
 
-      <ion-item lines="none">
-        <ion-icon name="time-outline" slot="start"></ion-icon>
-        <ion-label>1 hari</ion-label>
-        <ion-note slot="end">Durasi sewa 12 jam/hari</ion-note>
-      </ion-item>
+      
     </ion-list>
 
     <p class="summary-text">Selesai Sewa: {{ formattedReturnDate }}</p>
