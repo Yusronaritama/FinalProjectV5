@@ -1,0 +1,62 @@
+// ===================================================================
+// KODE PENGGANTI LENGKAP UNTUK: src/app/settings/settings.page.scss
+// ===================================================================
+
+ion-content {
+  // Atur warna latar belakang halaman agar konsisten dengan tema
+  --background: var(--ion-background-color);
+}
+
+// Kontainer utama untuk header profil
+.profile-header {
+  // Gunakan warna primer aplikasi untuk latar belakang
+  background: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast); // Warna teks putih
+
+  // Bentuk melengkung di bagian bawah
+  border-radius: 0 0 32px 32px;
+
+  padding: 24px 16px;
+  text-align: center;
+  margin-bottom: 16px; // Beri jarak ke daftar menu di bawahnya
+}
+
+// Kontainer untuk avatar agar bisa diberi border, dll.
+.avatar-container {
+  // Atur posisi di tengah
+  margin: 0 auto 16px auto;
+  width: 120px;
+  height: 120px;
+  
+  // Border putih di sekeliling avatar
+  border: 4px solid var(--ion-color-primary-contrast);
+  border-radius: 50%; // Membuatnya menjadi lingkaran sempurna
+  
+  // Pastikan ikon di dalamnya pas
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  // Beri sedikit bayangan agar terlihat lebih hidup
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+// Gaya untuk ikon avatar itu sendiri
+.profile-avatar {
+  font-size: 110px; // Buat ikon menjadi sangat besar
+  color: var(--ion-color-primary-contrast);
+}
+
+// Gaya untuk nama pengguna
+.user-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+// Gaya untuk email pengguna
+.user-email {
+  font-size: 0.9rem;
+  opacity: 0.8; // Buat sedikit transparan
+  margin: 4px 0 0 0;
+}

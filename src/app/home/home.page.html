@@ -1,28 +1,27 @@
 <ion-header>
-  <ion-toolbar class="custom-toolbar">
-    <div class="logo-header">
-      <img src="assets/icon/Icon.png" alt="GoRentall Logo" class="logo-img" />
-    </div>
+  <ion-toolbar color="primary" class="custom-toolbar">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
+    
+    <div class="logo-header">
+      <img src="assets/icon/Icon.png" alt="GoRent Logo" class="logo-img">
+    </div>
 
     <ion-buttons slot="end">
-  
-  <ng-container *ngIf="!isLoggedIn">
-    <ion-button fill="fill" class="sign-in-button" (click)="goToLogin()">
-      <ion-icon slot="start" name="log-in-outline"></ion-icon>
-      Sign In
-    </ion-button>
-  </ng-container>
+      <ng-container *ngIf="!isLoggedIn">
+        <ion-button fill="outline" class="sign-in-button" (click)="goToLogin()">
+          <ion-icon slot="start" name="log-in-outline"></ion-icon>
+          Sign In
+        </ion-button>
+      </ng-container>
 
-  <ng-container *ngIf="isLoggedIn">
-    <ion-button shape="circle" routerLink="/profile">
-      <ion-icon slot="icon-only" [name]="profileAvatarIcon"></ion-icon>
-    </ion-button>
-  </ng-container>
-
-</ion-buttons>
+      <ng-container *ngIf="isLoggedIn">
+        <ion-button shape="circle" routerLink="/profile">
+          <ion-icon slot="icon-only" [name]="profileAvatarIcon"></ion-icon>
+        </ion-button>
+      </ng-container>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -32,7 +31,6 @@
       <img [src]="image" class="banner-image" onerror="this.src='https://placehold.co/600x400/E0E0E0/white?text=Image+Not+Found';"/>
     </div>
   </div>
-  
 
   <div class="location-section">
     <div class="location-box" (click)="requestLocationPermission()">
@@ -41,16 +39,10 @@
     </div>
   </div>
 
-  
-  
   <div class="rental-form-container ion-padding">
     <h3 class="rental-form-title">Rental Form</h3>
-
-
-
     <ion-list class="ion-no-padding">
-      
-      
+     
       <ion-item lines="none" [button]="true" id="open-home-datepicker">
         <ion-icon name="calendar-outline" slot="start"></ion-icon>
         <ion-label>{{ formattedDate }}</ion-label>
@@ -99,6 +91,12 @@
           <ion-icon name="help-circle-outline"></ion-icon>
           <ion-label>Q&A</ion-label>
         </ion-tab-button>
+
+        <ion-tab-button tab="settings" routerLink="/settings">
+  <ion-icon name="settings-outline"></ion-icon>
+  Setting
+</ion-tab-button>
+
       </ion-tab-bar>
     </ion-tabs>
   </ion-toolbar>

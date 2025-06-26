@@ -1,61 +1,100 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
+      <ion-back-button defaultHref="/settings"></ion-back-button>
     </ion-buttons>
-    <ion-title>Profil Saya</ion-title>
+    <ion-title>Profil</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/settings">
+        <ion-icon name="settings-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="profile-header-background"></div>
-
-  <div class="profile-container" *ngIf="user">
-    <div class="avatar-section">
-      <div class="avatar-circle">
-        <ion-icon [name]="currentAvatarIcon" class="avatar-icon"></ion-icon>
+  <div *ngIf="user">
+    <div class="profile-header">
+      <div class="avatar-container">
+        <ion-icon [name]="selectedAvatar" class="profile-avatar"></ion-icon>
       </div>
-      <ion-button expand="block" (click)="changeAvatar()" class="change-avatar-button">Ubah Avatar</ion-button>
+      <h2 class="user-name">{{ user.name }}</h2>
+      <p class="user-email">{{ user.email }}</p>
     </div>
 
-    <ion-card class="personal-info-card">
-      <ion-card-header>
-        <ion-card-title>Informasi Pribadi</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-item lines="none">
-          <ion-label position="stacked">Nama Lengkap</ion-label>
-          <ion-input [value]="user.name" readonly></ion-input>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-label position="stacked">Nomor Telepon</ion-label>
-          <ion-input [value]="user.nomor_telepon" readonly></ion-input>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-label position="stacked">Alamat Email</ion-label>
-          <ion-input [value]="user.email" readonly></ion-input>
-        </ion-item>
-        <ion-item lines="none" class="address-item">
-          <ion-label position="stacked">Alamat</ion-label>
-          <ion-textarea [value]="user.alamat" readonly auto-grow="true"></ion-textarea>
-        </ion-item>
-      </ion-card-content>
-    </ion-card>
+    <ion-list-header>
+      <ion-label color="medium">Pilih Avatar Anda</ion-label>
+    </ion-list-header>
+    <div class="avatar-grid">
+      <div class="avatar-option" 
+           *ngFor="let avatar of avatarList" 
+           (click)="selectAvatar(avatar)"
+           [class.active]="avatar === selectedAvatar">
+        <ion-icon [name]="avatar"></ion-icon>
+      </div>
+    </div>
 
-    <ion-card class="account-settings-card">
-      <ion-card-header>
-        <ion-card-title>Pengaturan Akun</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-item button detail="true" lines="full" (click)="goToChangePassword()">
-          <ion-label>Ubah Password</ion-label>
+    <ion-accordion-group class="edit-profile-accordion">
+      <ion-accordion value="edit-form">
+        <ion-item slot="header">
+          <ion-icon name="create-outline" slot="start"></ion-icon>
+          <ion-label>Ubah Detail Profil</ion-label>
         </ion-item>
-      </ion-card-content>
-    </ion-card>
+        
+        <div class="ion-padding" slot="content">
+          <form (ngSubmit)="updateProfile()">
+            <ion-item>
+              <ion-label position="floating">Nomor Telepon</ion-label>
+              <ion-input type="tel" [(ngModel)]="editData.nomor_telepon" name="nomor_telepon"></ion-input>
+            </ion-item>
+    
+            <ion-item>
+              <ion-label position="floating">Alamat</ion-label>
+              <ion-textarea [(ngModel)]="editData.alamat" name="alamat" [autoGrow]="true"></ion-textarea>
+            </ion-item>
+            
+            <ion-item>
+              <ion-label position="stacked">Tanggal Lahir</ion-label>
+              <div class="date-display-container">
+                <span>{{ editData.tanggal_lahir | date:'d MMMM yyyy' }}</span>
+                <ion-button fill="clear" id="date-picker-button" class="calendar-button">
+                  <ion-icon slot="icon-only" name="calendar-outline" color="primary"></ion-icon>
+                </ion-button>
+              </div>
+            </ion-item>
+    
+            <ion-button type="submit" expand="block" class="save-button">
+              Simpan Perubahan
+            </ion-button>
+          </form>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
 
-    <ion-button expand="block" color="danger" class="logout-button" (click)="logout()">
-      <ion-icon name="log-out-outline" slot="start"></ion-icon>
-      Logout
-    </ion-button>
+    <ion-modal [keepContentsMounted]="true" trigger="date-picker-button">
+      <ng-template>
+        <ion-datetime id="birthdate" 
+                      presentation="date" 
+                      [(ngModel)]="editData.tanggal_lahir" 
+                      [showDefaultButtons]="true"
+                      doneText="Pilih"
+                      cancelText="Batal"></ion-datetime>
+      </ng-template>
+    </ion-modal>
+
+    <ion-list>
+      <ion-item>
+        <ion-icon name="call-outline" slot="start" color="medium"></ion-icon>
+        <ion-label><h3>Nomor Telepon</h3><p>{{ user.nomor_telepon }}</p></ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="home-outline" slot="start" color="medium"></ion-icon>
+        <ion-label><h3>Alamat</h3><p>{{ user.alamat }}</p></ion-label>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-icon name="calendar-outline" slot="start" color="medium"></ion-icon>
+        <ion-label><h3>Tanggal Lahir</h3><p>{{ user.tanggal_lahir | date:'d MMMM yyyy' }}</p></ion-label>
+      </ion-item>
+    </ion-list>
   </div>
 </ion-content>

@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthService, User } from '../services/auth.service';
+import { LoadingController, ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-profile',
@@ -8,84 +10,80 @@ import { AuthService, User } from '../services/auth.service';
   styleUrls: ['./profile.page.scss'],
   standalone: false
 })
-export class ProfilePage implements OnInit {
+export class ProfilePage implements OnInit, OnDestroy {
 
-  // Properti untuk menampung data user dari service
-  user: User | null = null;
+  public user: User | null = null;
+  public selectedAvatar: string = 'person-circle-outline';
+  private avatarSubscription!: Subscription;
 
-  // --- BAGIAN AVATAR YANG KITA KEMBALIKAN ---
-  avatarOptions: string[] = [
-    'person-circle-outline',
-    'happy-outline',
-    'game-controller-outline',
-    'paw-outline',
-    'bug-outline',
-    'rocket-outline'
+  public editData = {
+    nomor_telepon: '',
+    alamat: '',
+    tanggal_lahir: new Date().toISOString()
+  };
+
+  public avatarList = [
+    'person-circle-outline', 'happy-outline', 'game-controller-outline', 
+    'paw-outline', 'bug-outline', 'rocket-outline', 
+    'hardware-chip-outline', 'color-palette-outline'
   ];
-  currentAvatarIcon: string = this.avatarOptions[0];
-  private currentAvatarIndex: number = 0;
-  // --- END BAGIAN AVATAR ---
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private loadingCtrl: LoadingController,
+    private toastCtrl: ToastController
   ) { }
 
   ngOnInit() {
-    this.loadUserProfile();
+    this.user = this.authService.getUser();
+    if (this.user) {
+      this.editData.nomor_telepon = this.user.nomor_telepon;
+      this.editData.alamat = this.user.alamat;
+      this.editData.tanggal_lahir = this.user.tanggal_lahir;
+    }
+    
+    this.avatarSubscription = this.authService.currentAvatar$.subscribe(avatar => {
+      this.selectedAvatar = avatar;
+    });
   }
 
   ionViewWillEnter() {
-    this.loadUserProfile();
-  }
-
-  loadUserProfile() {
     this.user = this.authService.getUser();
-    console.log('User profile loaded from service:', this.user);
-    
-    // Setelah data user dimuat, muat juga preferensi avatar mereka
-    if (this.user) {
-      this.loadAvatarPreference();
-    }
+  }
+  
+  ngOnDestroy() {
+    if (this.avatarSubscription) { this.avatarSubscription.unsubscribe(); }
+  }
+  
+  selectAvatar(iconName: string) {
+    this.authService.updateAvatar(iconName);
   }
 
-  // --- FUNGSI BARU DAN LAMA UNTUK AVATAR ---
-  loadAvatarPreference() {
-    if (!this.user) return; // Pengaman jika user tidak ada
+  async updateProfile() {
+    const loading = await this.loadingCtrl.create({ message: 'Menyimpan...' });
+    await loading.present();
 
-    // Kita simpan preferensi avatar dengan key yang unik untuk setiap user
-    const avatarKey = `avatar_pref_${this.user.id}`;
-    const savedAvatar = localStorage.getItem(avatarKey);
-
-    if (savedAvatar && this.avatarOptions.includes(savedAvatar)) {
-      this.currentAvatarIcon = savedAvatar;
-      this.currentAvatarIndex = this.avatarOptions.indexOf(savedAvatar);
-    } else {
-      // Jika tidak ada preferensi, gunakan default
-      this.currentAvatarIcon = this.avatarOptions[0];
-      this.currentAvatarIndex = 0;
-    }
+    this.authService.updateUserProfile(this.editData).subscribe({
+      next: (response) => {
+        loading.dismiss();
+        this.presentToast('Profil berhasil diperbarui', 'success');
+        this.user = this.authService.getUser();
+      },
+      error: (err) => {
+        loading.dismiss();
+        this.presentToast('Gagal memperbarui profil. Coba lagi.', 'danger');
+        console.error(err);
+      }
+    });
   }
 
-  changeAvatar() {
-    this.currentAvatarIndex = (this.currentAvatarIndex + 1) % this.avatarOptions.length;
-    this.currentAvatarIcon = this.avatarOptions[this.currentAvatarIndex];
-    console.log('Changing avatar to:', this.currentAvatarIcon);
-
-    // Simpan pilihan avatar baru ke localStorage
-    if (this.user) {
-      const avatarKey = `avatar_pref_${this.user.id}`;
-      localStorage.setItem(avatarKey, this.currentAvatarIcon);
-      console.log(`Avatar preference for user ${this.user.id} saved.`);
-    }
-  }
-  // --- END FUNGSI AVATAR ---
-
-  logout() {
-    this.authService.logout();
+  async presentToast(message: string, color: 'success' | 'danger') {
+    const toast = await this.toastCtrl.create({ message, duration: 2000, color });
+    toast.present();
   }
 
-  goToChangePassword() {
-    this.router.navigateByUrl('/change-password');
-  }
+  logout() { this.authService.logout(); }
+  goToChangePassword() { this.router.navigateByUrl('/change-password'); }
+  goToSettings() { this.router.navigateByUrl('/settings'); }
 }

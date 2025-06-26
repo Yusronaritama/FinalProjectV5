@@ -1,6 +1,6 @@
 // ===================================================================
-// KODE PENGGANTI LENGKAP UNTUK: src/app/home/home.page.ts
-// Versi ini sudah menggunakan AuthService secara reaktif.
+// KODE PENGGANTI LENGKAP & FINAL UNTUK: src/app/home/home.page.ts
+// Versi ini mendengarkan status login DAN perubahan ikon avatar.
 // ===================================================================
 
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
@@ -8,8 +8,8 @@ import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { LocationPermissionModalComponent } from '../location-permission-modal/location-permission-modal.component';
 import { format, parseISO, add } from 'date-fns';
-import { Subscription } from 'rxjs'; // 1. Impor Subscription
-import { AuthService, User } from '../services/auth.service'; // 2. Impor AuthService dan User
+import { Subscription } from 'rxjs';
+import { AuthService, User } from '../services/auth.service';
 
 interface CarType {
   id: string;
@@ -27,7 +27,10 @@ export class HomePage implements OnInit, OnDestroy {
 
   @ViewChild('bannerScroller') bannerScroller!: ElementRef<HTMLElement>;
   private scrollInterval: any;
-  private authSubscription!: Subscription; // 3. Properti untuk menyimpan langganan
+  
+  // Properti untuk menyimpan semua 'langganan' ke service
+  private authSubscription!: Subscription;
+  private avatarSubscription!: Subscription;
 
   bannerImages = [
     'assets/image/tankleopard.jpeg',
@@ -41,7 +44,8 @@ export class HomePage implements OnInit, OnDestroy {
   public formattedReturnDate: string = '';
 
   isLoggedIn: boolean = false;
-  profileAvatarIcon: string = 'person-circle-outline';
+  profileAvatarIcon: string = 'person-circle-outline'; // Ikon default
+  
   displayedLocation: string = 'Izinkan lokasi untuk pengalaman yang lebih baik';
   carTypes: CarType[] = [
     { id: 'wuling', name: 'WULING', imageUrl: 'assets/logomobil/wuling.jpg' },
@@ -60,26 +64,25 @@ export class HomePage implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private modalController: ModalController,
-    private authService: AuthService // 4. Suntikkan AuthService
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
     this.updateFormattedDates();
 
-    // 5. Mulai mendengarkan status login dari AuthService
+    // 1. Berlangganan status login
     this.authSubscription = this.authService.isAuthenticated$.subscribe(isAuth => {
       this.isLoggedIn = isAuth;
-      if (isAuth) {
-        // Jika login, coba ambil data user untuk avatar
-        // Untuk masa depan, Anda bisa menambahkan properti avatar ke interface User
-        // dan menyimpannya di localStorage saat login.
-        this.profileAvatarIcon = 'person-circle'; // Contoh perubahan ikon saat login
-      }
+    });
+
+    // 2. Berlangganan status avatar
+    this.avatarSubscription = this.authService.currentAvatar$.subscribe(avatar => {
+      this.profileAvatarIcon = avatar || 'person-circle-outline';
     });
   }
 
-  // 6. Hapus ionViewWillEnter, karena sudah digantikan oleh ngOnInit subscription
-
+  // Hapus ionViewWillEnter, karena sudah digantikan oleh ngOnInit subscription
+  
   ionViewDidEnter() {
     this.startBannerAutoScroll();
   }
@@ -90,9 +93,12 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.stopBannerAutoScroll();
-    // 7. Hentikan langganan untuk mencegah kebocoran memori
+    // 3. Hentikan semua langganan saat halaman dihancurkan
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();
+    }
+    if (this.avatarSubscription) {
+      this.avatarSubscription.unsubscribe();
     }
   }
 
@@ -101,7 +107,6 @@ export class HomePage implements OnInit, OnDestroy {
       this.selectedCarType = null;
     } else {
       this.selectedCarType = type;
-      // Langsung navigasi ke halaman list mobil dengan filter
       this.navigateToCarList(type.id);
     }
   }
@@ -126,7 +131,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.router.navigate(['/car-random-list'], { state: searchParams });
   }
 
-  // 8. Hapus fungsi checkLoginStatusAndLoadAvatar() karena logikanya sudah terpusat
+  // Hapus fungsi checkLoginStatusAndLoadAvatar() karena sudah tidak diperlukan lagi
 
   startBannerAutoScroll() {
     if (!this.bannerScroller?.nativeElement) return;

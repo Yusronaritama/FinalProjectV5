@@ -84,6 +84,10 @@ const routes: Routes = [
     path: 'car-random-list',
     loadChildren: () => import('./car-random-list/car-random-list.module').then( m => m.CarRandomListPageModule)
   },
+  {
+    path: 'settings',
+    loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule)
+  },
 
 
   
