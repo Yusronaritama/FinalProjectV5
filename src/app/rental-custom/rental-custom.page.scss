@@ -127,38 +127,46 @@
 
   // Payment Summary
   .payment-summary {
-    background: var(--ion-item-background);
-    padding: 16px;
-    border-radius: 8px;
+  background: var(--ion-item-background);
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--ion-border-color);
 
-    .summary-item {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      font-size: 0.9rem;
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
 
-      span:first-child {
-        color: var(--ion-color-medium-shade);
-      }
+    span:first-child {
+      color: var(--ion-color-medium-shade);
+    }
 
-      span:last-child {
-        font-weight: 500;
+    span:last-child {
+      font-weight: 500;
+      color: var(--ion-text-color);
+    }
+
+    &.total {
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--ion-border-color);
+      
+      span:first-child, span:last-child {
         color: var(--ion-text-color);
       }
-
-      &.total {
-        font-weight: bold;
-        font-size: 1.1rem;
-        margin-top: 12px;
-        
-        span:first-child {
-          color: var(--ion-text-color);
-        }
-        
-        span:last-child {
-          color: var(--ion-color-primary);
-        }
+      
+      span:last-child {
+        color: var(--ion-color-primary);
       }
     }
   }
+  
+  ion-item-divider {
+      display: none;
+  }
+}
 }

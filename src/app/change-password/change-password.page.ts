@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ToastController, LoadingController } from '@ionic/angular'; // Import LoadingController
-import { AuthService } from '../services/auth.service'; // Import AuthService
+import { ToastController, LoadingController } from '@ionic/angular';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-change-password',
@@ -11,81 +12,61 @@ import { AuthService } from '../services/auth.service'; // Import AuthService
 })
 export class ChangePasswordPage implements OnInit {
 
-  currentPassword: string = '';
-  newPassword: string = '';
-  confirmNewPassword: string = '';
-
-  // State variables for password visibility
+  passwordForm: FormGroup;
   showCurrentPassword = false;
   showNewPassword = false;
   showConfirmNewPassword = false;
 
   constructor(
+    private fb: FormBuilder,
     private router: Router,
     private toastController: ToastController,
-    private authService: AuthService, // Inject AuthService
-    private loadingController: LoadingController // Inject LoadingController
-  ) { }
+    private authService: AuthService,
+    private loadingController: LoadingController
+  ) {
+    // Membuat struktur form
+    this.passwordForm = this.fb.group({
+      currentPassword: ['', [Validators.required]],
+      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      confirmNewPassword: ['', [Validators.required]]
+    });
+  }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
-  /**
-   * Displays a toast message.
-   * @param message The message to display.
-   * @param color The color of the toast (e.g., 'success', 'danger', 'warning').
-   * @param position The position of the toast ('top', 'bottom', 'middle').
-   */
-  async presentToast(message: string, color: string = 'dark', position: 'top' | 'bottom' | 'middle' = 'top') {
+  async presentToast(message: string, color: string = 'dark') {
     const toast = await this.toastController.create({
       message: message,
-      duration: 3000, // Toast will disappear after 3 seconds
-      position: position,
+      duration: 3000,
+      position: 'top',
       color: color,
     });
     toast.present();
   }
 
-  /**
-   * Toggles the visibility of the current password input.
-   */
-  toggleCurrentPasswordVisibility() {
-    this.showCurrentPassword = !this.showCurrentPassword;
-  }
+  toggleCurrentPasswordVisibility() { this.showCurrentPassword = !this.showCurrentPassword; }
+  toggleNewPasswordVisibility() { this.showNewPassword = !this.showNewPassword; }
+  toggleConfirmNewPasswordVisibility() { this.showConfirmNewPassword = !this.showConfirmNewPassword; }
 
-  /**
-   * Toggles the visibility of the new password input.
-   */
-  toggleNewPasswordVisibility() {
-    this.showNewPassword = !this.showNewPassword;
-  }
-
-  /**
-   * Toggles the visibility of the confirm new password input.
-   */
-  toggleConfirmNewPasswordVisibility() {
-    this.showConfirmNewPassword = !this.showConfirmNewPassword;
-  }
-
-  // --- PERUBAHAN UTAMA PADA LOGIKA PENYIMPANAN ---
   async saveChanges() {
-    // Validasi frontend sederhana
-    if (this.newPassword !== this.confirmNewPassword) {
-      this.presentToast('Password baru dan konfirmasi tidak cocok.', 'danger');
+    if (this.passwordForm.invalid) {
+      this.presentToast('Mohon isi semua kolom dengan benar.', 'warning');
       return;
     }
 
-    if (!this.currentPassword || !this.newPassword) {
-        this.presentToast('Semua kolom wajib diisi.', 'warning');
-        return;
+    const { newPassword, confirmNewPassword } = this.passwordForm.value;
+    if (newPassword !== confirmNewPassword) {
+      this.presentToast('Password baru dan konfirmasi tidak cocok.', 'danger');
+      return;
     }
 
     const loading = await this.loadingController.create({ message: 'Menyimpan...' });
     await loading.present();
 
     const passwordData = {
-      current_password: this.currentPassword,
-      new_password: this.newPassword,
-      new_password_confirmation: this.confirmNewPassword,
+      current_password: this.passwordForm.value.currentPassword,
+      new_password: newPassword,
+      new_password_confirmation: confirmNewPassword,
     };
 
     this.authService.changePassword(passwordData).subscribe({
@@ -96,19 +77,9 @@ export class ChangePasswordPage implements OnInit {
       },
       error: async (error) => {
         await loading.dismiss();
-        let errorMessage = 'Terjadi kesalahan.';
-        // Ambil pesan error dari backend jika ada
-        if (error.error?.message) {
-            errorMessage = error.error.message;
-        } else if (error.error?.errors) {
-            const firstErrorKey = Object.keys(error.error.errors)[0];
-            errorMessage = error.error.errors[firstErrorKey][0];
-        }
+        const errorMessage = error.error?.message || 'Terjadi kesalahan.';
         this.presentToast(errorMessage, 'danger');
       }
     });
   }
-
-  // Metode ini tidak lagi diperlukan karena navigasi langsung ke halaman
-  // async dismiss() { /* ... */ }
 }

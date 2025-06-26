@@ -7,7 +7,7 @@ import { VehicleService } from '../services/vehicle.service';
   selector: 'app-waiting-confirmation',
   templateUrl: './waiting-confirmation.page.html',
   styleUrls: ['./waiting-confirmation.page.scss'],
-  standalone: false, // Pastikan ini false jika Anda menggunakan Ionic dengan Angular
+  standalone: false
 })
 export class WaitingConfirmationPage implements OnInit, OnDestroy {
 
@@ -50,14 +50,12 @@ export class WaitingConfirmationPage implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Gagal mengecek status:', err);
-        // Anda bisa hentikan polling jika ada error, atau biarkan berlanjut
       }
     });
   }
 
   stopPollingAndNavigate() {
     clearInterval(this.pollingInterval);
-    // Arahkan ke halaman sukses setelah pembayaran dikonfirmasi
     this.router.navigate(['/transaction-success'], { replaceUrl: true });
   }
 
@@ -66,5 +64,15 @@ export class WaitingConfirmationPage implements OnInit, OnDestroy {
     if (this.pollingInterval) {
       clearInterval(this.pollingInterval);
     }
+  }
+
+  // --- FUNGSI BARU UNTUK TOMBOL KEMBALI ---
+  goToHome() {
+    // 1. Hentikan polling agar tidak berjalan di latar belakang
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+    }
+    // 2. Arahkan pengguna ke halaman Beranda
+    this.router.navigateByUrl('/home', { replaceUrl: true });
   }
 }

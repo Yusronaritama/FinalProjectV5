@@ -5,12 +5,12 @@
 
 :root {
   /** Warna-warna dasar aplikasi (Mode Terang) **/
-  --ion-color-primary: #008080; // Hijau Toska
+  --ion-color-primary: #9ce5a2; // Hijau Toska
   --ion-color-primary-rgb: 0,128,128;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255,255,255;
-  --ion-color-primary-shade: #007171;
-  --ion-color-primary-tint: #1a8d8d;
+  --ion-color-primary-shade: #9ce5a2;
+  --ion-color-primary-tint: #9ce5a2;
 
   --ion-color-secondary: #064420; // Hijau Tua
   --ion-color-secondary-rgb: 6,68,32;
@@ -54,12 +54,12 @@ body.dark {
   */
 
   /** primary (Dark Mode) **/
-  --ion-color-primary: #25a1a1; // Dibuat lebih cerah dari #008080
+  --ion-color-primary: #9ce5a2; // Dibuat lebih cerah dari #008080
   --ion-color-primary-rgb: 37,161,161;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255,255,255;
-  --ion-color-primary-shade: #218e8e;
-  --ion-color-primary-tint: #3babab;
+  --ion-color-primary-shade: #9ce5a2;
+  --ion-color-primary-tint: #9ce5a2;
 
   /** secondary (Dark Mode) **/
   --ion-color-secondary: #50c878; // Dibuat lebih cerah dari #064420

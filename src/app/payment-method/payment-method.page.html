@@ -7,44 +7,46 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <h2 class="section-title">Choose Payment Method</h2>
-  <div *ngFor="let group of paymentGroups">
-    <p class="payment-group-title">{{ group.group }}</p>
-    <ion-list class="accordion-list" lines="none">
-      <div *ngFor="let method of group.methods">
-        <ion-item button="true" (click)="toggleAccordion(method)" detail="false" [class.item-selected]="method === selectedMethod">
-  <ion-thumbnail slot="start">
-    <img [src]="method.logo" [alt]="method.name" (error)="img.src = 'assets/icon/placeholder.png'" #img>
-  </ion-thumbnail>
-  
-  <ion-label>
-    <h3>
-      {{ method.name }}
-      <ion-icon *ngIf="method === selectedMethod" name="checkmark-circle" color="success" class="selected-checkmark"></ion-icon>
-    </h3>
-    <p>{{ method.desc }}</p>
-  </ion-label>
-  <ion-icon [name]="method.isOpen ? 'chevron-up-outline' : 'chevron-down-outline'" slot="end" color="medium"></ion-icon>
-</ion-item>
-        <div *ngIf="method.isOpen" class="expanded-content">
-          <div *ngIf="method.virtualAccount">
-            <ion-item lines="none" class="va-item">
-              <ion-label>
-                <p>PT GoRent Indonesia</p>
-                <h3 class="virtual-account-number">{{ method.virtualAccount }}</h3>
-              </ion-label>
-              <ion-button fill="clear" size="small" (click)="copyVirtualAccount($event, method.virtualAccount)" class="copy-button">Copy</ion-button>
-            </ion-item>
-          </div>
-          <div *ngIf="method.qrCodeImageUrl" class="qr-code-container">
-            <img [src]="method.qrCodeImageUrl" alt="QR Code Pembayaran" (error)="qrImg.src = 'assets/icon/placeholder.png'" #qrImg>
-            <p>Scan QR code ini untuk melakukan pembayaran</p>
+<ion-content>
+  <div class="ion-padding">
+    <h2 class="section-title">Choose Payment Method</h2>
+    <div *ngFor="let group of paymentGroups">
+      <p class="payment-group-title">{{ group.group }}</p>
+      <ion-list class="accordion-list" lines="none">
+        <div *ngFor="let method of group.methods">
+          <ion-item button="true" (click)="toggleAccordion(method)" detail="false" [class.item-selected]="method === selectedMethod">
+            <ion-thumbnail slot="start">
+              <img [src]="method.logo" [alt]="method.name" (error)="img.src = 'assets/icon/placeholder.png'" #img>
+            </ion-thumbnail>
+            <ion-label>
+              <h3>
+                {{ method.name }}
+                <ion-icon *ngIf="method === selectedMethod" name="checkmark-circle" color="success" class="selected-checkmark"></ion-icon>
+              </h3>
+              <p>{{ method.desc }}</p>
+            </ion-label>
+            <ion-icon [name]="method.isOpen ? 'chevron-up-outline' : 'chevron-down-outline'" slot="end" color="medium"></ion-icon>
+          </ion-item>
+          <div *ngIf="method.isOpen" class="expanded-content">
+            <div *ngIf="method.virtualAccount">
+              <ion-item lines="none" class="va-item">
+                <ion-label>
+                  <p>PT GoRent Indonesia</p>
+                  <h3 class="virtual-account-number">{{ method.virtualAccount }}</h3>
+                </ion-label>
+                <ion-button fill="clear" size="small" (click)="copyVirtualAccount($event, method.virtualAccount)" class="copy-button">Copy</ion-button>
+              </ion-item>
+            </div>
+            <div *ngIf="method.qrCodeImageUrl" class="qr-code-container">
+              <img [src]="method.qrCodeImageUrl" alt="QR Code Pembayaran" (error)="qrImg.src = 'assets/icon/placeholder.png'" #qrImg>
+              <p>Scan QR code ini untuk melakukan pembayaran</p>
+            </div>
           </div>
         </div>
-      </div>
-    </ion-list>
+      </ion-list>
+    </div>
   </div>
+
   <ion-card class="payment-details-card" *ngIf="rentalData">
     <ion-item lines="none" class="car-info-header">
       <ion-thumbnail slot="start">
@@ -63,13 +65,13 @@
       <div class="rental-period">
         <div class="date-col">
           <p>Pickup</p>
-          <h3>{{ rentalData.pickup | date:'d MMM yyyy' }}</h3>
+          <h3>{{ rentalData.pickup | date:'d MMM yy' }}</h3>
           <p>{{ rentalData.pickup | date:'HH:mm' }}</p>
         </div>
         <ion-icon name="arrow-forward-outline" color="primary"></ion-icon>
         <div class="date-col">
           <p>Return</p>
-          <h3>{{ rentalData.return | date:'d MMM yyyy' }}</h3>
+          <h3>{{ rentalData.return | date:'d MMM yy' }}</h3>
           <p>{{ rentalData.return | date:'HH:mm' }}</p>
         </div>
       </div>
@@ -84,26 +86,32 @@
       </ion-item>
 
       <div class="cost-breakdown">
-        <div class="cost-item">
-          <span>Rental Fee ({{ rentalData.duration }} days)</span>
-          <span>{{ rentalData.cost | currency:'Rp ':'symbol':'1.0-0' }}</span>
-        </div>
-        <div class="cost-item" *ngIf="rentalData.delivery > 0">
-            <span>Biaya Antar</span>
-            <span>{{ rentalData.delivery | currency:'Rp ':'symbol':'1.0-0' }}</span>
-        </div>
-        <div class="cost-item">
-          <span>Security Deposit (Refundable)</span>
-          <span>{{ rentalData.car.security_deposit | currency:'Rp ':'symbol':'1.0-0' }}</span>
-        </div>
-        <div class="cost-item total-cost">
-            <strong>Jumlah Total</strong>
-            <strong>{{ (Number(rentalData.cost) || 0) + (Number(rentalData.delivery) || 0) + (Number(rentalData.car.security_deposit) || 0) | currency:'Rp ':'symbol':'1.0-0' }}</strong>
-        </div>
+        <ion-grid class="no-padding">
+          <ion-row>
+            <ion-col><ion-text color="medium">Rental Fee ({{ rentalData.duration }} days)</ion-text></ion-col>
+            <ion-col class="ion-text-end"><ion-text>{{ rentalData.cost | currency:'Rp ':'symbol':'1.0-0' }}</ion-text></ion-col>
+          </ion-row>
+          <ion-row *ngIf="rentalData.delivery > 0">
+            <ion-col><ion-text color="medium">Biaya Antar</ion-text></ion-col>
+            <ion-col class="ion-text-end"><ion-text>{{ rentalData.delivery | currency:'Rp ':'symbol':'1.0-0' }}</ion-text></ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col><ion-text color="medium">Security Deposit (Refundable)</ion-text></ion-col>
+            <ion-col class="ion-text-end"><ion-text>{{ rentalData.car.security_deposit | currency:'Rp ':'symbol':'1.0-0' }}</ion-text></ion-col>
+          </ion-row>
+        </ion-grid>
       </div>
       
       <ion-item-divider class="divider-line"></ion-item-divider>
 
+      <div class="total-row">
+        <ion-grid class="no-padding">
+            <ion-row>
+              <ion-col><strong>Jumlah Total</strong></ion-col>
+              <ion-col class="ion-text-end"><ion-text color="primary"><strong>{{ rentalData.totalCost | currency:'Rp ':'symbol':'1.0-0' }}</strong></ion-text></ion-col>
+            </ion-row>
+        </ion-grid>
+      </div>
       <div class="upload-section">
         <h3>Upload Bukti Pembayaran</h3>
         <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept="image/png, image/jpeg, application/pdf">
@@ -113,7 +121,6 @@
       </div>
     </div>
   </ion-card>
-
 </ion-content>
 
 <ion-footer class="ion-padding">

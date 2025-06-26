@@ -1,6 +1,10 @@
+// ===================================================================
+// INI ADALAH PERBAIKAN PALING PENTING
+// ===================================================================
+
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // 1. Impor ReactiveFormsModule
 
 import { IonicModule } from '@ionic/angular';
 
@@ -13,7 +17,8 @@ import { ChangePasswordPage } from './change-password.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    ChangePasswordPageRoutingModule
+    ChangePasswordPageRoutingModule,
+    ReactiveFormsModule // 2. Tambahkan di sini
   ],
   declarations: [ChangePasswordPage]
 })

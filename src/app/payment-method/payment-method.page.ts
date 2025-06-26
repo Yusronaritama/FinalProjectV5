@@ -108,7 +108,7 @@ export class PaymentMethodPage implements OnInit {
             name: 'QRIS',
             desc: 'Pay with any supporting app',
             logo: 'assets/logopayment/mandiri.jpg',
-            qrCodeImageUrl: 'assets/payment/qris-example.png',
+            qrCodeImageUrl: 'assets/logopayment/mandiri.jpg',
             isOpen: false,
             dbValue: 'qris',
           },
