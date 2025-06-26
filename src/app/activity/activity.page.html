@@ -22,7 +22,10 @@
       <ion-item class="card-header" lines="none">
         <ion-label>
           <h2>#GR{{ order.id }}</h2>
-          <p>{{ order.waktu_sewa | date:'d MMM y' }} - {{ order.waktu_kembali | date:'d MMM y' }}</p>
+          <p>
+            {{ order.waktu_sewa | date:'d MMM y, HH:mm' }} -
+            {{ order.waktu_kembali | date:'d MMM y, HH:mm' }}
+          </p>
         </ion-label>
         <ion-chip [color]="getStatusColor(order.status_pemesanan)" outline="true" class="status-chip-main">
           {{ order.status_pemesanan }}
@@ -51,6 +54,10 @@
           <ion-chip [color]="getStatusColor(order.payment.status_deposit)" class="status-chip-deposit">
             {{ order.payment.status_deposit }}
           </ion-chip>
+        </div>
+        <div class="deposit-row refunded" *ngIf="order.payment.deposit_dikembalikan > 0">
+            <strong>Refunded Amount</strong>
+            <strong>{{ order.payment.deposit_dikembalikan | currency:'Rp ':'symbol':'1.0-0' }}</strong>
         </div>
         <div class="deposit-row">
           <span>Original Deposit</span>

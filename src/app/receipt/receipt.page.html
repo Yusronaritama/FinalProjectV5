@@ -30,7 +30,7 @@
               <!-- PERBAIKAN: Gunakan rentalData.vehicle.merk dan .nama -->
               <h3>{{ rentalData.vehicle?.merk }} {{ rentalData.vehicle?.nama }}</h3>
               <!-- PERBAIKAN: Gunakan waktu_sewa dan waktu_kembali -->
-              <p>{{ rentalData.waktu_sewa | date:'d MMM y' }} - {{ rentalData.waktu_kembali | date:'d MMM y' }}</p>
+              <p>{{ rentalData.waktu_sewa | date:'d MMM y, HH:mm' }} - {{ rentalData.waktu_kembali | date:'d MMM y, HH:mm' }}</p>
               <!-- PERBAIKAN: Gunakan delivery_option -->
               <p>{{ rentalData.delivery_option === 'delivered' ? 'Diantar' : 'Self-Drive' }}</p>
             </ion-label>

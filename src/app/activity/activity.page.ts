@@ -92,10 +92,16 @@ export class ActivityPage implements OnInit {
     }
   }
 
-  bookAgain(order: OrderHistory) {
-    console.log('Pesan lagi mobil:', order.car.name);
-    // Navigasi ke halaman detail mobil
-    // Anda perlu ID mobil yang sebenarnya di sini, untuk sementara kita arahkan ke home
-    this.router.navigateByUrl('/home');
+  bookAgain(order: any) {
+    // Ambil ID kendaraan dari data pesanan
+    const vehicleId = order.vehicle.id;
+
+    console.log(
+      'Pesan lagi mobil, mengarahkan ke car-detail dengan ID:',
+      vehicleId,
+    );
+
+    // Arahkan ke halaman car-detail dengan membawa ID mobil
+    this.router.navigate(['/car-detail', vehicleId]);
   }
 }

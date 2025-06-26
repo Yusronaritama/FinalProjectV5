@@ -84,4 +84,11 @@ export class VehicleService {
   getRentalStatus(rentalId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/rentals/${rentalId}/status`);
   }
+
+  /**
+   * Mengambil daftar tanggal yang tidak tersedia untuk sebuah mobil.
+   */
+  getBookedDates(vehicleId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/vehicles/${vehicleId}/booked-dates`);
+  }
 }

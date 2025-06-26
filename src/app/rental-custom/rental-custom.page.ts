@@ -17,6 +17,7 @@ export class RentalCustomPage implements OnInit {
   pickupDateTime: string = new Date().toISOString();
   returnDateTime: string = new Date().toISOString();
   returnDateTimeDisplay: string = '';
+  bookedDates: string[] = [];
   minPickupDate: string = '';
   numberOfDays: number = 1;
   driverOption: 'pickup' | 'delivered' = 'pickup';
@@ -25,6 +26,8 @@ export class RentalCustomPage implements OnInit {
   deliveryCost: number = 0;
   totalCost: number = 0;
   public readonly FLAT_DELIVERY_FEE = 150000;
+  // --- TAMBAHKAN JAM OPERASIONAL DI SINI ---
+  public allowedHours: number[] = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
 
   private isUserInJabodetabek: boolean = true;
   constructor(
@@ -38,10 +41,7 @@ export class RentalCustomPage implements OnInit {
 
   ngOnInit() {
     this.getAuthenticatedUser(); // <-- Panggil fungsi baru ini
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    this.minPickupDate = today.toISOString();
-    this.updateReturnDateTime();
+    this.setInitialDates();
 
     const carIdParam = this.route.snapshot.paramMap.get('id');
     if (carIdParam) {
@@ -67,6 +67,29 @@ export class RentalCustomPage implements OnInit {
     });
   }
 
+  // --- PERBAIKAN LOGIKA TANGGAL ---
+  setInitialDates() {
+    const now = new Date();
+    const today = new Date();
+    
+    // Jika sekarang sudah lewat jam 21:59, maka tanggal minimal adalah besok
+    if (now.getHours() >= 22) {
+        today.setDate(today.getDate() + 1);
+    }
+    
+    today.setHours(0, 0, 0, 0);
+    this.minPickupDate = today.toISOString();
+    
+    // Atur waktu pickup default ke jam 8 pagi jika tanggalnya diubah
+    const initialPickup = new Date(this.minPickupDate);
+    if (initialPickup.getHours() < 8) {
+      initialPickup.setHours(8, 0, 0, 0);
+    }
+    this.pickupDateTime = initialPickup.toISOString();
+
+    this.updateReturnDateTime();
+  }
+
   // --- PERBAIKAN: Menggunakan semua fungsi dari versi Anda yang sudah terhubung ke API ---
   async loadVehicleDetails(id: string) {
     const loading = await this.loadingController.create({
@@ -79,6 +102,7 @@ export class RentalCustomPage implements OnInit {
         this.vehicle = response.data;
         this.calculateTotal();
         this.isLoading = false;
+        this.loadBookedDates(this.vehicle!.id);
         loading.dismiss();
       },
       error: (err) => {
@@ -88,6 +112,32 @@ export class RentalCustomPage implements OnInit {
       },
     });
   }
+
+  loadBookedDates(vehicleId: number) {
+    this.vehicleService.getBookedDates(vehicleId).subscribe({
+      next: (response) => {
+        this.bookedDates = response.data;
+        console.log('Tanggal yang tidak tersedia:', this.bookedDates);
+      },
+      error: (err) => {
+        console.error('Gagal mengambil tanggal yang dibooking:', err);
+      },
+    });
+  }
+
+  // Fungsi ini harus berupa arrow function agar 'this' bisa diakses
+  isDateEnabled = (dateString: string) => {
+    // 1. Ambil bagian tanggalnya saja, contoh: "2025-06-26"
+    const dateToCheck = dateString.split('T')[0];
+
+    // 2. Periksa apakah tanggal tersebut ada di dalam array bookedDates
+    const isDisabled = this.bookedDates.includes(dateToCheck);
+
+    // 3. Kembalikan kebalikannya:
+    //    - Jika isDisabled true (ada di array), maka kembalikan false (jangan aktifkan).
+    //    - Jika isDisabled false (tidak ada di array), maka kembalikan true (aktifkan).
+    return !isDisabled;
+  };
 
   async presentDeliveryAlert() {
     const alert = await this.alertController.create({
@@ -164,8 +214,36 @@ export class RentalCustomPage implements OnInit {
   }
 
   // ... (kode lain di atasnya tetap sama)
+  // --- TAMBAHKAN FUNGSI BARU INI UNTUK FORMAT TANGGAL ---
+  private formatISODateToYmdHis(isoDate: string): string {
+    const date = new Date(isoDate);
+    
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  }
+  // ----------------------------------------------------
 
   goToPayment() {
+    // ===== VALIDASI TANGGAL BARU (TAMBAHKAN BLOK INI) =====
+    const selectedPickupDate = new Date(this.pickupDateTime);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Atur waktu ke awal hari
+
+    if (selectedPickupDate < today) {
+      this.presentAlert(
+        'Tanggal Tidak Valid',
+        'Anda tidak dapat memilih tanggal yang sudah berlalu. Silakan pilih hari ini atau tanggal di masa mendatang.'
+      );
+      return; // Hentikan eksekusi fungsi
+    }
+    // =======================================================
+
     // Validasi jika memilih diantar tapi alamat tidak ada
     if (
       this.driverOption === 'delivered' &&
@@ -182,8 +260,8 @@ export class RentalCustomPage implements OnInit {
       const rentalData = {
         car: this.vehicle,
         duration: this.numberOfDays,
-        pickup: this.pickupDateTime,
-        return: this.returnDateTime,
+        pickup: this.formatISODateToYmdHis(this.pickupDateTime),
+        return: this.formatISODateToYmdHis(this.returnDateTime),
         cost: this.rentalCost,
         delivery: this.deliveryCost,
         total: this.totalCost,
