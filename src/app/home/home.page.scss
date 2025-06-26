@@ -1,19 +1,7 @@
-// ===================================================================
-// KODE PENGGANTI FINAL UNTUK: src/app/home/home.page.scss
-// Versi ini sudah bersih, rapi, dan mencakup semua permintaan Anda.
-// ===================================================================
-
 :host {
 
-  // Styling untuk Toolbar Header
+  // Gaya header standar
   ion-toolbar.custom-toolbar {
-    --background: var(--ion-color-primary);
-    --color: var(--ion-color-primary-contrast);
-    height: 90px;
-    display: flex;
-    align-items: center;
-    padding: 0 16px;
-
     .logo-header {
       order: 2;
       position: absolute;
@@ -25,19 +13,15 @@
       justify-content: center;
 
       .logo-img {
-        // PERBAIKAN: Ukuran logo disesuaikan agar proporsional
-        max-height: 150px;
+         max-height: 150px;
         width: auto;
         object-fit: contain;
       }
     }
 
-    ion-buttons[slot="end"] .sign-in-button {
+    .sign-in-button, ion-button[shape="circle"] {
       --color: var(--ion-color-primary-contrast);
       --border-color: var(--ion-color-primary-contrast);
-      --border-radius: 8px;
-      --border-width: 1.5px;
-      font-weight: 600;
     }
   }
 
@@ -70,124 +54,28 @@
     border-radius: 12px;
   }
 
-  // Judul Section (seperti "Car Type")
-  h3.section-title {
-    color: var(--ion-text-color);
-    margin: 24px 16px 15px 16px;
-    font-size: 1.2em;
-    font-weight: bold;
+  // Lokasi Pengguna
+  .location-section {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    color: var(--ion-color-medium-shade);
+    font-size: 0.9em;
+    cursor: pointer;
+
+    ion-icon {
+      margin-right: 8px;
+      font-size: 1.2em;
+      color: var(--ion-color-primary);
+    }
   }
 
-  // Bagian Filter Tipe Mobil
-  .car-type-grid {
-    display: flex;
-    gap: 10px;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding: 16px;
+  // Tombol Aksi Utama
+  .rental-form-card {
     margin: 16px;
     border-radius: 16px;
-    background: var(--ion-color-primary); // Latar belakang hijau
-
-    &::-webkit-scrollbar { display: none; }
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-
-    .car-type-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      flex: 0 0 auto;
-      width: 80px;
-      cursor: pointer;
-
-      .icon-wrapper {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 8px;
-        background-color: rgba(255, 255, 255, 0.2);
-        transition: background-color 0.2s ease-in-out;
-      }
-      img {
-        width: 32px;
-        height: 32px;
-        object-fit: contain;
-      }
-      span {
-        font-size: 0.8em;
-        color: var(--ion-color-primary-contrast); // Teks putih
-        font-weight: 500;
-      }
-      &.active .icon-wrapper {
-        background-color: var(--ion-color-primary-contrast);
-        img {
-          filter: invert(25%) sepia(25%) saturate(2596%) hue-rotate(145deg) brightness(95%) contrast(101%);
-        }
-      }
-    }
-  }
-
-  // Bagian Form Rental
-  .rental-form-card {
-    background: var(--ion-color-primary); // Latar belakang hijau
-    margin: 16px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 16px;
-
-    ion-segment {
-      margin-bottom: 8px; // Kurangi jarak bawah
-      --background: rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-    }
-    
-    // Gaya untuk catatan "Diantar"
-    .delivery-note {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.8rem;
-      padding: 8px 12px;
-      margin-bottom: 16px; // Beri jarak ke bawah
-      border-radius: 8px;
-      color: rgba(255, 255, 255, 0.9);
-      background: rgba(255, 255, 255, 0.1); 
-
-      ion-icon {
-        font-size: 1.2rem;
-        flex-shrink: 0;
-      }
-    }
-
-    ion-list {
-      background: transparent;
-      padding: 0;
-    }
-
-    ion-item {
-      --background: rgba(255, 255, 255, 0.15);
-      --border-radius: 8px;
-      margin-bottom: 12px;
-      --padding-start: 12px;
-      --border-width: 0;
-      --color: var(--ion-color-primary-contrast);
-    }
-    
-    ion-label {
-      color: var(--ion-color-primary-contrast);
-    }
-    .time-display, ion-input {
-      color: var(--ion-color-primary-contrast);
-    }
-    .summary-text {
-      color: rgba(255, 255, 255, 0.9);
-      margin: 24px 0 16px 0;
-    }
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --background: var(--ion-color-primary);
 
     .search-button {
       height: 48px;

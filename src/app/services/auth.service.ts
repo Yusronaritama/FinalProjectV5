@@ -1,6 +1,5 @@
 // ===================================================================
-// KODE PENGGANTI LENGKAP UNTUK: src/app/services/auth.service.ts
-// Versi ini lebih efisien dan akan menyelesaikan masalah tombol Anda.
+// KODE LENGKAP auth.service.ts DENGAN PENJELASAN PERUBAHAN
 // ===================================================================
 
 import { Injectable } from '@angular/core';
@@ -19,6 +18,10 @@ export interface User {
   alamat: string;
   path_sim: string;
   tanggal_lahir: string;
+  // --- NOTE: TAMBAHAN ---
+  // Properti opsional untuk menyimpan nama ikon avatar.
+  // Tanda '?' berarti tidak wajib ada di setiap objek User.
+  avatarIcon?: string;
 }
 
 export interface AuthResponse {
@@ -37,23 +40,51 @@ export interface AuthResponse {
 export class AuthService {
   private apiUrl = environment.apiUrl;
 
-  // --- PERUBAHAN UTAMA ADA DI SINI ---
-  // BehaviorSubject sekarang langsung diinisialisasi dengan status token yang benar.
+  // --- NOTE: PERUBAHAN ---
+  // BehaviorSubject untuk status login sekarang langsung diinisialisasi
+  // dengan memanggil fungsi hasToken() untuk keakuratan saat aplikasi dimuat.
   private isAuthenticated = new BehaviorSubject<boolean>(this.hasToken());
   public isAuthenticated$ = this.isAuthenticated.asObservable();
-  // --- AKHIR PERUBAHAN ---
+
+  // --- NOTE: TAMBAHAN ---
+  // BehaviorSubject baru yang khusus untuk menyimpan dan menyiarkan nama ikon avatar.
+  // Diinisialisasi dengan memanggil getInitialAvatar().
+  private currentAvatar = new BehaviorSubject<string>(this.getInitialAvatar());
+  public currentAvatar$ = this.currentAvatar.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {
-    // Constructor sekarang bisa kosong, karena pengecekan token sudah dilakukan saat inisialisasi.
+    // --- NOTE: PERUBAHAN ---
+    // Constructor sekarang kosong karena pemanggilan checkTokenOnLoad() sudah tidak diperlukan lagi.
   }
 
-  // --- PERUBAHAN: Fungsi checkTokenOnLoad() digantikan dengan hasToken() yang lebih efisien ---
+  // --- NOTE: PERUBAHAN ---
+  // Fungsi checkTokenOnLoad() diganti dengan hasToken() yang lebih ringkas
+  // dan digunakan langsung saat inisialisasi BehaviorSubject.
   private hasToken(): boolean {
     const token = localStorage.getItem('auth_token');
-    return !!token; // Mengembalikan true jika token ada, false jika tidak ada
+    return !!token;
   }
   
-  // Method register dan login Anda sudah benar dan tidak perlu diubah.
+  // --- NOTE: TAMBAHAN ---
+  // Fungsi baru untuk mendapatkan avatar yang tersimpan di localStorage saat aplikasi pertama kali dibuka.
+  private getInitialAvatar(): string {
+    const user = this.getUser();
+    return user?.avatarIcon || 'person-circle-outline'; 
+  }
+
+  // --- NOTE: TAMBAHAN ---
+  // Fungsi baru yang akan dipanggil dari halaman profil untuk:
+  // 1. Menyiarkan nama ikon baru ke semua 'pendengar' (seperti Halaman Beranda).
+  // 2. Menyimpan pilihan ikon baru ke localStorage agar tidak hilang.
+  updateAvatar(iconName: string) {
+    this.currentAvatar.next(iconName);
+    const user = this.getUser();
+    if (user) {
+      user.avatarIcon = iconName;
+      localStorage.setItem('user_data', JSON.stringify(user));
+    }
+  }
+
   register(userData: FormData): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, userData).pipe(
       tap(response => {
@@ -78,6 +109,9 @@ export class AuthService {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('user_data');
     this.isAuthenticated.next(false);
+    // --- NOTE: TAMBAHAN ---
+    // Saat logout, reset avatar kembali ke ikon default.
+    this.currentAvatar.next('person-circle-outline');
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 
@@ -89,6 +123,25 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/user`);
   }
 
+  // --- NOTE: TAMBAHAN ---
+  // Fungsi baru yang akan dipanggil dari halaman profil untuk mengirim
+  // perubahan data (telepon, alamat, dll.) ke server backend.
+  updateUserProfile(profileData: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/user/profile`, profileData).pipe(
+      tap(response => {
+        // Jika backend mengembalikan data user yang baru, perbarui localStorage
+        if (response && response.data) {
+          // Ambil avatar lama agar tidak hilang saat data di-refresh
+          const oldUser = this.getUser();
+          const updatedUser = response.data;
+          updatedUser.avatarIcon = oldUser?.avatarIcon;
+          
+          localStorage.setItem('user_data', JSON.stringify(updatedUser));
+        }
+      })
+    );
+  }
+
   getUser(): User | null {
     const userString = localStorage.getItem('user_data');
     if (userString) {
@@ -98,8 +151,17 @@ export class AuthService {
   }
   
   private storeAuthData(response: AuthResponse) {
+    const user = response.data.user;
+    // --- NOTE: TAMBAHAN ---
+    // Saat login/register pertama kali, beri avatar default jika belum ada.
+    user.avatarIcon = user.avatarIcon || 'person-circle-outline'; 
+
     localStorage.setItem('auth_token', response.data.access_token);
-    localStorage.setItem('user_data', JSON.stringify(response.data.user));
+    localStorage.setItem('user_data', JSON.stringify(user));
+    
     this.isAuthenticated.next(true);
+    // --- NOTE: TAMBAHAN ---
+    // Siarkan avatar yang aktif saat login.
+    this.currentAvatar.next(user.avatarIcon);
   }
 }

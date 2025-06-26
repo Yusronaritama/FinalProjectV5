@@ -1,21 +1,39 @@
 // ===================================================================
-// KODE PENGGANTI LENGKAP UNTUK: src/app/car-random-list/car-random-list.page.scss
-// Versi ini meniru gaya filter dari halaman Beranda.
+// KODE PENGGANTI LENGKAP & FINAL UNTUK: src/app/car-random-list/car-random-list.page.scss
 // ===================================================================
 
-// Gaya untuk filter car type
+.filter-accordion {
+  margin: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  ion-accordion {
+    // Menghilangkan garis bawah bawaan accordion
+    ion-item[slot="header"] {
+      --inner-border-width: 0;
+    }
+
+    // Gaya untuk header accordion
+    ion-item[slot="header"] {
+      --background: var(--ion-item-background);
+      --color: var(--ion-text-color);
+    }
+    
+    // Gaya untuk konten accordion
+    div[slot="content"] {
+      background: var(--ion-item-background);
+    }
+  }
+}
+
 .car-type-grid {
   display: flex;
   gap: 10px;
   flex-wrap: nowrap;
-  overflow-x: auto; // Ini yang membuat filter bisa digeser
-  padding: 16px;
-  background: var(--ion-color-primary); // Latar belakang hijau toska
+  overflow-x: auto;
+  padding: 0 16px 16px 16px;
   
-  // Sembunyikan scrollbar agar terlihat lebih rapi
-  &::-webkit-scrollbar { 
-    display: none; 
-  }
+  &::-webkit-scrollbar { display: none; }
   -ms-overflow-style: none;
   scrollbar-width: none;
 
@@ -24,7 +42,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex: 0 0 auto; // Mencegah item meregang atau menyusut
+    flex: 0 0 auto;
     width: 80px;
     cursor: pointer;
 
@@ -36,8 +54,9 @@
       align-items: center;
       justify-content: center;
       margin-bottom: 8px;
-      background-color: rgba(255, 255, 255, 0.2); // Lingkaran transparan
-      transition: background-color 0.2s ease-in-out;
+      background-color: var(--ion-background-color);
+      border: 1px solid var(--ion-border-color);
+      transition: all 0.2s ease-in-out;
     }
     img {
       width: 32px;
@@ -46,27 +65,52 @@
     }
     span {
       font-size: 0.8em;
-      color: var(--ion-color-primary-contrast); // Teks warna putih
+      color: var(--ion-text-color);
       font-weight: 500;
-      text-align: center;
     }
-
-    // Gaya saat item aktif/terpilih
     &.active .icon-wrapper {
-      background-color: var(--ion-color-primary-contrast); // Lingkaran jadi putih solid
-      
-      // Ikon di dalamnya jadi berwarna primer agar terlihat
-      img {
-        // Filter CSS untuk mengubah warna gambar menjadi warna primer
-        filter: invert(25%) sepia(25%) saturate(2596%) hue-rotate(145deg) brightness(95%) contrast(101%);
-      }
+      border-color: var(--ion-color-primary);
+      transform: scale(1.1);
+      box-shadow: 0 4px 8px rgba(var(--ion-color-primary-rgb), 0.2);
     }
   }
 }
 
-// Gaya untuk daftar mobil di bawah filter
-ion-list {
-  padding-top: 8px; // Beri sedikit jarak dari filter
+.filter-container {
+  padding: 0 16px 16px 16px;
+  border-bottom: none;
+
+  .filter-group {
+    margin-top: 16px;
+
+    ion-label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--ion-color-medium-shade);
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .select-item, .price-input-item {
+      --background: var(--ion-background-color);
+      --border-radius: 8px;
+      --padding-start: 8px;
+      --inner-padding-end: 8px;
+      border: 1px solid var(--ion-border-color);
+    }
+  }
+
+  .apply-filter-button {
+    margin-top: 24px;
+    height: 44px;
+    font-weight: bold;
+  }
+}
+
+ion-list-header {
+  font-weight: bold;
+  padding-left: 16px;
+  font-size: 1.1rem;
 }
 
 .car-card {
@@ -96,4 +140,16 @@ ion-list {
     font-weight: bold;
     color: var(--ion-color-primary);
   }
+}
+
+.empty-state {
+  color: var(--ion-color-medium);
+  ion-icon {
+    font-size: 4rem;
+    margin-bottom: 8px;
+  }
+}
+
+ion-fab {
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }

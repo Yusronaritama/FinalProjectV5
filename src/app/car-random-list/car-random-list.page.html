@@ -7,42 +7,135 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <div class="car-type-grid">
-    <div class="car-type-item" 
-         *ngFor="let type of carTypes" 
-         (click)="selectCarType(type)"> 
-         <div class="icon-wrapper">
-        <img [src]="type.imageUrl" [alt]="type.name">
+<ion-content [fullscreen]="true" [scrollEvents]="true" (ionScroll)="onContentScroll($event)" #content>
+  
+  <ion-accordion-group class="filter-accordion">
+    <ion-accordion value="main-filter">
+      
+      <ion-item slot="header">
+        <ion-icon name="options-outline" slot="start"></ion-icon>
+        <ion-label>Tampilkan Filter</ion-label>
+      </ion-item>
+
+      <div class="ion-padding" slot="content">
+        <div class="car-type-grid">
+          <div class="car-type-item" 
+               *ngFor="let type of carTypes" 
+               (click)="selectCarType(type)"
+               [class.active]="type === selectedCarType">
+            <div class="icon-wrapper">
+              <img [src]="type.imageUrl" [alt]="type.name">
+            </div>
+            <span>{{ type.name }}</span>
+          </div>
+        </div>
+
+        <div class="filter-container">
+          <div class="filter-group">
+            <ion-label>Bahan Bakar</ion-label>
+            <ion-item class="select-item">
+              <ion-select interface="popover" placeholder="Pilih Tipe" [(ngModel)]="filterOptions.bahan_bakar">
+                <ion-select-option value="semua">Semua</ion-select-option>
+                <ion-select-option value="bensin">Bensin</ion-select-option>
+                <ion-select-option value="diesel">Diesel</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </div>
+
+          <div class="filter-group">
+            <ion-label>Transmisi</ion-label>
+            <ion-item class="select-item">
+              <ion-select interface="popover" placeholder="Pilih Tipe" [(ngModel)]="filterOptions.transmisi">
+                <ion-select-option value="semua">Semua</ion-select-option>
+                <ion-select-option value="automatic">Automatic</ion-select-option>
+                <ion-select-option value="manual">Manual</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </div>
+          
+          <div class="filter-group">
+            <ion-label>Rentang Harga</ion-label>
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <ion-item class="price-input-item">
+                    <ion-label position="floating">Harga Min.</ion-label>
+                    <ion-input type="number" placeholder="Rp 0" [(ngModel)]="filterOptions.harga.lower"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col>
+                  <ion-item class="price-input-item">
+                    <ion-label position="floating">Harga Maks.</ion-label>
+                    <ion-input type="number" [placeholder]="maxPrice | currency:'Rp ':'symbol':'1.0-0'" [(ngModel)]="filterOptions.harga.upper"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+
+          <ion-button expand="block" (click)="applyFilters()" class="apply-filter-button">
+            <ion-icon name="search-outline" slot="start"></ion-icon>
+            Cari Mobil
+          </ion-button>
+        </div>
       </div>
-      <span>{{ type.name }}</span>
-    </div>
-  </div>
+    </ion-accordion>
+  </ion-accordion-group>
 
   <div *ngIf="isLoading" class="ion-text-center ion-padding">
     <ion-spinner name="crescent"></ion-spinner>
   </div>
 
-  <ion-list *ngIf="!isLoading">
-    <ion-card *ngFor="let car of allVehicles" (click)="viewCarDetail(car.id)" class="car-card">
-      <img [src]="'http://127.0.0.1:8000' + car.foto_utama" [alt]="car.nama" class="car-image">
-      <ion-card-header>
-        <ion-card-title>{{ car.nama }}</ion-card-title>
-        <ion-card-subtitle>{{ car.merk }} - {{ car.transmisi | titlecase }}</ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-        <div class="price-info">
-          <span class="price">{{ car.harga_sewa_harian | currency:'Rp ':'symbol':'1.0-0' }} / hari</span>
-          <ion-chip [color]="car.status === 'tersedia' ? 'success' : 'danger'" outline="true">
-            <ion-label>{{ car.status | titlecase }}</ion-label>
-          </ion-chip>
-        </div>
-      </ion-card-content>
-    </ion-card>
-  </ion-list>
-  
-  <div *ngIf="!isLoading && allVehicles.length === 0" class="ion-text-center ion-padding">
-    <ion-icon name="car-sport-outline" style="font-size: 3rem; color: #ccc;"></ion-icon>
-    <p>Tidak ada mobil yang tersedia.</p>
+  <div *ngIf="!isLoading">
+    <div *ngIf="priorityVehicles.length > 0">
+      <ion-list-header><ion-label color="primary">Hasil Pencarian</ion-label></ion-list-header>
+      <ion-list>
+        <ion-card *ngFor="let car of priorityVehicles" (click)="viewCarDetail(car.id)" class="car-card">
+          <img [src]="'http://127.0.0.1:8000' + car.foto_utama" [alt]="car.nama" class="car-image">
+          <ion-card-header>
+            <ion-card-title>{{ car.nama }}</ion-card-title>
+            <ion-card-subtitle>{{ car.merk }} - {{ car.transmisi | titlecase }}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="price-info">
+              <span class="price">{{ car.harga_sewa_harian | currency:'Rp ':'symbol':'1.0-0' }} / hari</span>
+              <ion-chip [color]="car.status === 'tersedia' ? 'success' : 'danger'" outline="true">
+                <ion-label>{{ car.status | titlecase }}</ion-label>
+              </ion-chip>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-list>
+    </div>
+    <div *ngIf="otherVehicles.length > 0">
+      <ion-list-header *ngIf="isFilterActive"><ion-label>Mobil Lainnya</ion-label></ion-list-header>
+      <ion-list>
+        <ion-card *ngFor="let car of otherVehicles" (click)="viewCarDetail(car.id)" class="car-card">
+          <img [src]="'http://127.0.0.1:8000' + car.foto_utama" [alt]="car.nama" class="car-image">
+          <ion-card-header>
+            <ion-card-title>{{ car.nama }}</ion-card-title>
+            <ion-card-subtitle>{{ car.merk }} - {{ car.transmisi | titlecase }}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="price-info">
+              <span class="price">{{ car.harga_sewa_harian | currency:'Rp ':'symbol':'1.0-0' }} / hari</span>
+              <ion-chip [color]="car.status === 'tersedia' ? 'success' : 'danger'" outline="true">
+                <ion-label>{{ car.status | titlecase }}</ion-label>
+              </ion-chip>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-list>
+    </div>
+    <div *ngIf="priorityVehicles.length === 0 && otherVehicles.length === 0" class="ion-text-center ion-padding empty-state">
+      <ion-icon name="car-sport-outline"></ion-icon>
+      <p>Tidak ada mobil yang cocok dengan filter Anda.</p>
+    </div>
   </div>
+  
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed" *ngIf="showScrollButton">
+    <ion-fab-button (click)="scrollToTop()">
+      <ion-icon name="arrow-up-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
