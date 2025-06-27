@@ -19,6 +19,7 @@ export class ProfilePage implements OnInit, OnDestroy {
   public editData = {
     nomor_telepon: '',
     alamat: '',
+    nomor_rekening: '', // <-- TAMBAHKAN INI
     tanggal_lahir: new Date().toISOString()
   };
 
@@ -40,6 +41,7 @@ export class ProfilePage implements OnInit, OnDestroy {
     if (this.user) {
       this.editData.nomor_telepon = this.user.nomor_telepon;
       this.editData.alamat = this.user.alamat;
+      this.editData.nomor_rekening = this.user.nomor_rekening;
       this.editData.tanggal_lahir = this.user.tanggal_lahir;
     }
     

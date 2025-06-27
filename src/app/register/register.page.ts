@@ -80,8 +80,7 @@ export class RegisterPage {
     formData.append('nomor_telepon', this.nomor_telepon);
     formData.append('alamat', this.alamat);
     formData.append('tanggal_lahir', this.tanggal_lahir);
-    // TODO: Rekan Anda bisa menambahkan ini nanti untuk mengirim nomor rekening ke backend
-    // formData.append('nomor_rekening', this.nomor_rekening);
+    formData.append('nomor_rekening', this.nomor_rekening);
     if (this.simFile) {
       formData.append('path_sim', this.simFile);
     }

@@ -21,7 +21,7 @@ interface CarType {
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
-  standalone: false
+  standalone: false, // Pastikan ini diatur ke false jika menggunakan Ionic Angular
 })
 export class HomePage implements OnInit, OnDestroy {
 
@@ -41,7 +41,8 @@ export class HomePage implements OnInit, OnDestroy {
   public driverOption: 'pickup' | 'diantar' = 'pickup';
   public searchPickupDate: string = new Date().toISOString();
   public formattedDate: string = '';
-  public formattedReturnDate: string = '';
+  public minDate: string = ''; // Properti baru untuk tanggal minimal
+
 
   isLoggedIn: boolean = false;
   profileAvatarIcon: string = 'person-circle-outline'; // Ikon default
@@ -68,14 +69,18 @@ export class HomePage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.updateFormattedDates();
+    // --- PERBAIKAN LOGIKA INISIALISASI ---
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Atur ke awal hari
+    this.minDate = today.toISOString(); // Set tanggal minimal
+    this.searchPickupDate = this.minDate; // Set tanggal default ke hari ini
+    this.updateFormattedDates(); // Panggil untuk format tampilan awal
+    // ------------------------------------
 
-    // 1. Berlangganan status login
     this.authSubscription = this.authService.isAuthenticated$.subscribe(isAuth => {
       this.isLoggedIn = isAuth;
     });
 
-    // 2. Berlangganan status avatar
     this.avatarSubscription = this.authService.currentAvatar$.subscribe(avatar => {
       this.profileAvatarIcon = avatar || 'person-circle-outline';
     });
@@ -118,20 +123,21 @@ export class HomePage implements OnInit, OnDestroy {
 
   updateFormattedDates() {
     const pickup = parseISO(this.searchPickupDate);
-    const returnD = add(pickup, { hours: 12 });
     this.formattedDate = format(pickup, 'EEE, d MMM');
-    this.formattedReturnDate = format(returnD, 'EEE, d MMM • HH:mm');
   }
 
   searchCars() {
     const searchParams = {
-      driverOption: this.driverOption,
-      pickupDate: this.searchPickupDate
+      // Kirim tanggal yang dipilih dalam format YYYY-MM-DD
+      pickupDate: format(parseISO(this.searchPickupDate), 'yyyy-MM-dd')
     };
+    console.log('Mencari mobil dengan parameter:', searchParams);
+    // Kirim parameter ke halaman car-random-list melalui state
     this.router.navigate(['/car-random-list'], { state: searchParams });
   }
 
   // Hapus fungsi checkLoginStatusAndLoadAvatar() karena sudah tidak diperlukan lagi
+
 
   startBannerAutoScroll() {
     if (!this.bannerScroller?.nativeElement) return;

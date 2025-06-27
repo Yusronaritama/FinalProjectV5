@@ -18,9 +18,7 @@ export interface User {
   alamat: string;
   path_sim: string;
   tanggal_lahir: string;
-  // --- NOTE: TAMBAHAN ---
-  // Properti opsional untuk menyimpan nama ikon avatar.
-  // Tanda '?' berarti tidak wajib ada di setiap objek User.
+  nomor_rekening: string;
   avatarIcon?: string;
 }
 
@@ -64,6 +62,13 @@ export class AuthService {
     const token = localStorage.getItem('auth_token');
     return !!token;
   }
+
+  updateUserInStorage(user: User) {
+  // Ambil avatar lama agar tidak hilang saat data di-refresh
+  const oldUser = this.getUser();
+  user.avatarIcon = oldUser?.avatarIcon || 'person-circle-outline';
+  localStorage.setItem('user_data', JSON.stringify(user));
+}
   
   // --- NOTE: TAMBAHAN ---
   // Fungsi baru untuk mendapatkan avatar yang tersimpan di localStorage saat aplikasi pertama kali dibuka.

@@ -153,3 +153,30 @@ ion-list-header {
 ion-fab {
   transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
+
+ion-card[disabled] {
+  opacity: 0.5;
+  pointer-events: none; // Mencegah klik
+}
+
+.car-card {
+  position: relative; // Diperlukan untuk overlay
+}
+
+.status-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 140px; // Sesuaikan dengan tinggi gambar Anda
+  background-color: rgba(0, 0, 0, 0.5); // Latar belakang gelap transparan
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-top-left-radius: var(--ion-card-border-radius, 8px);
+  border-top-right-radius: var(--ion-card-border-radius, 8px);
+}

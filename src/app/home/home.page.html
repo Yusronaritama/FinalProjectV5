@@ -46,16 +46,11 @@
       <ion-item lines="none" [button]="true" id="open-home-datepicker">
         <ion-icon name="calendar-outline" slot="start"></ion-icon>
         <ion-label>{{ formattedDate }}</ion-label>
-        <ion-text slot="end" class="time-display">
-          <ion-icon name="time-outline"></ion-icon>
-          {{ searchPickupDate | date:'HH:mm' }}
-        </ion-text>
       </ion-item>
 
       
     </ion-list>
 
-    <p class="summary-text">Selesai Sewa: {{ formattedReturnDate }}</p>
 
     <ion-button expand="block" color="primary" class="search-button" (click)="searchCars()">Ayo cari</ion-button>
   </div>
@@ -63,9 +58,8 @@
   <ion-popover trigger="open-home-datepicker" [keepContentsMounted]="true">
     <ng-template>
       <ion-datetime
-        presentation="date-time"
-        [(ngModel)]="searchPickupDate"
-        (ionChange)="dateChanged($event)">
+        presentation="date"  [(ngModel)]="searchPickupDate"
+        [min]="minDate"        (ionChange)="dateChanged($event)">
       </ion-datetime>
     </ng-template>
   </ion-popover>

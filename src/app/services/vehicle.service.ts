@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 // PASTIKAN INTERFACE DIEKSPOR
 export interface VehicleImage {
@@ -37,8 +37,15 @@ export class VehicleService {
 
   constructor(private http: HttpClient) {}
 
-  getAllVehicles(): Observable<{ data: Vehicle[] }> {
-    return this.http.get<{ data: Vehicle[] }>(`${this.apiUrl}/vehicles`);
+  getAllVehicles(params: any = null): Observable<{ data: Vehicle[] }> {
+    // Jika ada parameter, tambahkan ke URL
+    let httpParams = new HttpParams();
+    if (params && params.pickupDate) {
+      httpParams = httpParams.set('pickup_date', params.pickupDate);
+    }
+    return this.http.get<{ data: Vehicle[] }>(`${this.apiUrl}/vehicles`, {
+      params: httpParams,
+    });
   }
 
   getVehicleById(id: string | number): Observable<{ data: Vehicle }> {
