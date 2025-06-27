@@ -15,10 +15,11 @@ export class RegisterPage {
   nomor_telepon: string = '';
   email: string = '';
   alamat: string = '';
+  nomor_rekening: string = ''; // BARU: Properti untuk nomor rekening
   tanggal_lahir: string = ''; // Format YYYY-MM-DD, cocok untuk <ion-input type="date">
   password: string = '';
   confirmPassword: string = '';
-  
+
   simFile: File | null = null; // Menyimpan file asli untuk di-upload
   simFilePreview: string | null = null; // Menyimpan URL preview untuk ditampilkan
 
@@ -79,6 +80,8 @@ export class RegisterPage {
     formData.append('nomor_telepon', this.nomor_telepon);
     formData.append('alamat', this.alamat);
     formData.append('tanggal_lahir', this.tanggal_lahir);
+    // TODO: Rekan Anda bisa menambahkan ini nanti untuk mengirim nomor rekening ke backend
+    // formData.append('nomor_rekening', this.nomor_rekening);
     if (this.simFile) {
       formData.append('path_sim', this.simFile);
     }

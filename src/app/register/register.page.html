@@ -29,6 +29,12 @@
       </ion-item>
 
       <ion-item>
+        <ion-label position="stacked">Nomor Rekening</ion-label>
+        <ion-icon name="card-outline" slot="start"></ion-icon>
+        <ion-input type="text" placeholder="Nomor Rekening Bank Anda" [(ngModel)]="nomor_rekening"></ion-input>
+      </ion-item>
+
+      <ion-item>
         <ion-label position="stacked">Date of Birth</ion-label>
         <ion-icon name="calendar-outline" slot="start"></ion-icon>
         <ion-input type="date" [(ngModel)]="tanggal_lahir"></ion-input>
