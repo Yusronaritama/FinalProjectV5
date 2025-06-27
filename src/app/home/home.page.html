@@ -1,13 +1,11 @@
 <ion-header>
-  <ion-toolbar color="primary" class="custom-toolbar">
+  <ion-toolbar class="custom-toolbar">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    
     <div class="logo-header">
       <img src="assets/icon/Icon.png" alt="GoRent Logo" class="logo-img">
     </div>
-
     <ion-buttons slot="end">
       <ng-container *ngIf="!isLoggedIn">
         <ion-button fill="outline" class="sign-in-button" (click)="goToLogin()">
@@ -15,7 +13,6 @@
           Sign In
         </ion-button>
       </ng-container>
-
       <ng-container *ngIf="isLoggedIn">
         <ion-button shape="circle" routerLink="/profile">
           <ion-icon slot="icon-only" [name]="profileAvatarIcon"></ion-icon>
@@ -32,39 +29,116 @@
     </div>
   </div>
 
-  <div class="location-section">
-    <div class="location-box" (click)="requestLocationPermission()">
-      <ion-icon name="location-outline"></ion-icon>
-      <span>{{ displayedLocation }}</span>
+  <div class="rental-form-card">
+    <div class="card-header">
+      <h2 class="card-title">Sewa Apapun, Kapanpun</h2>
+      <p class="card-subtitle">Mulai petualanganmu sekarang!</p>
     </div>
+    <div class="form-input-group">
+      <div class="input-wrapper location-wrapper" (click)="requestLocationPermission()">
+        <ion-icon name="location-outline" class="input-icon"></ion-icon>
+        <div class="input-text">
+          <ion-label class="input-label">Lokasi Anda</ion-label>
+          <p class="input-value location-value" [ngClass]="{'placeholder-text': !isLocationSet}">{{ displayedLocation }}</p>
+        </div>
+      </div>
+      <div class="input-wrapper" id="open-home-datepicker">
+        <ion-icon name="calendar-outline" class="input-icon"></ion-icon>
+        <div class="input-text">
+          <ion-label class="input-label">Tanggal Sewa</ion-label>
+          <p class="input-value">{{ formattedDate }}</p>
+        </div>
+      </div>
+    </div>
+    <ion-button expand="block" class="search-button" (click)="searchCars()">
+      <ion-icon name="search" slot="start"></ion-icon>
+      Cari Sekarang
+    </ion-button>
   </div>
 
-  <div class="rental-form-container ion-padding">
-    <h3 class="rental-form-title">Rental Form</h3>
-    <ion-list class="ion-no-padding">
-     
-      <ion-item lines="none" [button]="true" id="open-home-datepicker">
-        <ion-icon name="calendar-outline" slot="start"></ion-icon>
-        <ion-label>{{ formattedDate }}</ion-label>
-      </ion-item>
-
-      
-    </ion-list>
-
-
-    <ion-button expand="block" color="primary" class="search-button" (click)="searchCars()">Ayo cari</ion-button>
+  <div class="gorent-story-section">
+    <h2 class="story-title">{{ gorentStory.title }}</h2>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6" size-md="3" *ngFor="let stat of gorentStory.stats">
+          <div class="story-stat">
+            <ion-icon [name]="stat.icon"></ion-icon>
+            <h3 class="stat-value">{{ stat.value }}</h3>
+            <p class="stat-label">{{ stat.label }}</p>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </div>
+  
+
+
+  <div class="reasons-section">
+    <h2 class="reasons-heading">Kenapa Sewa di GoRentall?</h2>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6" size-md="3" *ngFor="let reason of reasonsToRent">
+          <div class="reason-card">
+            <div class="reason-icon-wrapper">
+              <ion-icon [name]="reason.icon" color="primary"></ion-icon>
+            </div>
+            <h3 class="reason-title">{{ reason.title }}</h3>
+            <p class="reason-description">{{ reason.description }}</p>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <div class="testimonials-section">
+  <h2 class="section-title">Kata Pengguna GoRentall</h2>
+
+  <div class="slider-wrapper-css">
+    <ion-button fill="clear" class="slider-nav-button prev-button" (click)="scrollPrev()">
+      <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+    </ion-button>
+
+    <div #scrollContainer class="scroll-snap-container">
+      <div class="scroll-item" *ngFor="let testimonial of testimonials">
+        
+        <div class="testimonial-card">
+          <div class="card-header">
+            <ion-avatar>
+              <div class="avatar-placeholder">
+                <ion-icon name="person-outline"></ion-icon>
+              </div>
+            </ion-avatar>
+            <div class="user-info">
+              <h4>{{ testimonial.name }}</h4>
+              <p>{{ testimonial.role }}</p>
+            </div>
+            <div class="quote-icon">
+              <ion-icon name="chatbox-ellipses-outline"></ion-icon>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="star-rating">
+              <ion-icon *ngFor="let i of [1,2,3,4,5]" name="star"></ion-icon>
+            </div>
+            <hr class="divider">
+            <p class="quote-text">{{ testimonial.quote }}</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    
+    <ion-button fill="clear" class="slider-nav-button next-button" (click)="scrollNext()">
+      <ion-icon slot="icon-only" name="chevron-forward-outline"></ion-icon>
+    </ion-button>
+  </div>
+</div>
 
   <ion-popover trigger="open-home-datepicker" [keepContentsMounted]="true">
     <ng-template>
-      <ion-datetime
-        presentation="date"  [(ngModel)]="searchPickupDate"
-        [min]="minDate"        (ionChange)="dateChanged($event)">
-      </ion-datetime>
+      <ion-datetime presentation="date" [(ngModel)]="searchPickupDate" [min]="minDate" (ionChange)="dateChanged($event)"></ion-datetime>
     </ng-template>
   </ion-popover>
-
-  
 </ion-content>
 
 <ion-footer>
@@ -75,22 +149,18 @@
           <ion-icon name="home"></ion-icon>
           <ion-label>Beranda</ion-label>
         </ion-tab-button>
-
         <ion-tab-button tab="activity" routerLink="/activity">
           <ion-icon name="time-outline"></ion-icon>
           <ion-label>Aktivitas</ion-label>
         </ion-tab-button>
-
-        <ion-tab-button tab="qna" routerLink="/faq">
+        <ion-tab-button tab="faq" routerLink="/faq">
           <ion-icon name="help-circle-outline"></ion-icon>
-          <ion-label>Q&A</ion-label>
+          <ion-label>FAQ</ion-label>
         </ion-tab-button>
-
         <ion-tab-button tab="settings" routerLink="/settings">
-  <ion-icon name="settings-outline"></ion-icon>
-  Setting
-</ion-tab-button>
-
+          <ion-icon name="settings-outline"></ion-icon>
+          <ion-label>Setting</ion-label>
+        </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
   </ion-toolbar>

@@ -1,116 +1,120 @@
-// Menggunakan :host untuk memastikan gaya ini hanya berlaku untuk halaman ini
-:host {
-  ion-toolbar {
-    --background: var(--ion-color-primary); // Menggunakan variabel
-    --color: var(--ion-color-primary-contrast); // Warna teks di atasnya
-  }
+/* ============================================================
+ KODE SCSS BARU - Menggunakan Variabel dari theme/variables.scss
+============================================================
+*/
 
-  ion-content {
-    --background: var(--ion-background-color); // Background utama
+ion-header {
+  &::after {
+    display: none;
   }
+}
+
+ion-toolbar {
+  // Toolbar dibuat transparan agar bentuk custom di belakangnya terlihat.
+  --background: transparent;
+  --border-width: 0;
+}
+
+// Elemen kunci untuk bentuk melengkung, sekarang menggunakan variabel.
+.header-shape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 180px;
+  background: var(--ion-color-secondary); // Diganti dari #3E8A43
+  border-bottom-left-radius: 45px;
+  border-bottom-right-radius: 45px;
+  z-index: -1;
+}
+
+/* KODE BARU UNTUK LOGO GAMBAR */
+
+.logo-container {
+      order: 2;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 10%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .header-logo-img{
+         max-height: 150px;
+        width: auto;
+        object-fit: contain;
+      }
+    }
+
+ion-content {
+  // Mengambil warna latar belakang langsung dari variabel tema.
+  --background: var(--ion-background-color); 
+}
+
+.search-container {
+  padding: 0 16px;
+  margin-top: 10px;
+}
+
+// Custom style untuk ion-searchbar menggunakan variabel.
+.custom-searchbar {
+  --background: var(--ion-item-background); // Diganti dari #ffffff
+  --border-radius: 30px;
+  --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); // Bayangan dipertahankan untuk estetika
+  --icon-color: var(--ion-color-secondary); // Diganti dari #3E8A43
+  padding: 0;
   
-  // Styling untuk header
-  ion-header.faq-header {
-    &::after {
-      display: none;
-    }
-    transition: top 0.3s ease-in-out;
-    top: 0;
+  // Mengatur warna teks input dan placeholder
+  input.searchbar-input {
+    color: var(--ion-text-color); 
+  }
+}
 
-    &.header-hidden {
-      top: -250px; 
-    }
+.no-results-container {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--ion-color-medium); // Diganti dari #888
 
-    ion-toolbar {
-      --background: var(--ion-color-primary); // Menggunakan variabel
-      --color: var(--ion-color-primary-contrast); 
-    }
+  ion-icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+  }
+
+  h3 {
+    margin: 0 0 10px 0;
+    color: var(--ion-text-color); // Diganti dari #333
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  p {
+    font-size: 14px;
+  }
+}
+
+// Styling untuk Accordion FAQ menggunakan variabel.
+.faq-accordion {
+  margin: 20px 16px;
+  
+  ion-accordion {
+    background: var(--ion-item-background); // Diganti dari #ffffff
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); // Bayangan dipertahankan
     
-    ion-toolbar:last-of-type {
-      padding-bottom: 50px;
-      border-bottom-left-radius: 25px;
-      border-bottom-right-radius: 25px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    // Header akordeon (pertanyaan)
+    ion-item {
+      --background: transparent; // Buat transparan agar warna ion-accordion terlihat
+      --color: var(--ion-text-color);
+      --border-color: var(--ion-border-color); // Gunakan border color dari variabel
+      font-weight: 500;
+      border-radius: 10px;
     }
-  }
 
-  // Styling untuk searchbar
-  .custom-searchbar {
-    --background: var(--ion-item-background); // Background searchbar
-    --border-radius: 50px;
-    --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 450px;
-    margin: -20px auto 0 auto;
-
-    &::part(native) {
-      border: none !important;
-      box-shadow: none !important;
+    // Konten akordeon (jawaban)
+    .ion-padding {
+      color: var(--ion-color-medium);
     }
-  }
-  
-  // Konten di dalam header
-  .centered-title {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    padding: 20px 0 10px 0;
-  }
-  
-  .faq-text {
-    font-family: 'Caveat', cursive;
-    font-size: 2.9rem;
-    font-weight: 700;
-    line-height: 1;
-    color: var(--ion-color-primary-contrast); // Warna teks
-  }
-  
-  .header-logo-img {
-    max-height: 100px;
-    width: 100px;
-  }
-
-  // Styling untuk daftar FAQ (accordion)
-  .faq-accordion {
-    background: var(--ion-item-background); // Background accordion
-    padding: 0;
-    margin: 0;
-  }
-
-  .faq-item {
-    border-bottom: 1px solid var(--ion-border-color, #e0e0e0);
-  }
-
-  .faq-item:last-child {
-    border-bottom: none;
-  }
-
-  .faq-accordion ion-item {
-    --padding-start: 16px;
-    --inner-padding-end: 16px;
-    --background: var(--ion-item-background);
-    --background-activated: rgba(var(--ion-color-primary-rgb), 0.1); // Efek saat diklik
-    font-size: 1rem;
-  }
-
-  .faq-accordion .question {
-    font-weight: 500;
-    color: var(--ion-text-color); // Warna teks
-  }
-
-  .faq-accordion ion-icon {
-    color: var(--ion-color-medium-shade);
-    font-size: 1.2rem;
-  }
-
-  .faq-accordion .answer {
-    background: var(--ion-item-background);
-    padding: 4px 16px 20px 16px;
-    color: var(--ion-color-medium-shade); // Warna teks abu-abu
-    font-size: 0.95rem;
-    line-height: 1.6;
   }
 }

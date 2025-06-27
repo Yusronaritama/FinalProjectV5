@@ -69,7 +69,7 @@ export class PaymentMethodPage implements OnInit {
           {
             name: 'Bank Mandiri',
             desc: 'Transfer via ATM, Mobile Banking, Internet Banking',
-            logo: 'assets/logopayment/mandiri.jpg',
+            logo: 'assets/logopayment/MANDIRI.png',
             virtualAccount: '2345 678 901',
             isOpen: false,
             dbValue: 'transfer',
@@ -83,7 +83,7 @@ export class PaymentMethodPage implements OnInit {
           {
             name: 'GoPay',
             desc: 'Pay with your GoPay balance',
-            logo: 'assets/logopayment/mandiri.jpg',
+            logo: 'assets/logopayment/Gopay.png',
             virtualAccount: '0812 3456 7890 (a/n GoRent)',
             isOpen: false,
             dbValue: 'transfer',
@@ -91,7 +91,7 @@ export class PaymentMethodPage implements OnInit {
           {
             name: 'OVO',
             desc: 'Pay with your OVO balance',
-            logo: 'assets/logopayment/mandiri.jpg',
+            logo: 'assets/logopayment/OVO.png',
             virtualAccount: '0812 3456 7891 (a/n GoRent)',
             isOpen: false,
             dbValue: 'transfer',
@@ -99,7 +99,7 @@ export class PaymentMethodPage implements OnInit {
           {
             name: 'DANA',
             desc: 'Pay with your DANA balance',
-            logo: 'assets/logopayment/mandiri.jpg',
+            logo: 'assets/logopayment/DANA.png',
             virtualAccount: '0812 3456 7892 (a/n GoRent)',
             isOpen: false,
             dbValue: 'transfer',
@@ -107,8 +107,8 @@ export class PaymentMethodPage implements OnInit {
           {
             name: 'QRIS',
             desc: 'Pay with any supporting app',
-            logo: 'assets/logopayment/mandiri.jpg',
-            qrCodeImageUrl: 'assets/logopayment/mandiri.jpg',
+            logo: 'assets/logopayment/QRIS.png',
+            qrCodeImageUrl: 'assets/logopayment/BARCODE.png',
             isOpen: false,
             dbValue: 'qris',
           },

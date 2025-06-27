@@ -12,7 +12,7 @@
   --ion-color-primary-shade: #9ce5a2;
   --ion-color-primary-tint: #9ce5a2;
 
-  --ion-color-secondary: #064420; // Hijau Tua
+  --ion-color-secondary: #9ce5a2; // Hijau Tua
   --ion-color-secondary-rgb: 6,68,32;
   --ion-color-secondary-contrast: #ffffff;
   --ion-color-secondary-contrast-rgb: 255,255,255;
@@ -39,6 +39,29 @@
   --ion-text-color: #000000;
   --ion-item-background: #ffffff;
   --ion-border-color: #d7d8da;
+
+  --ion-color-emphasis: #053c1c;
+  --ion-color-emphasis-rgb: #053c1c;
+  --ion-color-emphasis-contrast: #ffffff;
+  --ion-color-emphasis-contrast-rgb: #053c1c;
+  --ion-color-emphasis-shade: #1f5736;
+  --ion-color-emphasis-tint: #2dd36f;
+
+  /** Variabel untuk Spacing (Padding/Margin) **/
+  --app-padding-small: 8px;
+  --app-padding-medium: 16px;
+  --app-padding-large: 24px;
+
+  /** Variabel untuk Ukuran Font **/
+  --app-font-size-label: 0.9em;
+  --app-font-size-title: 1.4em;
+  --app-font-size-stat: 1.6em;
+  --app-font-size-icon: 2.5em;
+
+  /** Variabel untuk Border Radius **/
+  --app-border-radius-small: 4px;
+  --app-border-radius-medium: 8px;
+  --app-border-radius-large: 12px;
 }
 
 

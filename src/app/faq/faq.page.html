@@ -1,42 +1,40 @@
-<ion-header class="faq-header" [class.header-hidden]="isHeaderHidden">
-
-  <ion-toolbar>
-    <div class="centered-title">
-      <span class="faq-text">FAQ</span>
-      <img [src]="logoUrl" alt="Logo Aplikasi" class="header-logo-img">
-    </div>
-    <div>
-    <ion-searchbar
-      class="custom-searchbar"
-      animated="true"
-      placeholder="Search"
-      show-clear-button="always">
-    </ion-searchbar>
-  </div>
-  
-
-
-    
-  </ion-toolbar>
-
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  <ion-title class="logo-container">
+      <img src="assets/icon/Icon.png" alt="GoRentall Logo" class="header-logo-img">
+  </ion-title>
+</ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" [scrollEvents]="true" (ionScroll)="onScroll($event)">
+<ion-content [fullscreen]="true">
+  <div class="search-container">
+    <ion-searchbar 
+      class="custom-searchbar"
+      placeholder="Cari pertanyaan..." 
+      [value]="searchQuery"
+      (ionInput)="onSearchChange($event)">
+    </ion-searchbar>
+  </div>
 
-  <ion-list class="faq-accordion" lines="none">
-    <div class="faq-item" *ngFor="let faq of faqList">
-      <ion-item (click)="toggleFaq(faq)" detail="false">
-        <ion-label class="question">{{ faq.question }}</ion-label>
-        <ion-icon
-          slot="end"
-          [name]="faq.isOpen ? 'chevron-up-outline' : 'chevron-down-outline'">
-        </ion-icon>
+  <div *ngIf="showNoResults" class="no-results-container">
+  </div>
+
+<div *ngIf="!showNoResults">
+  <ion-accordion-group class="faq-accordion">
+    <ion-accordion *ngFor="let faq of filteredFaqs" value="{{faq.question}}">
+      
+      <ion-item slot="header">
+        <ion-label>{{ faq.question }}</ion-label>
       </ion-item>
-
-      <div class="answer" *ngIf="faq.isOpen">
+      
+      <div class="ion-padding" slot="content">
         {{ faq.answer }}
       </div>
-    </div>
-  </ion-list>
+    </ion-accordion>
+  </ion-accordion-group>
+</div>
 
 </ion-content>

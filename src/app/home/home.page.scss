@@ -1,7 +1,11 @@
+/* src/app/home/home.page.scss - VERSI FINAL DENGAN LAYOUT STABIL */
+
 :host {
 
-  // Gaya header standar
+  // --- HEADER ---
   ion-toolbar.custom-toolbar {
+    --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-primary-shade));
+    
     .logo-header {
       order: 2;
       position: absolute;
@@ -18,85 +22,414 @@
         object-fit: contain;
       }
     }
-
     .sign-in-button, ion-button[shape="circle"] {
       --color: var(--ion-color-primary-contrast);
       --border-color: var(--ion-color-primary-contrast);
     }
   }
 
-  // Styling untuk area konten utama
+  // --- KONTEN UTAMA ---
   ion-content {
     --background: var(--ion-background-color);
   }
 
-  // Banner Slider
-  .banner-scroll-container {
-    margin: 16px;
-    border-radius: 12px;
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  .testimonials-section {
+  background: rgba(var(--ion-color-emphasis-rgb), 0.05);
+  padding: var(--app-padding-large) 0;
+  width: 100%;
+  overflow: hidden; // Mencegah konten meluber saat animasi
+}
 
-    &::-webkit-scrollbar { display: none; }
-    scrollbar-width: none;
+// Judul "Kata Pengguna"
+.section-title {
+  color: var(--ion-color-emphasis);
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.8em;
+  margin-bottom: var(--app-padding-medium);
+}
+
+// Wrapper untuk slider dan tombol
+.slider-wrapper-css {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+// Tombol navigasi kustom
+.slider-nav-button {
+  --padding-start: 0;
+  --padding-end: 0;
+  width: 44px;
+  height: 44px;
+  background: var(--ion-item-background);
+  border-radius: 50%;
+  border: 1px solid var(--ion-border-color);
+  color: var(--ion-color-medium);
+  margin: 0 8px;
+  flex-shrink: 0; // Mencegah tombol mengecil
+
+  ion-icon {
+    font-size: 22px;
+  }
+}
+
+// Container yang memiliki scroll snap
+.scroll-snap-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory; // Kunci dari efek slider
+  -webkit-overflow-scrolling: touch; // Scrolling lebih mulus di iOS
+
+  // Sembunyikan scrollbar
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// Setiap item di dalam slider
+.scroll-item {
+  scroll-snap-align: center; // Item akan berhenti di tengah
+  flex: 0 0 100%; // Setiap item memakan 100% lebar container
+  padding: var(--app-padding-small) 16px;
+  box-sizing: border-box;
+}
+
+// Styling untuk kartu testimoni (SAMA PERSIS SEPERTI SEBELUMNYA)
+.testimonial-card {
+  background: var(--ion-item-background);
+  border-radius: var(--app-card-border-radius);
+  padding: var(--app-padding-medium);
+  box-shadow: var(--app-card-shadow);
+  text-align: left;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar-placeholder {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(var(--ion-color-emphasis-rgb), 0.1);
+  color: var(--ion-color-emphasis);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.user-info {
+  flex-grow: 1;
+  h4 { margin: 0; font-weight: bold; color: var(--ion-text-color); }
+  p { margin: 0; font-size: 0.9em; color: var(--ion-color-medium); }
+}
+
+.quote-icon {
+  font-size: 3em;
+  color: rgba(var(--ion-color-emphasis-rgb), 0.2);
+}
+
+.star-rating {
+  margin: var(--app-padding-medium) 0;
+  color: var(--ion-color-warning);
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid var(--ion-border-color);
+  margin-bottom: var(--app-padding-medium);
+}
+
+.quote-text {
+  color: var(--ion-color-medium);
+  font-size: var(--app-font-size-body);
+  line-height: var(--app-line-height-body);
+  margin: 0;
+}
+  
+  // --- CAROUSEL (LAYOUT BARU) ---
+  .banner-scroll-container {
+    height: 180px;
+    width: 100%;
+    display: flex;
+    overflow-x: hidden;
+    pointer-events: none;
   }
   .banner-slide {
     flex: 0 0 100%;
     width: 100%;
-    scroll-snap-align: center;
-  }
-  .banner-image {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 12px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 
-  // Lokasi Pengguna
-  .location-section {
+  // --- KARTU PENCARIAN (LAYOUT BARU) ---
+  .rental-form-card {
+    background: var(--ion-item-background);
+    border-radius: 24px;
+    padding: 20px;
+    margin: 16px; // Jarak normal dari atas (carousel)
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--ion-border-color);
+    
+    .card-header {
+      margin-bottom: 20px;
+      text-align: center;
+      .card-title {
+        font-size: 1.4em;
+        font-weight: bold;
+        margin: 0 0 4px 0;
+      }
+      .card-subtitle {
+        margin: 0;
+        font-size: 0.9em;
+        color: var(--ion-color-medium);
+      }
+    }
+    .form-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .input-wrapper {
+      background: var(--ion-background-color);
+      border: 1px solid var(--ion-border-color);
+      border-radius: 12px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:active {
+        transform: scale(0.98);
+        border-color: var(--ion-color-primary);
+      }
+      .input-icon {
+        color: var(--ion-color-primary);
+        font-size: 1.4em;
+        margin-right: 12px;
+      }
+      .input-text {
+        flex: 1;
+        min-width: 0;
+        .input-label {
+          font-size: 0.8em;
+          color: var(--ion-color-medium);
+          margin: 0;
+        }
+        .input-value {
+          font-size: 1em;
+          font-weight: 500;
+          color: var(--ion-text-color);
+          margin: 4px 0 0 0;
+        }
+        .location-value {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          &.placeholder-text {
+            white-space: normal;
+            font-style: italic;
+            color: var(--ion-color-medium);
+          }
+        }
+      }
+    }
+    .search-button {
+      margin-top: 20px;
+      height: 50px;
+      --border-radius: 12px;
+      font-weight: bold;
+      font-size: 1.1em;
+      text-transform: none;
+      --background: var(--ion-color-secondary);
+      --color: var(--ion-color-secondary-contrast);
+      --box-shadow: 0 4px 15px -2px rgba(var(--ion-color-secondary-rgb), 0.4);
+      transition: transform 0.2s ease;
+      &:active {
+        transform: scale(0.97);
+      }
+    }
+  }
+
+  .gorent-story-section {
+  // Menggunakan variabel warna ungu yang baru kita definisikan.
+  // Jika Anda lebih suka warna hijau dari tema Anda, ganti --ion-color-emphasis
+  // menjadi --ion-color-primary atau --ion-color-secondary.
+  background: var(--ion-item-background);
+
+  // Menggunakan warna kontras yang sudah didefinisikan untuk warna emphasis.
+  color: var(--ion-color-primary);
+
+  // Menggunakan variabel spacing untuk padding.
+  padding: var(--app-padding-large) var(--app-padding-medium);
+  text-align: center;
+
+  .story-title {
+    // Menggunakan variabel ukuran font.
+    font-size: var(--app-font-size-title);
+    font-weight: bold;
+    // Menggunakan variabel spacing untuk margin.
+    margin-bottom: var(--app-padding-medium);
+  }
+
+  ion-grid {
+    // Menggunakan variabel spacing.
+    padding: var(--app-padding-medium) 0;
+  }
+
+  ion-row {
+    justify-content: space-around;
+  }
+
+  .story-stat {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    padding: 10px 16px;
-    color: var(--ion-color-medium-shade);
-    font-size: 0.9em;
-    cursor: pointer;
+    // Menggunakan variabel spacing.
+    padding: var(--app-padding-medium) var(--app-padding-small);
 
     ion-icon {
-      margin-right: 8px;
-      font-size: 1.2em;
-      color: var(--ion-color-primary);
+      // Menggunakan variabel ukuran font untuk ikon.
+      font-size: var(--app-font-size-icon);
+      // Menggunakan variabel spacing.
+      margin-bottom: var(--app-padding-small);
     }
-  }
 
-  // Tombol Aksi Utama
-  .rental-form-card {
-    margin: 16px;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --background: var(--ion-color-primary);
-
-    .search-button {
-      height: 48px;
-      --border-radius: 8px;
+    .stat-value {
+      // Menggunakan variabel ukuran font.
+      font-size: var(--app-font-size-stat);
       font-weight: bold;
-      --background: var(--ion-color-tertiary);
-      --color: var(--ion-color-tertiary-contrast);
+      margin-bottom: 4px; // Nilai kecil seperti ini bisa tetap hardcoded atau buat variabel baru (--app-padding-xsmall: 4px).
+    }
+
+    .stat-label {
+      // Menggunakan variabel ukuran font.
+      font-size: var(--app-font-size-label);
+      // Cara terbaik untuk membuat warna transparan dari variabel.
+      // Ini akan bekerja baik di mode terang maupun gelap.
+      color: rgba(var(--ion-color-emphasis-contrast-rgb), 0.8);
+    }
+  }
+}
+  
+  // --- KATEGORI & ALASAN SEWA ---
+  .section-header {
+    padding: 16px 16px 8px 16px;
+    .section-title {
+      margin: 0;
+      font-size: 1.2em;
+      font-weight: 600;
+    }
+  }
+  .category-scroll-container {
+    display: flex;
+    overflow-x: auto;
+    padding: 8px 16px;
+    gap: 12px;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
+  .category-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    .category-image {
+      width: 55px;
+      height: 55px;
+      object-fit: contain;
+      background: var(--ion-color-light);
+      border-radius: 12px;
+      padding: 5px;
+    }
+    ion-label {
+      font-size: 0.8em;
+      font-weight: 500;
+    }
+    &.selected {
+      border-color: var(--ion-color-primary);
+      background: rgba(var(--ion-color-primary-rgb), 0.1);
+    }
+  }
+  .reasons-section {
+    padding: 32px 16px;
+    margin-top: 16px;
+    position: relative;
+    z-index: 1;
+    .reasons-heading {
+      text-align: center;
+      font-size: 1.6em;
+      font-weight: bold;
+      margin-bottom: 24px;
+      color: var(--ion-text-color);
+    }
+    ion-grid {
+      padding: 0;
+    }
+    .reason-card {
+      background: var(--ion-item-background);
+      border-radius: 20px;
+      padding: 24px 16px;
+      height: 100%;
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .reason-icon-wrapper {
+      margin-bottom: 16px;
+      background: rgba(var(--ion-color-primary-rgb), 0.1);
+      border-radius: 50%;
+      width: 70px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      ion-icon {
+        font-size: 2.8em;
+      }
+    }
+    .reason-title {
+      font-size: 1.1em;
+      font-weight: 600;
+      margin: 0 0 8px 0;
+      color: var(--ion-text-color);
+    }
+    .reason-description {
+      font-size: 0.8em;
+      line-height: 1.6;
+      color: var(--ion-color-medium);
+      margin: 0;
+      flex-grow: 1;
     }
   }
 
-  // Bottom Tab Bar
+  // --- FOOTER ---
   ion-footer ion-toolbar {
     --background: var(--ion-item-background);
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    
+    padding-bottom: var(--ion-safe-area-bottom, 0);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
     ion-tab-bar {
       --background: transparent;
       --border: none;
-      
       ion-tab-button {
-        --color: var(--ion-color-medium-shade);
+        --color: var(--ion-color-medium);
         --color-selected: var(--ion-color-primary);
       }
     }

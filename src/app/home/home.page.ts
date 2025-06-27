@@ -1,15 +1,12 @@
-// ===================================================================
-// KODE PENGGANTI LENGKAP & FINAL UNTUK: src/app/home/home.page.ts
-// Versi ini mendengarkan status login DAN perubahan ikon avatar.
-// ===================================================================
+// src/app/home/home.page.ts (SUDAH DIEDIT)
 
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { LocationPermissionModalComponent } from '../location-permission-modal/location-permission-modal.component';
-import { format, parseISO, add } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { Subscription } from 'rxjs';
-import { AuthService, User } from '../services/auth.service';
+import { AuthService } from '../services/auth.service';
 
 interface CarType {
   id: string;
@@ -21,33 +18,96 @@ interface CarType {
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
-  standalone: false, // Pastikan ini diatur ke false jika menggunakan Ionic Angular
+  standalone: false 
 })
 export class HomePage implements OnInit, OnDestroy {
 
   @ViewChild('bannerScroller') bannerScroller!: ElementRef<HTMLElement>;
+
+  // --- PENAMBAHAN KODE UNTUK SLIDER TESTIMONI ---
+  // 1. Menambahkan ViewChild untuk container slider testimoni
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+  // ---------------------------------------------
+
   private scrollInterval: any;
   
-  // Properti untuk menyimpan semua 'langganan' ke service
   private authSubscription!: Subscription;
   private avatarSubscription!: Subscription;
 
   bannerImages = [
-    'assets/image/tankleopard.jpeg',
-    'assets/image/tankarbrams.jpeg',
-    'assets/image/tankt90m.jpg'
+    'assets/Tank/Abrams.jpeg',
+    'assets/Tank/Leopard.jpeg',
+    'assets/Tank/T-90MS.jpeg',
+    'assets/Tank/Tiger2(H).jpeg',
+    'assets/Tank/TigerH1.jpeg'
   ];
+
+  public gorentStory = {
+    title: 'Cerita Perjalanan GoRent',
+    stats: [
+      { icon: 'people-outline', value: '1.5K', label: 'Pengguna' },
+      { icon: 'car-outline', value: '71.7K', label: 'Booking Selesai' },
+      { icon: 'map-outline', value: '22', label: 'Kota di Indonesia' },
+      { icon: 'phone-portrait-outline', value: '10.2K', label: 'Mobil Terdaftar' },
+    ],
+  };
+
+  testimonials = [
+    {
+      name: 'Michelliinn',
+      role: 'Traveler',
+      stars: 5,
+      quote: 'Di apps ini kalian mudah buat car sharing n bs jg kl kalian mau jalan2 d dlm kota slama lebaran inii.. driver ny ramaahhh mbl bagus bersih dan baruuu',
+    },
+    {
+      name: 'Budi Santoso',
+      role: 'Photographer',
+      stars: 5,
+      quote: 'Pilihan kameranya lengkap banget! Sewa untuk project akhir pekan jadi lebih mudah dan terjamin kualitasnya. Prosesnya cepat dan aman.',
+    },
+      {
+      name: 'Citra Lestari',
+      role: 'Event Organizer',
+      stars: 5,
+      quote: 'Menemukan semua peralatan pesta yang saya butuhkan di satu tempat. Sangat menghemat waktu dan tenaga. Pelayanannya juga responsif!',
+    }
+  ];
+
+  reasonsToRent = [
+    {
+      icon: 'key-outline',
+      title: 'Sewa Fleksibel',
+      description: 'Nikmati kebebasan penuh dan privasi dengan menyewa barang untuk kendali Anda sendiri, baik harian, mingguan, maupun bulanan.'
+    },
+    {
+      icon: 'cube-outline',
+      title: 'Ribuan Variasi Barang',
+      description: 'Dari kendaraan, kamera, hingga peralatan pesta. Temukan puluhan ribu barang unik yang terdaftar di GoRentall untuk segala kebutuhanmu.'
+    },
+    {
+      icon: 'phone-portrait-outline',
+      title: 'Proses Sewa Mudah',
+      description: 'Sewa apapun hanya dalam beberapa ketukan. Semua proses dari pemesanan, pembayaran, hingga konfirmasi dilakukan sepenuhnya via aplikasi.'
+    },
+    {
+      icon: 'shield-checkmark-outline',
+      title: 'Keamanan Sistem',
+      description: 'Kami menerapkan verifikasi ketat dan sistem pembayaran yang aman untuk memastikan setiap transaksi dan barang selalu terlindungi.'
+    }
+  ];
+
   
-  public driverOption: 'pickup' | 'diantar' = 'pickup';
+  
   public searchPickupDate: string = new Date().toISOString();
   public formattedDate: string = '';
-  public minDate: string = ''; // Properti baru untuk tanggal minimal
-
+  public minDate: string = '';
 
   isLoggedIn: boolean = false;
-  profileAvatarIcon: string = 'person-circle-outline'; // Ikon default
+  profileAvatarIcon: string = 'person-circle-outline';
   
   displayedLocation: string = 'Izinkan lokasi untuk pengalaman yang lebih baik';
+  isLocationSet: boolean = false;
+
   carTypes: CarType[] = [
     { id: 'wuling', name: 'WULING', imageUrl: 'assets/logomobil/wuling.jpg' },
     { id: 'bmw', name: 'BMW', imageUrl: 'assets/logomobil/bmw.jpg' },
@@ -69,13 +129,11 @@ export class HomePage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    // --- PERBAIKAN LOGIKA INISIALISASI ---
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Atur ke awal hari
-    this.minDate = today.toISOString(); // Set tanggal minimal
-    this.searchPickupDate = this.minDate; // Set tanggal default ke hari ini
-    this.updateFormattedDates(); // Panggil untuk format tampilan awal
-    // ------------------------------------
+    today.setHours(0, 0, 0, 0);
+    this.minDate = today.toISOString();
+    this.searchPickupDate = this.minDate;
+    this.updateFormattedDates();
 
     this.authSubscription = this.authService.isAuthenticated$.subscribe(isAuth => {
       this.isLoggedIn = isAuth;
@@ -85,8 +143,6 @@ export class HomePage implements OnInit, OnDestroy {
       this.profileAvatarIcon = avatar || 'person-circle-outline';
     });
   }
-
-  // Hapus ionViewWillEnter, karena sudah digantikan oleh ngOnInit subscription
   
   ionViewDidEnter() {
     this.startBannerAutoScroll();
@@ -98,7 +154,6 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.stopBannerAutoScroll();
-    // 3. Hentikan semua langganan saat halaman dihancurkan
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();
     }
@@ -128,16 +183,11 @@ export class HomePage implements OnInit, OnDestroy {
 
   searchCars() {
     const searchParams = {
-      // Kirim tanggal yang dipilih dalam format YYYY-MM-DD
       pickupDate: format(parseISO(this.searchPickupDate), 'yyyy-MM-dd')
     };
     console.log('Mencari mobil dengan parameter:', searchParams);
-    // Kirim parameter ke halaman car-random-list melalui state
     this.router.navigate(['/car-random-list'], { state: searchParams });
   }
-
-  // Hapus fungsi checkLoginStatusAndLoadAvatar() karena sudah tidak diperlukan lagi
-
 
   startBannerAutoScroll() {
     if (!this.bannerScroller?.nativeElement) return;
@@ -167,6 +217,12 @@ export class HomePage implements OnInit, OnDestroy {
       cssClass: 'location-permission-modal'
     });
     await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data && data.location) {
+        this.displayedLocation = data.location;
+        this.isLocationSet = true;
+    }
   }
 
   navigateToCarList(carId: string) {
@@ -176,4 +232,31 @@ export class HomePage implements OnInit, OnDestroy {
   goToLogin() {
     this.router.navigateByUrl('/login');
   }
+
+  // --- PENAMBAHAN KODE UNTUK SLIDER TESTIMONI ---
+  // 2. Menambahkan fungsi untuk tombol navigasi slider
+  
+  /**
+   * Fungsi untuk menggeser slider ke item berikutnya.
+   */
+  scrollNext() {
+    // Pengecekan keamanan jika elemen belum ada
+    if (this.scrollContainer?.nativeElement) {
+      const element = this.scrollContainer.nativeElement;
+      element.scrollBy({ left: element.clientWidth, behavior: 'smooth' });
+    }
+  }
+
+  /**
+   * Fungsi untuk menggeser slider ke item sebelumnya.
+   */
+  scrollPrev() {
+    // Pengecekan keamanan jika elemen belum ada
+    if (this.scrollContainer?.nativeElement) {
+      const element = this.scrollContainer.nativeElement;
+      element.scrollBy({ left: -element.clientWidth, behavior: 'smooth' });
+    }
+  }
+  // ---------------------------------------------
+  
 }
