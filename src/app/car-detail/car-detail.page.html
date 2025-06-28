@@ -52,16 +52,13 @@
       <ion-list lines="none">
         <ion-item *ngFor="let option of rentalOptions">
           <ion-label>
-            <h3>{{ option.durationText }}</h3>
+            <h3>{{ option.duration }}</h3>
             <p>{{ option.desc }}</p>
           </ion-label>
           <div slot="end" class="option-price">
             <p>{{ option.price | currency:'Rp ':'symbol':'1.0-0' }}</p>
             
-            <ion-button size="small" fill="solid" color="primary" class="select-button"
-                        (click)="selectPackage(option)">
-              Select
-            </ion-button>
+            <ion-button size="small" fill="solid" color="primary" class="select-button" (click)="selectPackage(option)">Select</ion-button>
           </div>
         </ion-item>
 

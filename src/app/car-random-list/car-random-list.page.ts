@@ -103,13 +103,43 @@ export class CarRandomListPage implements OnInit {
     this.isFilterActive = true; 
 
     // Fungsi helper untuk memeriksa kondisi filter
-    const checkFilter = (car: Vehicle) => {
-      const brandMatch = this.selectedCarType.id === 'all' || (car.merk && car.merk.trim().toLowerCase() === this.selectedCarType.name.toLowerCase());
-      const fuelMatch = this.filterOptions.bahan_bakar === 'semua' || (car.bahan_bakar && car.bahan_bakar.toLowerCase() === this.filterOptions.bahan_bakar);
-      const transmissionMatch = this.filterOptions.transmisi === 'semua' || (car.transmisi && car.transmisi.toLowerCase() === this.filterOptions.transmisi);
-      const priceMatch = car.harga_sewa_harian >= minPrice && car.harga_sewa_harian <= maxPrice;
-      return brandMatch && fuelMatch && transmissionMatch && priceMatch;
-    };
+  // Ganti fungsi lama Anda dengan yang ini
+
+const checkFilter = (car: Vehicle) => {
+  // Guard clause untuk data mobil yang tidak valid
+  if (!car) {
+    return false;
+  }
+
+  // --- BAGIAN YANG DIPERBAIKI ---
+  // Kita mengambil `bahan_bakar` dan `transmisi` dari level atas.
+  // Kemudian, kita masuk ke dalam properti `harga` untuk mengambil `lower` dan `upper`.
+  // Kita juga langsung mengganti nama `lower` menjadi `minPrice` dan `upper` menjadi `maxPrice`.
+  const {
+    bahan_bakar,
+    transmisi,
+    harga: { lower: minPrice, upper: maxPrice } // Inilah perbaikannya
+  } = this.filterOptions;
+  // ------------------------------
+
+  const { id: selectedTypeId, name: selectedTypeName } = this.selectedCarType;
+
+  const isBrandMatch = selectedTypeId === 'all' ||
+    (car.merk?.trim().toLowerCase() === selectedTypeName.toLowerCase());
+
+  const isFuelMatch = bahan_bakar === 'semua' ||
+    (car.bahan_bakar?.toLowerCase() === bahan_bakar.toLowerCase());
+
+  const isTransmissionMatch = transmisi === 'semua' ||
+    (car.transmisi?.toLowerCase() === transmisi.toLowerCase());
+
+  // Logika harga sekarang akan berfungsi karena minPrice dan maxPrice sudah didefinisikan dengan benar.
+  // Pastikan nilai lower dan upper dari slider adalah angka.
+  const carPrice = car.harga_sewa_harian ?? 0;
+  const isPriceMatch = carPrice >= minPrice && carPrice <= maxPrice;
+
+  return isBrandMatch && isFuelMatch && isTransmissionMatch && isPriceMatch;
+};
 
     // Pisahkan mobil ke dalam dua array berdasarkan hasil filter
     this.priorityVehicles = this.allVehicles.filter(car => checkFilter(car));

@@ -71,7 +71,7 @@ export class CarDetailPage implements OnInit {
       },
       {
         duration: '3 Days',
-        desc: 'Weekend package',
+        desc: 'sewa 3 hari',
         days: 3, // Data durasi dalam hari
         price: this.vehicle.harga_sewa_harian * 3 // Harga 3 hari
       }

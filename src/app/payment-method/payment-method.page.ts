@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
-import { VehicleService } from '../services/vehicle.service'; // Tambahkan import ini
-
-
+import { VehicleService } from '../services/vehicle.service';
 
 // Interface untuk struktur data pembayaran
 interface PaymentMethod {
@@ -12,7 +10,7 @@ interface PaymentMethod {
   logo: string;
   isOpen: boolean;
   virtualAccount?: string; // Untuk Bank Transfer dan E-Wallet
-  dbValue: string; // <-- TAMBAHKAN BARIS INI
+  dbValue: string;
   qrCodeImageUrl?: string; // Khusus untuk QRIS
 }
 
@@ -40,7 +38,7 @@ export class PaymentMethodPage implements OnInit {
   constructor(
     private router: Router,
     private toastController: ToastController,
-    private vehicleService: VehicleService, // <-- TAMBAHKAN INI
+    private vehicleService: VehicleService,
   ) {
     // Mengambil data rental dari halaman sebelumnya
     const navigation = this.router.getCurrentNavigation();
@@ -56,7 +54,29 @@ export class PaymentMethodPage implements OnInit {
       this.router.navigateByUrl('/home');
       return;
     }
+
+    // --- PERBAIKAN 1: Panggil fungsi kalkulasi total biaya ---
+    this.calculateTotalCost();
+
     this.initializePaymentMethods();
+  }
+
+  // --- PERBAIKAN 2: Tambahkan fungsi baru untuk kalkulasi ---
+  /**
+   * Menghitung total biaya berdasarkan rincian dari rentalData.
+   * Hasilnya disimpan kembali ke dalam properti rentalData.totalCost.
+   */
+  private calculateTotalCost(): void {
+    // Pastikan semua nilai adalah angka untuk menghindari error, gunakan 0 jika null/undefined
+    const baseCost = Number(this.rentalData.cost) || 0;
+    const deliveryFee = Number(this.rentalData.delivery) || 0;
+    const deposit = Number(this.rentalData.car?.security_deposit) || 0;
+
+    // Lakukan penjumlahan dan simpan hasilnya ke properti totalCost
+    this.rentalData.totalCost = baseCost + deliveryFee + deposit;
+
+    // (Opsional) Log untuk debugging, Anda bisa hapus jika sudah berfungsi
+    console.log('Total cost calculated successfully:', this.rentalData.totalCost);
   }
 
   // Inisialisasi semua data metode pembayaran
@@ -65,7 +85,6 @@ export class PaymentMethodPage implements OnInit {
       {
         group: 'Bank Transfer',
         methods: [
-          // Path logo dikembalikan ke folder "payment" seperti di kode Anda sebelumnya
           {
             name: 'Bank Mandiri',
             desc: 'Transfer via ATM, Mobile Banking, Internet Banking',
@@ -79,7 +98,6 @@ export class PaymentMethodPage implements OnInit {
       {
         group: 'E-Wallet',
         methods: [
-          // Path logo dikembalikan ke folder "payment" seperti di kode Anda sebelumnya
           {
             name: 'GoPay',
             desc: 'Pay with your GoPay balance',
@@ -180,12 +198,11 @@ export class PaymentMethodPage implements OnInit {
     // Siapkan data akhir untuk dikirim
     const finalData = {
       ...this.rentalData,
-      paymentMethod: this.selectedMethod.dbValue, // <-- UBAH MENJADI dbValue
-      paymentProofFile: this.paymentProofFile, // Sertakan objek File-nya
-      deliveryAddress: this.rentalData.deliveryAddress, // <-- TAMBAHKAN BARIS INI
+      paymentMethod: this.selectedMethod.dbValue,
+      paymentProofFile: this.paymentProofFile,
+      deliveryAddress: this.rentalData.deliveryAddress,
     };
 
-    // Tampilkan loading jika perlu
     console.log('Memulai proses pengiriman data...', finalData);
 
     // Panggil service untuk menyimpan data
@@ -204,7 +221,7 @@ export class PaymentMethodPage implements OnInit {
         this.router.navigate(['/waiting-confirmation'], {
           replaceUrl: true,
           state: {
-            rental: response.data, // Kirim seluruh data rental dari server
+            rental: response.data,
           },
         });
       },

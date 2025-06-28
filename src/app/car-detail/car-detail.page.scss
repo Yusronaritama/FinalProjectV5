@@ -105,17 +105,32 @@
             color: var(--ion-color-medium-shade);
         }
 
-        .option-price p {
-            font-weight: bold;
-            color: var(--ion-text-color);
+        // --- AWAL PERBAIKAN ---
+        
+        // Atur container yang membungkus harga dan tombol
+        .option-price {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+
+            // Pindahkan gaya untuk teks harga ke dalam sini agar lebih teratur
+            p {
+                font-weight: bold;
+                color: var(--ion-text-color);
+            }
         }
+
         .select-button {
             --background: var(--ion-color-primary);
             --background-activated: var(--ion-color-primary-shade);
+            // Tambahkan jarak konsisten di sebelah kiri tombol
+            margin-left: 8px;
         }
+        
+        // --- AKHIR PERBAIKAN ---
     }
 
     .description-text {
         color: var(--ion-color-medium-shade);
     }
-}
+}   

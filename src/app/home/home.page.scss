@@ -11,13 +11,13 @@
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      height: 10%;
+      height: 1%;
       display: flex;
       align-items: center;
       justify-content: center;
 
       .logo-img {
-         max-height: 150px;
+        max-height: 65px;
         width: auto;
         object-fit: contain;
       }
