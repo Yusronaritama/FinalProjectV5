@@ -33,7 +33,7 @@ export interface AuthResponse {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private apiUrl = environment.apiUrl;
@@ -50,7 +50,10 @@ export class AuthService {
   private currentAvatar = new BehaviorSubject<string>(this.getInitialAvatar());
   public currentAvatar$ = this.currentAvatar.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+  ) {
     // --- NOTE: PERUBAHAN ---
     // Constructor sekarang kosong karena pemanggilan checkTokenOnLoad() sudah tidak diperlukan lagi.
   }
@@ -64,17 +67,17 @@ export class AuthService {
   }
 
   updateUserInStorage(user: User) {
-  // Ambil avatar lama agar tidak hilang saat data di-refresh
-  const oldUser = this.getUser();
-  user.avatarIcon = oldUser?.avatarIcon || 'person-circle-outline';
-  localStorage.setItem('user_data', JSON.stringify(user));
-}
-  
+    // Ambil avatar lama agar tidak hilang saat data di-refresh
+    const oldUser = this.getUser();
+    user.avatarIcon = oldUser?.avatarIcon || 'person-circle-outline';
+    localStorage.setItem('user_data', JSON.stringify(user));
+  }
+
   // --- NOTE: TAMBAHAN ---
   // Fungsi baru untuk mendapatkan avatar yang tersimpan di localStorage saat aplikasi pertama kali dibuka.
   private getInitialAvatar(): string {
     const user = this.getUser();
-    return user?.avatarIcon || 'person-circle-outline'; 
+    return user?.avatarIcon || 'person-circle-outline';
   }
 
   // --- NOTE: TAMBAHAN ---
@@ -91,23 +94,27 @@ export class AuthService {
   }
 
   register(userData: FormData): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, userData).pipe(
-      tap(response => {
-        if (response && response.data.access_token) {
-          this.storeAuthData(response);
-        }
-      })
-    );
+    return this.http
+      .post<AuthResponse>(`${this.apiUrl}/register`, userData)
+      .pipe(
+        tap((response) => {
+          if (response && response.data.access_token) {
+            this.storeAuthData(response);
+          }
+        }),
+      );
   }
 
   login(credentials: any): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
-      tap(response => {
-        if (response && response.data.access_token) {
-          this.storeAuthData(response);
-        }
-      })
-    );
+    return this.http
+      .post<AuthResponse>(`${this.apiUrl}/login`, credentials)
+      .pipe(
+        tap((response) => {
+          if (response && response.data.access_token) {
+            this.storeAuthData(response);
+          }
+        }),
+      );
   }
 
   logout() {
@@ -123,9 +130,23 @@ export class AuthService {
   changePassword(passwordData: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/change-password`, passwordData);
   }
-  
+
   getProfile(): Observable<any> {
     return this.http.get(`${this.apiUrl}/user`);
+  }
+
+  /**
+   * Mengirim permintaan lupa password ke backend.
+   */
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+  }
+
+  /**
+   * Mengirim data untuk mereset password baru.
+   */
+  resetPassword(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password`, data);
   }
 
   // --- NOTE: TAMBAHAN ---
@@ -133,17 +154,17 @@ export class AuthService {
   // perubahan data (telepon, alamat, dll.) ke server backend.
   updateUserProfile(profileData: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/user/profile`, profileData).pipe(
-      tap(response => {
+      tap((response) => {
         // Jika backend mengembalikan data user yang baru, perbarui localStorage
         if (response && response.data) {
           // Ambil avatar lama agar tidak hilang saat data di-refresh
           const oldUser = this.getUser();
           const updatedUser = response.data;
           updatedUser.avatarIcon = oldUser?.avatarIcon;
-          
+
           localStorage.setItem('user_data', JSON.stringify(updatedUser));
         }
-      })
+      }),
     );
   }
 
@@ -154,16 +175,16 @@ export class AuthService {
     }
     return null;
   }
-  
+
   private storeAuthData(response: AuthResponse) {
     const user = response.data.user;
     // --- NOTE: TAMBAHAN ---
     // Saat login/register pertama kali, beri avatar default jika belum ada.
-    user.avatarIcon = user.avatarIcon || 'person-circle-outline'; 
+    user.avatarIcon = user.avatarIcon || 'person-circle-outline';
 
     localStorage.setItem('auth_token', response.data.access_token);
     localStorage.setItem('user_data', JSON.stringify(user));
-    
+
     this.isAuthenticated.next(true);
     // --- NOTE: TAMBAHAN ---
     // Siarkan avatar yang aktif saat login.

@@ -80,13 +80,18 @@ const routes: Routes = [
   {
     path: 'faq',
     loadChildren: () => import('./faq/faq.module').then( m => m.FaqPageModule)
-  },  {
+  },
+  {
     path: 'car-random-list',
     loadChildren: () => import('./car-random-list/car-random-list.module').then( m => m.CarRandomListPageModule)
   },
   {
     path: 'settings',
     loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule)
+  },
+  {
+    path: 'reset-password',
+    loadChildren: () => import('./reset-password/reset-password.module').then( m => m.ResetPasswordPageModule)
   },
 
 
