@@ -27,7 +27,9 @@ export class RentalCustomPage implements OnInit {
   totalCost: number = 0;
   public readonly FLAT_DELIVERY_FEE = 150000;
   // --- TAMBAHKAN JAM OPERASIONAL DI SINI ---
-  public allowedHours: number[] = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
+  public allowedHours: number[] = [
+    8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+  ];
 
   private isUserInJabodetabek: boolean = true;
   constructor(
@@ -71,15 +73,17 @@ export class RentalCustomPage implements OnInit {
   setInitialDates() {
     const now = new Date();
     const today = new Date();
-    
+
+    // Reset jam ke 00:00:00 untuk perbandingan tanggal
+    today.setHours(0, 0, 0, 0);
+
     // Jika sekarang sudah lewat jam 21:59, maka tanggal minimal adalah besok
     if (now.getHours() >= 22) {
-        today.setDate(today.getDate() + 1);
+      today.setDate(today.getDate() + 1);
     }
-    
-    today.setHours(0, 0, 0, 0);
+
     this.minPickupDate = today.toISOString();
-    
+
     // Atur waktu pickup default ke jam 8 pagi jika tanggalnya diubah
     const initialPickup = new Date(this.minPickupDate);
     if (initialPickup.getHours() < 8) {
@@ -130,12 +134,20 @@ export class RentalCustomPage implements OnInit {
     // 1. Ambil bagian tanggalnya saja, contoh: "2025-06-26"
     const dateToCheck = dateString.split('T')[0];
 
-    // 2. Periksa apakah tanggal tersebut ada di dalam array bookedDates
+    // 2. Konversi ke Date object untuk pengecekan
+    const selectedDate = new Date(dateString);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set ke awal hari
+
+    // 3. Jika tanggal yang dipilih sudah lewat (kemarin atau sebelumnya)
+    if (selectedDate < today) {
+      return false;
+    }
+
+    // 4. Periksa apakah tanggal tersebut ada di dalam array bookedDates
     const isDisabled = this.bookedDates.includes(dateToCheck);
 
-    // 3. Kembalikan kebalikannya:
-    //    - Jika isDisabled true (ada di array), maka kembalikan false (jangan aktifkan).
-    //    - Jika isDisabled false (tidak ada di array), maka kembalikan true (aktifkan).
+    // 5. Kembalikan true hanya jika tanggal valid dan tidak dibooking
     return !isDisabled;
   };
 
@@ -217,7 +229,7 @@ export class RentalCustomPage implements OnInit {
   // --- TAMBAHKAN FUNGSI BARU INI UNTUK FORMAT TANGGAL ---
   private formatISODateToYmdHis(isoDate: string): string {
     const date = new Date(isoDate);
-    
+
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
@@ -230,17 +242,25 @@ export class RentalCustomPage implements OnInit {
   // ----------------------------------------------------
 
   goToPayment() {
-    // ===== VALIDASI TANGGAL BARU (TAMBAHKAN BLOK INI) =====
+    // ===== VALIDASI TANGGAL YANG DIPERBAIKI =====
     const selectedPickupDate = new Date(this.pickupDateTime);
+    const now = new Date();
+
+    // Buat tanggal pembanding dengan jam 00:00:00
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Atur waktu ke awal hari
+    today.setHours(0, 0, 0, 0);
+
+    // Jika sekarang sudah lewat jam 22:00, maka tanggal minimal adalah besok
+    if (now.getHours() >= 22) {
+      today.setDate(today.getDate() + 1);
+    }
 
     if (selectedPickupDate < today) {
       this.presentAlert(
         'Tanggal Tidak Valid',
-        'Anda tidak dapat memilih tanggal yang sudah berlalu. Silakan pilih hari ini atau tanggal di masa mendatang.'
+        'Anda tidak dapat memilih tanggal yang sudah berlalu. Silakan pilih hari ini atau tanggal di masa mendatang.',
       );
-      return; // Hentikan eksekusi fungsi
+      return;
     }
     // =======================================================
 

@@ -129,10 +129,17 @@ export class HomePage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    // Perbaikan kode inisialisasi
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    this.minDate = today.toISOString();
-    this.searchPickupDate = this.minDate;
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const day = today.getDate();
+
+    // Buat tanggal minimal tanpa pengaruh timezone
+    this.minDate = new Date(year, month, day + 1).toISOString(); // +1 hari dari kemarin
+
+    // Atur nilai default ke hari ini (dalam format lokal)
+    this.searchPickupDate = new Date(year, month, day).toISOString();
     this.updateFormattedDates();
 
     this.authSubscription = this.authService.isAuthenticated$.subscribe(isAuth => {
