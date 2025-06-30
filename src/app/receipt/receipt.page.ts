@@ -1,7 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { ToastController, Platform } from '@ionic/angular';
 import html2canvas from 'html2canvas';
+
+// --- PERBAIKAN: Impor plugin Capacitor ---
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 
 @Component({
   selector: 'app-receipt',
@@ -10,15 +14,15 @@ import html2canvas from 'html2canvas';
   standalone: false,
 })
 export class ReceiptPage implements OnInit {
-  // Menangkap elemen div struk untuk diubah menjadi gambar
-  @ViewChild('receiptCard', { static: false }) receiptCard!: ElementRef;
-
+  
   public rentalData: any;
-  public transactionDetails: any = {}; // Untuk data tambahan
+  public transactionDetails: any = {};
 
   constructor(
     private router: Router,
     private toastController: ToastController,
+    // --- PERBAIKAN: Inject Platform untuk memastikan perangkat siap ---
+    private platform: Platform,
   ) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state && navigation.extras.state['rental']) {
@@ -34,62 +38,96 @@ export class ReceiptPage implements OnInit {
         orderId: `#GR${String(this.rentalData.id).padStart(6, '0')}`,
         transactionId: `TXN${this.rentalData.payment.id}`,
         paymentDate: new Date(this.rentalData.payment.updated_at),
-        status:
-          this.rentalData.payment.status_pembayaran === 'lunas'
-            ? 'Paid'
-            : 'Pending',
-        statusColor:
-          this.rentalData.payment.status_pembayaran === 'lunas'
-            ? 'success'
-            : 'warning',
+        status: this.rentalData.payment.status_pembayaran === 'lunas' ? 'Paid' : 'Pending',
+        statusColor: this.rentalData.payment.status_pembayaran === 'lunas' ? 'success' : 'warning',
       };
     }
   }
 
-  // Fungsi untuk menyimpan struk sebagai gambar
+  /**
+   * --- PERBAIKAN: Fungsi helper untuk mengambil screenshot elemen struk ---
+   * Mengembalikan data gambar dalam format base64.
+   */
+  private async captureReceiptAsBase64(): Promise<string> {
+    await this.platform.ready(); // Pastikan DOM sudah siap
+    const element = document.getElementById('receipt-to-print');
+    if (!element) {
+      throw new Error('Elemen struk tidak ditemukan!');
+    }
+    const canvas = await html2canvas(element, { scale: 2 });
+    // Kembalikan data base64 saja, tanpa prefix
+    return canvas.toDataURL('image/png').split(',')[1];
+  }
+
+
+  /**
+   * --- PERBAIKAN: Fungsi untuk menyimpan struk menggunakan Capacitor Filesystem ---
+   */
   async saveReceipt() {
-    const card = this.receiptCard.nativeElement;
-
-    this.presentToast('Menyiapkan struk untuk diunduh...', 'primary');
-
+    // Hanya berjalan di perangkat mobile
+    if (!this.platform.is('capacitor')) {
+      this.presentToast('Fitur ini hanya tersedia di aplikasi mobile.', 'warning');
+      return;
+    }
+    
     try {
-      const canvas = await html2canvas(card, { scale: 2, useCORS: true });
-      const a = document.createElement('a');
-      a.href = canvas.toDataURL('image/png');
-      a.download = `receipt-${this.transactionDetails.orderId.replace('#', '')}.png`;
-      a.click();
+      this.presentToast('Menyiapkan struk...', 'primary');
+      const base64Data = await this.captureReceiptAsBase64();
+      const fileName = `receipt-${this.transactionDetails.orderId.replace('#', '')}.png`;
+
+      // Simpan file ke folder Downloads
+      await Filesystem.writeFile({
+        path: fileName,
+        data: base64Data,
+        directory: Directory.Documents,
+      });
+
+      this.presentToast(`Struk disimpan di folder Documents!`, 'success');
     } catch (error) {
       console.error('Gagal menyimpan struk:', error);
-      this.presentToast('Gagal menyimpan struk.', 'danger');
+      this.presentToast('Oops! Gagal menyimpan struk.', 'danger');
     }
   }
 
-  // Fungsi untuk membagikan struk menggunakan Web Share API
+  /**
+   * --- PERBAIKAN: Fungsi untuk membagikan struk menggunakan Capacitor Share ---
+   */
   async shareReceipt() {
-    // Proses berbagi tetap berjalan di latar belakang jika didukung
-    const shareData = {
-      title: 'GoRent Payment Receipt',
-      // PERBAIKAN: Gunakan `this.rentalData.vehicle.nama` bukan `this.rentalData.car.name`
-      text: `Berikut adalah rincian sewa mobil ${this.rentalData.vehicle.nama} dengan Order ID: ${this.transactionDetails.orderId}`,
-      url: window.location.href,
-    };
+    // Hanya berjalan di perangkat mobile
+    if (!this.platform.is('capacitor')) {
+      this.presentToast('Fitur ini hanya tersedia di aplikasi mobile.', 'warning');
+      return;
+    }
 
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch (error) {
-        // Gagal berbagi tidak perlu menghentikan alur
-        console.error('Gagal membagikan:', error);
+    try {
+      this.presentToast('Menyiapkan struk...', 'primary');
+      const base64Data = await this.captureReceiptAsBase64();
+      const fileName = `receipt-share.png`;
+
+      // Simpan file ke direktori sementara (Cache) agar bisa di-share
+      const result = await Filesystem.writeFile({
+        path: fileName,
+        data: base64Data,
+        directory: Directory.Cache,
+      });
+
+      // Bagikan file menggunakan URI yang didapat
+      await Share.share({
+        title: 'Bukti Pembayaran GoRent',
+        text: `Berikut adalah bukti pembayaran sewa mobil ${this.rentalData.vehicle.nama}.`,
+        url: result.uri, // Path ke file di cache
+      });
+    } catch (error) {
+      // Jangan tampilkan error jika pengguna sengaja membatalkan dialog share
+      if ((error as Error).message !== 'Share canceled') {
+        console.error('Gagal membagikan struk:', error);
+        this.presentToast('Oops! Gagal membagikan struk.', 'danger');
       }
-    } else {
-      console.warn('Browser Anda tidak mendukung fitur berbagi.');
     }
   }
 
-  async presentToast(
-    message: string,
-    color: 'primary' | 'success' | 'warning' | 'danger',
-  ) {
+  // Fungsi bantuan untuk menampilkan pesan toast (tidak diubah)
+  async presentToast(message: string, color: 'primary' | 'success' | 'warning' | 'danger') {
     const toast = await this.toastController.create({
       message,
       duration: 3000,
@@ -99,8 +137,8 @@ export class ReceiptPage implements OnInit {
     toast.present();
   }
 
+  // Fungsi navigasi (tidak diubah)
   navigateToSuccessPage() {
-    // `replaceUrl: true` agar pengguna tidak bisa kembali ke halaman struk dengan tombol back
     this.router.navigate(['/transaction-success'], { replaceUrl: true });
   }
 }

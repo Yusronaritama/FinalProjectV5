@@ -105,7 +105,7 @@
     </div>
 
     <div *ngIf="otherVehicles.length > 0">
-      <ion-list-header *ngIf="isFilterActive"><ion-label>Mobil Lainnya</ion-label></ion-list-header>
+      <ion-list-header *ngIf="isFilterActive" color="primary"><ion-label>Mobil Lainnya</ion-label></ion-list-header>
       <ion-list>
         <ion-card *ngFor="let car of otherVehicles" (click)="viewCarDetail(car.id)" class="car-card" [disabled]="car.status === 'servis'">
           <img [src]="'http://127.0.0.1:8000' + car.foto_utama" [alt]="car.nama" class="car-image">

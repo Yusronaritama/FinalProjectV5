@@ -6,7 +6,7 @@ const config: CapacitorConfig = {
   webDir: 'www',             // Direktori aset web yang dikompilasi
   plugins: {
     SplashScreen: {
-      launchShowDuration: 3000,     // Tampilkan splash screen selama 3 detik
+      launchShowDuration: 0,     // Tampilkan splash screen selama 3 detik
       launchAutoHide: false,        // PENTING: Jangan sembunyikan otomatis, kita akan sembunyikan di kode
       backgroundColor: "#27ae60",   // Warna background splash screen (hijau GoRent All)
       androidSplashResourceName: "splash", // Nama resource gambar splash di Android (sesuai yang digenerate Ionic)

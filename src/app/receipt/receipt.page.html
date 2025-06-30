@@ -1,15 +1,13 @@
 <!-- GANTI SELURUH ISI FILE receipt.page.html DENGAN KODE INI -->
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
-    </ion-buttons>
     <ion-title>Receipt</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div id="receipt-card" #receiptCard>
+  <!-- Elemen ini akan kita 'screenshot' untuk disimpan/dibagikan -->
+  <div id="receipt-to-print">
     <ion-card class="receipt-card-inner">
       <ion-card-header class="ion-text-center">
         <div class="brand-title">GoRent</div>
@@ -23,15 +21,11 @@
           <p class="section-title">Rental Details</p>
           <ion-item lines="none">
             <ion-thumbnail slot="start">
-              <!-- PERBAIKAN: Gunakan rentalData.vehicle -->
               <img [src]="'http://127.0.0.1:8000' + rentalData.vehicle?.foto_utama" (error)="carImg.src = 'assets/icon/placeholder.png'" #carImg>
             </ion-thumbnail>
             <ion-label>
-              <!-- PERBAIKAN: Gunakan rentalData.vehicle.merk dan .nama -->
               <h3>{{ rentalData.vehicle?.merk }} {{ rentalData.vehicle?.nama }}</h3>
-              <!-- PERBAIKAN: Gunakan waktu_sewa dan waktu_kembali -->
               <p>{{ rentalData.waktu_sewa | date:'d MMM y, HH:mm' }} - {{ rentalData.waktu_kembali | date:'d MMM y, HH:mm' }}</p>
-              <!-- PERBAIKAN: Gunakan delivery_option -->
               <p>{{ rentalData.delivery_option === 'delivered' ? 'Diantar' : 'Self-Drive' }}</p>
             </ion-label>
           </ion-item>
@@ -39,10 +33,8 @@
 
         <div class="section">
           <p class="section-title">Payment Breakdown</p>
-          <!-- Perhitungan biaya sewa (ini perlu logika tambahan di .ts jika tidak ada) -->
           <div class="cost-item">
             <span>Rental Fee</span>
-            <!-- Asumsi total_harga sudah termasuk semuanya kecuali deposit -->
             <span>{{ (rentalData.total_harga - rentalData.vehicle?.security_deposit) | currency:'Rp ':'symbol':'1.0-0' }}</span>
           </div>
           <div class="cost-item" *ngIf="rentalData.delivery_fee > 0">
@@ -56,23 +48,10 @@
           <ion-item-divider></ion-item-divider>
           <div class="cost-item total">
             <strong>Total Paid</strong>
-            <!-- PERBAIKAN: Gunakan total_harga -->
             <strong>{{ rentalData.total_harga | currency:'Rp ':'symbol':'1.0-0' }}</strong>
           </div>
         </div>
 
-        <div class="section">
-          <p class="section-title">Payment Method</p>
-          <ion-item lines="none" *ngIf="rentalData.payment">
-            <ion-icon name="card-outline" slot="start" color="medium"></ion-icon>
-            <ion-label>
-              <!-- PERBAIKAN: Gunakan metode_pembayaran dari relasi payment -->
-              <h3>{{ rentalData.payment.metode_pembayaran | titlecase }}</h3>
-              <p>Pembayaran telah dikonfirmasi</p>
-            </ion-label>
-          </ion-item>
-        </div>
-        
         <div class="section">
           <p class="section-title">Transaction Information</p>
           <div class="info-item">
@@ -101,6 +80,7 @@
   </div>
 </ion-content>
 
+<!-- PERBAIKAN: Tombol untuk selesai dipindahkan ke footer utama -->
 <ion-footer>
   <ion-toolbar>
     <ion-grid>
@@ -117,6 +97,11 @@
             Bagikan
           </ion-button>
         </ion-col>
+      </ion-row>
+      <ion-row class="ion-padding-top">
+         <ion-col>
+            <ion-button expand="block" color="success" (click)="navigateToSuccessPage()">Selesai</ion-button>
+         </ion-col>
       </ion-row>
     </ion-grid>
   </ion-toolbar>

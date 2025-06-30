@@ -48,7 +48,7 @@ export class CarRandomListPage implements OnInit {
   public filterOptions = {
     bahan_bakar: 'semua',
     transmisi: 'semua',
-    harga: { lower: null, upper: null },
+    harga: { lower: null, upper: 1000000 },
   };
   public maxPrice: number = 2000000;
 

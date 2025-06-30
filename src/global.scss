@@ -66,3 +66,14 @@
     background: transparent !important; 
   }
 }
+
+
+/* =================================================================== */
+/* == PERBAIKAN GLOBAL UNTUK STATUS BAR YANG TUMPANG TINDIH ========= */
+/* =================================================================== */
+ion-header ion-toolbar {
+  // Menambahkan padding atas seukuran tinggi status bar perangkat.
+  // --ion-safe-area-top adalah variabel dari Capacitor yang berisi tinggi status bar.
+  // !important memastikan aturan ini tidak bisa ditimpa oleh gaya CSS lain.
+  padding-top: var(--ion-safe-area-top, 0) !important;
+}
