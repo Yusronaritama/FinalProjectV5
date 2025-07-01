@@ -86,7 +86,7 @@
       <ion-list-header><ion-label color="primary">Hasil Pencarian</ion-label></ion-list-header>
       <ion-list>
         <ion-card *ngFor="let car of priorityVehicles" (click)="viewCarDetail(car.id)" class="car-card" [disabled]="car.status === 'servis'">
-          <img [src]="'http://127.0.0.1:8000' + car.foto_utama" [alt]="car.nama" class="car-image">
+          <img [src]="'https://yahabe.my.id' + car.foto_utama" [alt]="car.nama" class="car-image">
           <div class="status-overlay" *ngIf="car.status !== 'tersedia'"><span>{{ car.status | titlecase }}</span></div>
           <ion-card-header>
             <ion-card-title>{{ car.nama }}</ion-card-title>
@@ -108,7 +108,7 @@
       <ion-list-header *ngIf="isFilterActive" color="primary"><ion-label>Mobil Lainnya</ion-label></ion-list-header>
       <ion-list>
         <ion-card *ngFor="let car of otherVehicles" (click)="viewCarDetail(car.id)" class="car-card" [disabled]="car.status === 'servis'">
-          <img [src]="'http://127.0.0.1:8000' + car.foto_utama" [alt]="car.nama" class="car-image">
+          <img [src]="'https://yahabe.my.id' + car.foto_utama" [alt]="car.nama" class="car-image">
           <div class="status-overlay" *ngIf="car.status !== 'tersedia'"><span>{{ car.status | titlecase }}</span></div>
           <ion-card-header>
             <ion-card-title>{{ car.nama }}</ion-card-title>

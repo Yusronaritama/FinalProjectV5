@@ -19,7 +19,7 @@
           {{ car.status === 'tersedia' ? 'TERSEDIA' : 'TIDAK TERSEDIA' }}
         </div>
 
-        <img [src]="'http://127.0.0.1:8000' + car.foto_utama" [alt]="car.nama" class="car-image" (error)="img.src = 'assets/cars/default.jpg'" #img/>
+        <img [src]="'https://yahabe.my.id' + car.foto_utama" [alt]="car.nama" class="car-image" (error)="img.src = 'assets/cars/default.jpg'" #img/>
 
         <ion-card-content class="car-details">
           <h4>{{ car.merk }} {{ car.nama }}</h4>

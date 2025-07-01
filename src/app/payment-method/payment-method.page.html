@@ -50,7 +50,7 @@
   <ion-card class="payment-details-card" *ngIf="rentalData">
     <ion-item lines="none" class="car-info-header">
       <ion-thumbnail slot="start">
-        <img [src]="'http://127.0.0.1:8000' + rentalData.car?.foto_utama" (error)="carImg.src = 'assets/icon/placeholder.png'" #carImg>
+        <img [src]="'https://yahabe.my.id' + rentalData.car?.foto_utama" (error)="carImg.src = 'assets/icon/placeholder.png'" #carImg>
       </ion-thumbnail>
       <ion-label>
         <h2>{{ rentalData.car?.nama }}</h2>

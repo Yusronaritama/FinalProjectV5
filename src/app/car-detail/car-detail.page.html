@@ -16,7 +16,7 @@
 
     <div class="scroll-snap-container" *ngIf="vehicle.images && vehicle.images.length > 0">
       <div class="scroll-snap-slide" *ngFor="let image of vehicle.images">
-        <img [src]="'http://127.0.0.1:8000' + image.path" class="slide-image"/>
+        <img [src]="'https://yahabe.my.id' + image.path" class="slide-image"/>
       </div>
     </div>
     <div class="pager-indicator" *ngIf="vehicle.images && vehicle.images.length > 0">
