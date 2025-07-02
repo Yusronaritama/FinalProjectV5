@@ -35,11 +35,11 @@ export class HomePage implements OnInit, OnDestroy {
   private avatarSubscription!: Subscription;
 
   bannerImages = [
-    'assets/Tank/Abrams.jpeg',
-    'assets/Tank/Leopard.jpeg',
-    'assets/Tank/T-90MS.jpeg',
-    'assets/Tank/Tiger2(H).jpeg',
-    'assets/Tank/TigerH1.jpeg'
+    'assets/Mobil/CRETA.jpeg',
+    'assets/Mobil/CRV.jpeg',
+    'assets/Mobil/Ignis.jpeg',
+    'assets/Mobil/LandCruiser.jpeg',
+    
   ];
 
   public gorentStory = {
