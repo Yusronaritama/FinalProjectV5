@@ -1,9 +1,14 @@
-import type { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'FinalProject',
-  webDir: 'www'
+  appId: 'io.ionic.starter', // Sesuaikan dengan ID aplikasi Anda
+  appName: 'GoRentAll',       // Sesuaikan dengan nama aplikasi Anda
+  webDir: 'www',
+  // --- TAMBAHKAN ATAU PASTIKAN BLOK INI ADA ---
+  server: {
+    androidScheme: 'https',
+  }
+  // ------------------------------------------
 };
 
 export default config;

@@ -1,3 +1,5 @@
+// GANTI SELURUH ISI FILE DENGAN KODE INI
+
 import { Injectable } from '@angular/core';
 import {
   HttpRequest,
@@ -17,8 +19,9 @@ export class AuthInterceptor implements HttpInterceptor {
     const token = localStorage.getItem('auth_token');
     const isApiUrl = request.url.startsWith(environment.apiUrl);
 
-    // Hanya tambahkan token jika ada dan jika request ditujukan ke API kita
+    // Hanya tambahkan token jika ada token tersimpan DAN request-nya ke API kita
     if (token && isApiUrl) {
+      // Clone request-nya dan tambahkan header Authorization
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`
@@ -26,6 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
       });
     }
 
+    // Teruskan request yang sudah dimodifikasi (atau yang asli jika tidak ada token)
     return next.handle(request);
   }
 }
