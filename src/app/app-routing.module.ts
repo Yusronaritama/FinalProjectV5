@@ -43,10 +43,6 @@ const routes: Routes = [
     loadChildren: () => import('./activity/activity.module').then( m => m.ActivityPageModule)
   },
   {
-    path: 'car-list/:brand',
-    loadChildren: () => import('./car-list/car-list.module').then( m => m.CarListPageModule)
-  },
-  {
     // Rute ini sudah benar, hanya menggunakan ID mobil
     path: 'car-detail/:id',
     loadChildren: () => import('./car-detail/car-detail.module').then( m => m.CarDetailPageModule)
