@@ -3,7 +3,6 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { LocationPermissionModalComponent } from '../location-permission-modal/location-permission-modal.component';
 import { format, parseISO } from 'date-fns';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../services/auth.service';
@@ -105,8 +104,7 @@ export class HomePage implements OnInit, OnDestroy {
   isLoggedIn: boolean = false;
   profileAvatarIcon: string = 'person-circle-outline';
   
-  displayedLocation: string = 'Izinkan lokasi untuk pengalaman yang lebih baik';
-  isLocationSet: boolean = false;
+ 
 
   carTypes: CarType[] = [
     { id: 'wuling', name: 'WULING', imageUrl: 'assets/logomobil/wuling.jpg' },
@@ -218,19 +216,7 @@ export class HomePage implements OnInit, OnDestroy {
     }
   }
 
-  async requestLocationPermission() {
-    const modal = await this.modalController.create({
-      component: LocationPermissionModalComponent,
-      cssClass: 'location-permission-modal'
-    });
-    await modal.present();
-
-    const { data } = await modal.onDidDismiss();
-    if (data && data.location) {
-        this.displayedLocation = data.location;
-        this.isLocationSet = true;
-    }
-  }
+ 
 
   navigateToCarList(carId: string) {
     this.router.navigate(['/car-list', carId.toLowerCase()]);
