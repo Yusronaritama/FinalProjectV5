@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
-import { LocationPermissionModalComponent } from '../location-permission-modal/location-permission-modal.component';
+
 
 
 @NgModule({
@@ -17,7 +17,7 @@ import { LocationPermissionModalComponent } from '../location-permission-modal/l
   ],
   declarations: [
     HomePage,
-    LocationPermissionModalComponent,
+    
      // <-- PINDAHKAN KE SINI (declarations)
   ]
 })
