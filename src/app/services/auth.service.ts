@@ -50,12 +50,20 @@ export class AuthService {
   private currentAvatar = new BehaviorSubject<string>(this.getInitialAvatar());
   public currentAvatar$ = this.currentAvatar.asObservable();
 
+  // --- TAMBAHAN: Properti untuk menyimpan token FCM sementara ---
+  private fcmToken: string | null = null;
+
   constructor(
     private http: HttpClient,
     private router: Router,
   ) {
     // --- NOTE: PERUBAHAN ---
     // Constructor sekarang kosong karena pemanggilan checkTokenOnLoad() sudah tidak diperlukan lagi.
+  }
+
+  // --- TAMBAHAN: Fungsi untuk menerima token dari app.component ---
+  setFcmToken(token: string) {
+    this.fcmToken = token;
   }
 
   // --- NOTE: PERUBAHAN ---
@@ -112,6 +120,15 @@ export class AuthService {
         tap((response) => {
           if (response && response.data.access_token) {
             this.storeAuthData(response);
+            // --- PERBAIKAN UTAMA: Kirim token FCM setelah login berhasil ---
+            if (this.fcmToken) {
+              console.log('User logged in, sending stored FCM token...');
+              this.updateFcmToken(this.fcmToken).subscribe({
+                next: () => console.log('Stored FCM Token sent successfully.'),
+                error: (err) =>
+                  console.error('Failed to send stored FCM Token:', err),
+              });
+            }
           }
         }),
       );
@@ -174,6 +191,13 @@ export class AuthService {
       return JSON.parse(userString) as User;
     }
     return null;
+  }
+
+  /**
+   * Mengirim FCM Token ke backend untuk disimpan.
+   */
+  updateFcmToken(token: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/fcm-token`, { fcm_token: token });
   }
 
   private storeAuthData(response: AuthResponse) {
