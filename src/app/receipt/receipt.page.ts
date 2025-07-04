@@ -139,6 +139,6 @@ export class ReceiptPage implements OnInit {
 
   // Fungsi navigasi (tidak diubah)
   navigateToSuccessPage() {
-    this.router.navigate(['/transaction-success'], { replaceUrl: true });
+    this.router.navigate(['/home'], { replaceUrl: true });
   }
 }

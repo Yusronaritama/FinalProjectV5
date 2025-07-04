@@ -35,13 +35,7 @@
       <p class="card-subtitle">Mulai petualanganmu sekarang!</p>
     </div>
     <div class="form-input-group">
-      <div class="input-wrapper location-wrapper" (click)="requestLocationPermission()">
-        <ion-icon name="location-outline" class="input-icon"></ion-icon>
-        <div class="input-text">
-          <ion-label class="input-label">Lokasi Anda</ion-label>
-          <p class="input-value location-value" [ngClass]="{'placeholder-text': !isLocationSet}">{{ displayedLocation }}</p>
-        </div>
-      </div>
+      
       <div class="input-wrapper" id="open-home-datepicker">
         <ion-icon name="calendar-outline" class="input-icon"></ion-icon>
         <div class="input-text">
