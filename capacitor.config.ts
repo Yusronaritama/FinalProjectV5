@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter', // Sesuaikan dengan ID aplikasi Anda
+  appId: 'com.gorentall.app', // Sesuaikan dengan ID aplikasi Anda
   appName: 'GoRentAll',       // Sesuaikan dengan nama aplikasi Anda
   webDir: 'www',
   // --- TAMBAHKAN ATAU PASTIKAN BLOK INI ADA ---

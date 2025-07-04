@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "773112826109",
-    "project_id": "finalprojectv5",
-    "storage_bucket": "finalprojectv5.firebasestorage.app"
+    "project_number": "942864453577",
+    "project_id": "gorentall-app",
+    "storage_bucket": "gorentall-app.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:773112826109:android:d3fa40a7ee94c8ca09d694",
+        "mobilesdk_app_id": "1:942864453577:android:ec2d3b929da0bb29246218",
         "android_client_info": {
-          "package_name": "com.example.app"
+          "package_name": "com.gorentall.app"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCxZs4Z3xEUuRZ9YYteQB_Ib62-SZlHQnI"
+          "current_key": "AIzaSyDLXjc6STsfE9Bo3QjMl6EbugvLrEwOM0k"
         }
       ],
       "services": {
