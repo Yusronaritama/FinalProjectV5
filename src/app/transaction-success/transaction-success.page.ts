@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core'; // Impor OnInit
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,9 +7,19 @@ import { Router } from '@angular/router';
   styleUrls: ['./transaction-success.page.scss'],
   standalone: false
 })
-export class TransactionSuccessPage {
+export class TransactionSuccessPage implements OnInit {
 
-  constructor(private router: Router) { }
+  public message: string = 'Terima kasih telah melakukan pembayaran. Transaksi Anda akan segera kami proses.';
+
+  constructor(private router: Router) {
+    // Ambil state dari navigasi
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras.state && navigation.extras.state['message']) {
+      this.message = navigation.extras.state['message'];
+    }
+  }
+
+  ngOnInit() { } // ngOnInit bisa dikosongkan
 
   goToActivity() {
     // Arahkan ke halaman riwayat aktivitas/transaksi

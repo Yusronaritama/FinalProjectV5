@@ -75,17 +75,23 @@ export class ActivityPage implements OnInit {
 
   // Placeholder untuk fungsi tombol
   viewReceipt(order: any) {
-    // Ubah tipe menjadi any
-    // Cek status pembayaran dari data order
-    if (
-      order.payment &&
-      (order.payment.status_pembayaran === 'lunas' ||
-        order.payment.status_pembayaran === 'paid')
-    ) {
+    if (!order.payment) {
+      console.error('Tidak ada data pembayaran untuk pesanan ini.');
+      return;
+    }
+
+    // Jika metode bayar di tempat, user bisa langsung lihat receipt
+    if (order.payment.metode_pembayaran === 'bayar_di_tempat') {
+      this.router.navigate(['/receipt'], { state: { rental: order } });
+      return;
+    }
+
+    // Untuk metode lain, cek status pembayarannya
+    if (order.payment.status_pembayaran === 'lunas') {
       // Jika sudah lunas, ke halaman receipt
       this.router.navigate(['/receipt'], { state: { rental: order } });
     } else {
-      // Jika masih pending, ke halaman tunggu
+      // Jika masih pending atau gagal, ke halaman tunggu
       this.router.navigate(['/waiting-confirmation'], {
         state: { rental: order },
       });

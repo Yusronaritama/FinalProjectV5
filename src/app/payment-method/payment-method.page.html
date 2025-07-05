@@ -53,7 +53,7 @@
         <img [src]="'https://yahabe.my.id' + rentalData.car?.foto_utama" (error)="carImg.src = 'assets/icon/placeholder.png'" #carImg>
       </ion-thumbnail>
       <ion-label>
-        <h2>{{ rentalData.car?.nama }}</h2>
+        <h2>{{rentalData.car?.merk}} {{ rentalData.car?.nama }}</h2>
         <ion-chip color="primary" outline="true">
           <ion-label>{{ rentalData.duration }} Hari</ion-label>
         </ion-chip>
@@ -112,7 +112,7 @@
             </ion-row>
         </ion-grid>
       </div>
-      <div class="upload-section">
+      <div class="upload-section" *ngIf="selectedMethod?.dbValue !== 'bayar_di_tempat'">
         <h3>Upload Bukti Pembayaran</h3>
         <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept="image/png, image/jpeg, application/pdf">
         <ion-button expand="block" fill="outline" (click)="fileInput.click()">

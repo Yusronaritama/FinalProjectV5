@@ -76,7 +76,10 @@ export class PaymentMethodPage implements OnInit {
     this.rentalData.totalCost = baseCost + deliveryFee + deposit;
 
     // (Opsional) Log untuk debugging, Anda bisa hapus jika sudah berfungsi
-    console.log('Total cost calculated successfully:', this.rentalData.totalCost);
+    console.log(
+      'Total cost calculated successfully:',
+      this.rentalData.totalCost,
+    );
   }
 
   // Inisialisasi semua data metode pembayaran
@@ -129,6 +132,20 @@ export class PaymentMethodPage implements OnInit {
             qrCodeImageUrl: 'assets/logopayment/BARCODE.png',
             isOpen: false,
             dbValue: 'qris',
+          },
+        ],
+      },
+
+      // --- TAMBAHKAN GRUP BARU INI ---
+      {
+        group: 'Bayar di Tempat',
+        methods: [
+          {
+            name: 'Bayar di Lokasi',
+            desc: 'Lakukan pembayaran tunai saat pengambilan mobil',
+            logo: 'assets/logopayment/CASH.png', // Ganti dengan ikon yang sesuai
+            isOpen: false,
+            dbValue: 'bayar_di_tempat',
           },
         ],
       },
@@ -189,8 +206,11 @@ export class PaymentMethodPage implements OnInit {
       return;
     }
 
-    // Validasi 2: Bukti pembayaran harus diunggah
-    if (!this.paymentProofFile) {
+    // Validasi 2: Bukti pembayaran hanya wajib jika BUKAN bayar di tempat
+    if (
+      this.selectedMethod.dbValue !== 'bayar_di_tempat' &&
+      !this.paymentProofFile
+    ) {
       this.presentToast('Silakan unggah bukti pembayaran.', 'warning');
       return;
     }
@@ -212,18 +232,27 @@ export class PaymentMethodPage implements OnInit {
           'Pesanan berhasil dibuat, data diterima dari server:',
           response.data,
         );
-        this.presentToast(
-          'Pemesanan Anda telah diterima. Mohon tunggu konfirmasi.',
-          'success',
-        );
 
-        // Arahkan ke halaman tunggu dengan membawa data rental yang baru dibuat
-        this.router.navigate(['/waiting-confirmation'], {
-          replaceUrl: true,
-          state: {
-            rental: response.data,
-          },
-        });
+        if (this.selectedMethod?.dbValue === 'bayar_di_tempat') {
+          // Jika bayar di tempat, langsung ke halaman sukses dengan pesan khusus
+          this.router.navigate(['/transaction-success'], {
+            replaceUrl: true,
+            state: {
+              message:
+                'Pemesanan Anda berhasil! Silakan lakukan pembayaran di lokasi.',
+            },
+          });
+        } else {
+          // Jika metode lain, ke halaman tunggu konfirmasi
+          this.router.navigate(['/transaction-success'], {
+            replaceUrl: true,
+            state: {
+              message:
+                'Pemesanan Anda berhasil! Mohon menunggu konfirmasi pembayaran dari kami.',
+            },
+          });
+        }
+        // -----------------------------
       },
       error: (err) => {
         console.error('Gagal mengirim data:', err);

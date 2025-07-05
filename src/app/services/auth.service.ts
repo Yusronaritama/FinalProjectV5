@@ -108,6 +108,15 @@ export class AuthService {
         tap((response) => {
           if (response && response.data.access_token) {
             this.storeAuthData(response);
+            // --- PERBAIKAN UTAMA: Kirim token FCM setelah login berhasil ---
+            if (this.fcmToken) {
+              console.log('User logged in, sending stored FCM token...');
+              this.updateFcmToken(this.fcmToken).subscribe({
+                next: () => console.log('Stored FCM Token sent successfully.'),
+                error: (err) =>
+                  console.error('Failed to send stored FCM Token:', err),
+              });
+            }
           }
         }),
       );

@@ -26,6 +26,7 @@
             {{ order.waktu_sewa | date:'d MMM y, HH:mm' }} -
             {{ order.waktu_kembali | date:'d MMM y, HH:mm' }}
           </p>
+          
         </ion-label>
         <ion-chip [color]="getStatusColor(order.status_pemesanan)" outline="true" class="status-chip-main">
           {{ order.status_pemesanan }}
@@ -43,6 +44,8 @@
           <p class="return-info">
             {{ order.delivery_option === 'delivered' ? 'Diantar ke lokasi Anda' : 'Ambil Sendiri' }}
           </p>
+          <p class="payment-status-info" *ngIf="order.payment">Status Bayar: {{ order.payment.status_pembayaran | titlecase }}</p>
+          <p class="payment-status-info" *ngIf="order.payment">Metode Bayar: {{ order.payment.metode_pembayaran | titlecase }}</p>
         </ion-label>
       </ion-item>
 
